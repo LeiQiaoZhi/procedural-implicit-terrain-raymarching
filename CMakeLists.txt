@@ -10,7 +10,7 @@ file(GLOB_RECURSE CPP_SOURCES "Source/*.cpp")
 file(GLOB_RECURSE HEADER_FILES "Source/*.h")
 file(GLOB_RECURSE IMGUI "${CMAKE_SOURCE_DIR}/imgui/*")
 file(GLOB_RECURSE GLAD "Source/glad.c")
-file(GLOB_RECURSE GIT ".gitignore")
+file(GLOB_RECURSE GIT ".gitignore" "README.*")
 file(GLOB_RECURSE SHADERS "Source/*.frag" "Source/*.vert")
 
 # Set up filters for organizing the source files in the Visual Studio solution
