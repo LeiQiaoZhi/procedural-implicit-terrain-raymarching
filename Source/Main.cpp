@@ -46,16 +46,26 @@ int main() {
 	// specify the viewport of OpenGL in the window
 	glViewport(0, 0, WIDTH, HEIGHT);
 
+	Shader shader((shader_path + "\\default.vert").c_str(),
+		(shader_path + "\\default.frag").c_str());
+
 	// Enables the Depth Buffer (z-buffer)
 	glEnable(GL_DEPTH_TEST);
 
+	// render loop
 	while (!glfwWindowShouldClose(window)) {
 		// background color
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f); // set clear color to dark blue
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear back color buffer to the clear color
+		
+		// activate the shader
+		shader.activate();
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+	shader.delete_shader();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
