@@ -1,3 +1,7 @@
+#include "ShaderClass.h"
+#include "VAO.h"
+#include "EBO.h"
+
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -10,11 +14,29 @@
 const int WIDTH = 1600;
 const int HEIGHT = 1600;
 
-// callback function for when the window is resized
+float vertices[] = {
+	-1.0f,  1.0f, -1.0f,  // Top-left
+	-1.0f, -1.0f, -1.0f,  // Bottom-left
+	 1.0f, -1.0f, -1.0f,  // Bottom-right
+	 1.0f,  1.0f, -1.0f,   // Top-right
+};
+
+unsigned int indices[] = {
+	0, 1, 2,   // First triangle
+	2, 3, 0    // Second triangle
+};
+
+namespace fs = std::filesystem;
+
+// path of the project directory
+std::string dir_path = fs::current_path().parent_path().string();
+std::string src_path = dir_path + "\\Source";
+std::string shader_path = src_path + "\\Shaders";
+
+// callback function for dynamic viewport resizing
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 }
-
 
 int main() {
 	glfwInit();
@@ -46,8 +68,26 @@ int main() {
 	// specify the viewport of OpenGL in the window
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	Shader shader((shader_path + "\\default.vert").c_str(),
-		(shader_path + "\\default.frag").c_str());
+	Shader shader((shader_path + "\\minimum.vert").c_str(),
+		(shader_path + "\\minimum.frag").c_str());
+
+	// set up vertex array object
+	VAO vao;
+	vao.bind();
+
+	// create vertex buffer object to store vertices
+	VBO vbo(vertices, sizeof(vertices));
+	// create element buffer object to store indices
+	EBO ebo(indices, sizeof(indices));
+
+	// link vertex positions
+	GLsizeiptr stride = 3 * sizeof(float);
+	vao.link_attrib(vbo, 0, 3, GL_FLOAT, stride, (void*)0);
+
+	// unbind all to prevent accidentally modifying them
+	vao.unbind();
+	vbo.unbind();
+	ebo.unbind();
 
 	// Enables the Depth Buffer (z-buffer)
 	glEnable(GL_DEPTH_TEST);
@@ -61,10 +101,16 @@ int main() {
 		// activate the shader
 		shader.activate();
 
+		vao.bind();
+		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
+	vao.delete_VAO();
+	vbo.delete_buffer();
+	ebo.delete_buffer();
 	shader.delete_shader();
 
 	glfwDestroyWindow(window);
