@@ -5,14 +5,14 @@
 std::string get_file_contents(const char* _filename)
 {
 	std::filesystem::path absolute_path = std::filesystem::current_path() / _filename;
-	std::cout << "Opening file from " << absolute_path << std::endl;
+	std::cout << "Reading shader file from " << absolute_path << std::endl;
 	std::ifstream in(absolute_path, std::ios::binary);
 
 	if (!in) {
-		throw std::runtime_error("Error opening file: " + absolute_path.string());
+		throw std::runtime_error("Error reading shader file: " 
+			+ absolute_path.string());
 	}
 
-	//std::ifstream in(_filename, std::ios::binary);
 	if (in)
 	{
 		std::string contents;
