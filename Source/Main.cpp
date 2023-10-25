@@ -26,12 +26,6 @@ unsigned int indices[] = {
 	2, 3, 0    // Second triangle
 };
 
-namespace fs = std::filesystem;
-
-// path of the project directory
-std::string dir_path = fs::current_path().parent_path().string();
-std::string src_path = dir_path + "\\Source";
-std::string shader_path = src_path + "\\Shaders";
 
 // callback function for dynamic viewport resizing
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -68,8 +62,8 @@ int main() {
 	// specify the viewport of OpenGL in the window
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	Shader shader((shader_path + "\\minimum.vert").c_str(),
-		(shader_path + "\\minimum.frag").c_str());
+	Shader shader((SHADER_PATH "\\minimum.vert"),
+		(SHADER_PATH "\\minimum.frag"));
 
 	// set up vertex array object
 	VAO vao;
