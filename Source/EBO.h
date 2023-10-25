@@ -7,7 +7,7 @@ public:
 	GLuint ID;
 	
 	// we need size because vertices is a pointer, not an array
-	EBO(GLuint* _indices, GLsizeiptr _size);
+	EBO(const GLuint* _indices, const GLsizeiptr _size);
 	// rule of five
 	~EBO();
 	EBO(const EBO&) = delete;

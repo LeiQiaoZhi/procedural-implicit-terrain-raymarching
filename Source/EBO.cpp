@@ -1,6 +1,6 @@
 #include "EBO.h"
 
-EBO::EBO(GLuint* _indices, GLsizeiptr _size)
+EBO::EBO(const GLuint* _indices, const GLsizeiptr _size)
 {
 	glGenBuffers(1, &ID);
 	bind();
