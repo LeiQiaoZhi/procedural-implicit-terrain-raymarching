@@ -1,7 +1,3 @@
-#include "ShaderClass.h"
-#include "VAO.h"
-#include "EBO.h"
-
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -11,56 +7,29 @@
 #include <filesystem>
 #include <string>
 
-const int WIDTH = 1600;
-const int HEIGHT = 1600;
-
-float vertices[] = {
-	-1.0f,  1.0f, -1.0f,  // Top-left
-	-1.0f, -1.0f, -1.0f,  // Bottom-left
-	 1.0f, -1.0f, -1.0f,  // Bottom-right
-	 1.0f,  1.0f, -1.0f,   // Top-right
-};
-
-unsigned int indices[] = {
-	0, 1, 2,   // First triangle
-	2, 3, 0    // Second triangle
-};
+#include "Constants.h"
+#include "Init.h"
+#include "ShaderClass.h"
+#include "VAO.h"
+#include "EBO.h"
 
 
-// callback function for dynamic viewport resizing
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-	glViewport(0, 0, width, height);
-}
-
-int main() {
-	glfwInit();
-
-	// tell GLFW we are using opengl 3.3
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	// tell GLFW we are using the core profile
-	// which only have modern functions
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+int main()
+{
+	Init::init_glfw();
 
 	// create a window
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Procedural Implicit Terrain Raymarching", NULL, NULL);
-	// error checking
+	GLFWwindow* window = glfwCreateWindow(Constants::WIDTH, Constants::HEIGHT, "Procedural Implicit Terrain Raymarching", NULL, NULL);
 	if (window == NULL) {
 		std::cout << "Failed to create glfw window." << std::endl;
 		glfwTerminate();
 		return -1;
 	}
-	// make the window into the current context (show it)
-	glfwMakeContextCurrent(window);
 
-	// set the framebuffer size callback for dynamic viewport resizing
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	Init::setup_window(window);
 
 	// load glad so it configures opengl
 	gladLoadGL();
-
-	// specify the viewport of OpenGL in the window
-	glViewport(0, 0, WIDTH, HEIGHT);
 
 	Shader shader((SHADER_PATH "\\minimum.vert"),
 		(SHADER_PATH "\\minimum.frag"));
@@ -69,10 +38,8 @@ int main() {
 	VAO vao;
 	vao.bind();
 
-	// create vertex buffer object to store vertices
-	VBO vbo(vertices, sizeof(vertices));
-	// create element buffer object to store indices
-	EBO ebo(indices, sizeof(indices));
+	VBO vbo(Constants::VERTICES, sizeof(Constants::VERTICES));
+	EBO ebo(Constants::INDICES, sizeof(Constants::INDICES));
 
 	// link vertex positions
 	GLsizeiptr stride = 3 * sizeof(float);
@@ -89,9 +56,9 @@ int main() {
 	// render loop
 	while (!glfwWindowShouldClose(window)) {
 		// background color
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f); // set clear color to dark blue
+		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear back color buffer to the clear color
-		
+
 		// activate the shader
 		shader.activate();
 
@@ -103,7 +70,7 @@ int main() {
 		shader.set_uniform_vec2("iResolution", glm::vec2(width, height));
 
 		vao.bind();
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, sizeof(Constants::INDICES) / sizeof(int), GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
