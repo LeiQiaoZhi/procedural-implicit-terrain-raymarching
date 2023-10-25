@@ -95,6 +95,13 @@ int main() {
 		// activate the shader
 		shader.activate();
 
+		// set the uniforms
+		GLint viewport[4];
+		glGetIntegerv(GL_VIEWPORT, viewport);
+		GLint width = viewport[2];
+		GLint height = viewport[3];
+		shader.set_uniform_vec2("iResolution", glm::vec2(width, height));
+
 		vao.bind();
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 

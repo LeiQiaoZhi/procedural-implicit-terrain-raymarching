@@ -64,3 +64,9 @@ void Shader::delete_shader() {
 	glDeleteProgram(program_ID);
 }
 
+void Shader::set_uniform_vec2(const std::string& name, const glm::vec2& value) const
+{
+	GLint location = glGetUniformLocation(program_ID, name.c_str());
+	glUniform2f(location, value.x, value.y);
+}
+
