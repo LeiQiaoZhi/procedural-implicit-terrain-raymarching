@@ -5,6 +5,11 @@ VAO::VAO()
 	glGenVertexArrays(1, &ID);
 }
 
+VAO::~VAO()
+{
+	glDeleteVertexArrays(1, &ID);
+}
+
 void VAO::link_attrib(VBO& _vbo, GLuint _layout, GLuint _num_components, GLenum _type, GLsizeiptr _stride, void* _offset)
 {
 	_vbo.bind();
@@ -22,9 +27,4 @@ void VAO::bind()
 void VAO::unbind()
 {
 	glBindVertexArray(0);
-}
-
-void VAO::delete_VAO()
-{
-	glDeleteVertexArrays(1, &ID);
 }

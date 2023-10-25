@@ -8,9 +8,9 @@ public:
 	
 	// we need size because vertices is a pointer, not an array
 	VBO(GLfloat* _vertices, GLsizeiptr _size);
+	~VBO();
 
 	void bind();
 	void unbind();
-	void delete_buffer();
 
 };

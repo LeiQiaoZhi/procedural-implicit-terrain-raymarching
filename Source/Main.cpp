@@ -109,11 +109,6 @@ int main() {
 		glfwPollEvents();
 	}
 
-	vao.delete_VAO();
-	vbo.delete_buffer();
-	ebo.delete_buffer();
-	shader.delete_shader();
-
 	glfwDestroyWindow(window);
 	glfwTerminate();
 

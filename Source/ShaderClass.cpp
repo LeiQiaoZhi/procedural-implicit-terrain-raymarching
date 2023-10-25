@@ -26,7 +26,8 @@ std::string get_file_contents(const char* _filename)
 	throw(errno);
 }
 
-Shader::Shader(const char* _vertex_file, const char* _frag_file) {
+Shader::Shader(const char* _vertex_file, const char* _frag_file) 
+{
 	// Read vertexFile and fragmentFile and store the strings
 	std::string vertex_code = get_file_contents(_vertex_file);
 	std::string frag_code = get_file_contents(_frag_file);
@@ -56,12 +57,14 @@ Shader::Shader(const char* _vertex_file, const char* _frag_file) {
 
 }
 
-void Shader::activate() {
-	glUseProgram(program_ID);
+Shader::~Shader()
+{
+	glDeleteProgram(program_ID);
 }
 
-void Shader::delete_shader() {
-	glDeleteProgram(program_ID);
+void Shader::activate() 
+{
+	glUseProgram(program_ID);
 }
 
 void Shader::set_uniform_vec2(const std::string& name, const glm::vec2& value) const

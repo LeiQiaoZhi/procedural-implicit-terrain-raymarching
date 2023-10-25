@@ -8,10 +8,9 @@ public:
 	
 	// we need size because vertices is a pointer, not an array
 	EBO(GLuint* _indices, GLsizeiptr _size);
+	~EBO();
 
 	void bind();
 	void unbind();
-	void delete_buffer();
-
 };
 

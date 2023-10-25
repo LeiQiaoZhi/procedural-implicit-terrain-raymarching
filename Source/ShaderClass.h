@@ -15,9 +15,9 @@ public:
 	GLuint program_ID;
 
 	Shader(const char* vertexFile, const char* fragFile);
+	~Shader();
 
 	void activate();
-	void delete_shader();
 
 	void set_uniform_vec2(const std::string& name, const glm::vec2& value) const;
 };
