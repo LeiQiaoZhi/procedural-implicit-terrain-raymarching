@@ -32,8 +32,9 @@ int main()
 	// load glad so it configures opengl
 	gladLoadGL();
 
-	Shader shader((SHADER_PATH "\\minimum.vert"),
-		(SHADER_PATH "\\minimum.frag"));
+	Shader shader((SHADER_PATH "\\Minimum.vert"),{ 
+		(SHADER_PATH "\\HeightMap.frag") 
+	});
 
 	// set up vertex array object
 	VAO vao;

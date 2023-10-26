@@ -1,60 +1,99 @@
-#include "shaderClass.h"
-#include <filesystem>
+#include "ShaderClass.h"
+#include <regex>
 
-// Reads a text file and outputs a string with everything in the text file
-std::string get_file_contents(const char* _filename)
+namespace
 {
-	std::filesystem::path absolute_path = std::filesystem::current_path() / _filename;
-	std::cout << "Reading shader file from " << absolute_path << std::endl;
-	std::ifstream in(absolute_path, std::ios::binary);
-
-	if (!in) {
-		throw std::runtime_error("Error reading shader file: " 
-			+ absolute_path.string());
-	}
-
-	if (in)
+	// Reads a text file and outputs a string with everything in the text file
+	std::string get_file_contents(const char* _filename)
 	{
-		std::string contents;
-		in.seekg(0, std::ios::end);
-		contents.resize(in.tellg());
-		in.seekg(0, std::ios::beg);
-		in.read(&contents[0], contents.size());
-		in.close();
-		return(contents);
+		std::filesystem::path absolute_path = std::filesystem::current_path() / _filename;
+		std::cout << "Reading shader file from " << absolute_path << std::endl;
+		std::ifstream in(absolute_path, std::ios::binary);
+
+		if (!in) {
+			throw std::runtime_error("Error reading shader file: "
+				+ absolute_path.string());
+		}
+
+		if (in)
+		{
+			std::string contents;
+			in.seekg(0, std::ios::end);
+			contents.resize(in.tellg());
+			in.seekg(0, std::ios::beg);
+			in.read(&contents[0], contents.size());
+			in.close();
+			return(contents);
+		}
+		throw(errno);
 	}
-	throw(errno);
+
+	void check_shader_compilation(GLint _shader)
+	{
+		GLint success;
+		GLchar infoLog[512];
+
+		// Check vertex shader compilation
+		glGetShaderiv(_shader, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			glGetShaderInfoLog(_shader, 512, NULL, infoLog);
+			std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		}
+		else
+			std::cout << "Shader compiled successfully." << std::endl;
+	}
+
+	void process_includes(std::string& file_content)
+	{
+		const std::regex include_regex("#include \"(.*)\"");
+		std::smatch include_match;
+
+		while (std::regex_search(file_content, include_match, include_regex))
+		{
+			const std::string include_file_path = SHADER_PATH + std::string("/") + include_match[1].str();
+			const std::string include_file_contents = get_file_contents(include_file_path.c_str());
+			file_content.replace(include_match.position(), include_match.length(), include_file_contents);
+		}
+	}
 }
 
-Shader::Shader(const char* _vertex_file, const char* _frag_file) 
+Shader::Shader(const char* _vertex_file, const std::vector<const char*>& _frag_files)
 {
-	// Read vertexFile and fragmentFile and store the strings
+	// A single vertex shader
 	std::string vertex_code = get_file_contents(_vertex_file);
-	std::string frag_code = get_file_contents(_frag_file);
-
-	// Convert the shader source strings into character arrays
 	const char* vertex_source = vertex_code.c_str();
-	const char* frag_source = frag_code.c_str();
 
-	// Shader compilation 
 	GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex_shader, 1, &vertex_source, NULL);
 	glCompileShader(vertex_shader);
-
-	GLuint frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(frag_shader, 1, &frag_source, NULL);
-	glCompileShader(frag_shader);
+	check_shader_compilation(vertex_shader);
 
 	// Shader program
 	program_ID = glCreateProgram();
 	glAttachShader(program_ID, vertex_shader);
-	glAttachShader(program_ID, frag_shader);
-	glLinkProgram(program_ID);
-
-	// Delete the shaders as the program has them now
 	glDeleteShader(vertex_shader);
+
+	std::string combined_frag_code = "";
+	// Multiple fragment shaders
+	for (const char* frag_file : _frag_files)
+	{
+		std::string frag_code = get_file_contents(frag_file);
+		combined_frag_code += frag_code;
+	}
+
+	process_includes(combined_frag_code);
+	const char* frag_source = combined_frag_code.c_str();
+
+	GLuint frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(frag_shader, 1, &frag_source, NULL);
+	glCompileShader(frag_shader);
+	check_shader_compilation(frag_shader);
+
+	glAttachShader(program_ID, frag_shader);
 	glDeleteShader(frag_shader);
 
+	glLinkProgram(program_ID);
 }
 
 Shader::~Shader()
@@ -62,7 +101,7 @@ Shader::~Shader()
 	glDeleteProgram(program_ID);
 }
 
-void Shader::activate() 
+void Shader::activate()
 {
 	glUseProgram(program_ID);
 }
@@ -71,5 +110,11 @@ void Shader::set_uniform_vec2(const std::string& name, const glm::vec2& value) c
 {
 	GLint location = glGetUniformLocation(program_ID, name.c_str());
 	glUniform2f(location, value.x, value.y);
+}
+
+void Shader::set_uniform_float(const std::string& name, const float value) const
+{
+	GLint location = glGetUniformLocation(program_ID, name.c_str());
+	glUniform1f(location, value);
 }
 

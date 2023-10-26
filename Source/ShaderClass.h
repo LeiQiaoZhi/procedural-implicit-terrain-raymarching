@@ -4,20 +4,21 @@
 #include<string>
 #include<fstream>
 #include<sstream>
+#include <filesystem>
 #include<iostream>
 #include<cerrno>
 #include<glm/glm.hpp>
-
-std::string get_file_contents(const char* filename);
 
 class Shader {
 public:
 	GLuint program_ID;
 
-	Shader(const char* vertexFile, const char* fragFile);
+	Shader();
+	Shader(const char* _vertex_file, const std::vector<const char*>& _frag_file);
 	~Shader();
 
 	void activate();
 
 	void set_uniform_vec2(const std::string& name, const glm::vec2& value) const;
+	void set_uniform_float(const std::string& name, const float value) const;
 };
