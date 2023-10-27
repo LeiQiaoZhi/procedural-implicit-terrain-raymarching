@@ -1,35 +1,14 @@
-#version 330 core
-
 #include "ValueNoise.frag"
 
-out vec4 FragColor;
+#define NUM_LAYER 3
 
-uniform float iTime;
-uniform vec2 iResolution;
-
-void main() 
+float layerNoise(float x, float y, float heights[NUM_LAYER], float scales[NUM_LAYER], 
+    vec2 offsets[NUM_LAYER], mat2 rotations[NUM_LAYER], float iTime) 
 {
-    const int numLayers = 3;
-
-    const float heights[3] = float[3](0.8, 0.25, 0.125);
-    const float scales[3] = float[3](200.0, 50.0, 20.0);
-    const vec2 offsets[3] = vec2[3](
-        vec2(0.0,0.0), vec2(0.0,0.0), vec2(0.0,0.0)
-    );
-    // random different rotations using pythagorean theorem
-    const mat2 rotations[3] = mat2[3](
-		mat2(0.8, 0.6, -0.6, 0.8),
-		mat2(0.6, 0.8, -0.8, 0.6),
-		mat2(0.8, 0.6, -0.6, 0.8)
-	);
-
-    float x = gl_FragCoord.x;
-    float y = gl_FragCoord.y;
-
     // layering of noise
     float layeredNoise = 0;
 
-    for(int i = 0; i < numLayers; i++)
+    for(int i = 0; i < NUM_LAYER; i++)
 	{
         vec2 movement = iTime * vec2(100);
         vec2 pos = rotations[i] * (vec2(x,y)+movement) / scales[i] + offsets[i];
@@ -40,5 +19,5 @@ void main()
             );
 	}
 
-    FragColor = vec4(layeredNoise);
+    return layeredNoise;
 }

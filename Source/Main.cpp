@@ -33,7 +33,7 @@ int main()
 	gladLoadGL();
 
 	Shader shader((SHADER_PATH "\\Minimum.vert"),{ 
-		(SHADER_PATH "\\HeightMap.frag") 
+		(SHADER_PATH "\\Raymarching.frag") 
 	});
 
 	// set up vertex array object
