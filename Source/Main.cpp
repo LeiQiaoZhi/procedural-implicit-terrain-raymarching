@@ -13,6 +13,7 @@
 #include "ShaderClass.h"
 #include "VAO.h"
 #include "EBO.h"
+#include "CameraController.h"
 
 
 int main()
@@ -52,6 +53,10 @@ int main()
 	vbo.unbind();
 	ebo.unbind();
 
+	// init camera
+	Camera camera(glm::vec3(0.0f, 100.0f, 0.0f));
+	CameraController camera_controller(&camera);
+
 	const auto start_time = std::chrono::high_resolution_clock::now();
 
 	// Enables the Depth Buffer (z-buffer)
@@ -77,8 +82,15 @@ int main()
 		const float time = std::chrono::duration<float, std::chrono::seconds::period>(current_time - start_time).count();
 		shader.set_uniform_float("iTime", time);
 
+		shader.set_uniform_vec3("iCameraPos", camera.get_position());
+		shader.set_uniform_vec3("iCameraFwd", camera.get_forward());
+		shader.set_uniform_vec3("iCameraUp", camera.get_up());
+		shader.set_uniform_vec3("iCameraRight", camera.get_right());
+
 		vao.bind();
 		glDrawElements(GL_TRIANGLES, sizeof(Constants::INDICES) / sizeof(int), GL_UNSIGNED_INT, 0);
+
+		camera_controller.handle_inputs(window, width, height);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

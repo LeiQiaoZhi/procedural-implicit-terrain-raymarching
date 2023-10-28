@@ -21,15 +21,15 @@ const mat2 rotations[NUM_LAYER] = mat2[3](
 );
 
 // camera parameters
-const vec3 cameraPos = vec3(0.0, 100.0, 0.0);
-const vec3 cameraFwd = vec3(0.0, 1.0, 5.0);
-const vec3 cameraRight = vec3(1.0, 0.0, 0.0);
-const vec3 cameraUp = vec3(0.0, 1.0, 1.0);
+uniform vec3 iCameraPos;
+uniform vec3 iCameraFwd; 
+uniform vec3 iCameraRight; 
+uniform vec3 iCameraUp; 
 const float focal_length = 1;
 
 // raymarching parameters
-const int MAX_STEPS = 1000;
-const float step = 1;
+const int MAX_STEPS = 500;
+const float step = 2;
 
 // light parameters
 const vec3 sunPos = vec3(300.0, 400.0, -200.0);
@@ -37,13 +37,13 @@ const vec3 sunPos = vec3(300.0, 400.0, -200.0);
 void main() 
 {
 	vec2 NDC = (gl_FragCoord.xy / min(iResolution.x, iResolution.y)) * 2.0 - 1.0;
-	vec3 screenCenter = cameraPos + normalize(cameraFwd) * focal_length;
+	vec3 screenCenter = iCameraPos + normalize(iCameraFwd) * focal_length;
 	vec3 pixelWorld = screenCenter 
-		+ NDC.x * normalize(cameraRight) + NDC.y * normalize(cameraUp);
-	vec3 ray = normalize(pixelWorld - cameraPos);
+		+ NDC.x * normalize(iCameraRight) + NDC.y * normalize(iCameraUp);
+	vec3 ray = normalize(pixelWorld - iCameraPos);
 
 	// raymarching
-	vec3 pos = cameraPos;
+	vec3 pos = iCameraPos;
 	for (int i = 0; i < MAX_STEPS; i++) 
 	{
 		pos += ray * step;
