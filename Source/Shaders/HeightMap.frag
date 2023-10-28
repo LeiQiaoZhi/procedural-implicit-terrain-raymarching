@@ -2,11 +2,12 @@
 
 #define NUM_LAYER 3
 
-float layerNoise(float x, float y, float heights[NUM_LAYER], float scales[NUM_LAYER], 
+// return (height, normal)
+vec4 layerNoise(float x, float y, float heights[NUM_LAYER], float scales[NUM_LAYER], 
     vec2 offsets[NUM_LAYER], mat2 rotations[NUM_LAYER], float iTime) 
 {
     // layering of noise
-    float layeredNoise = 0;
+    vec4 layeredNoise = vec4(0,0,0,0);
 
     for(int i = 0; i < NUM_LAYER; i++)
 	{
@@ -18,6 +19,7 @@ float layerNoise(float x, float y, float heights[NUM_LAYER], float scales[NUM_LA
                 pos.y
             );
 	}
-
+    
+    layeredNoise.z = 1.0;
     return layeredNoise;
 }

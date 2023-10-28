@@ -14,17 +14,37 @@ float a(int i, int j)
     return hash(i,j);
 }
 
+float differentiate_smoothstep(float x, float a = 0.0, float b = 1.0)
+{
+    float t = smoothstep(a, b, x);
+    return 6.0 * t * (1.0 - t) / (b - a);
+}
+
 // piecewise function, i,j are the coordinates of the piece
 // x,y are the global coordinates of the noise, y is returned
-float noise_piece(float x,float z, int i, int j)
+// return (height, normal)
+vec4 noise_piece(float x,float z, int i, int j)
 {
-    return a(i,j) + (a(i+1,j) - a(i,j)) * smoothstep(0.0, 1.0, x - i)
-        + (a(i,j+1) - a(i,j)) * smoothstep(0.0, 1.0, z - j)
-		+ (a(i+1,j+1) + a(i,j) - a(i+1,j) - a(i,j+1)) * smoothstep(0.0, 1.0, x - i) * smoothstep(0.0, 1.0, z - j);
+    float a00 = a(i,j);
+    float a01 = a(i,j+1);
+    float a10 = a(i+1,j);
+    float a11 = a(i+1,j+1);
+    float height = a00 + (a10 - a00) * smoothstep(0.0, 1.0, x - i)
+		+ (a01 - a00) * smoothstep(0.0, 1.0, z - j) +
+        (a11 + a00 - a01 - a10) * smoothstep(0.0, 1.0, x - i) * smoothstep(0.0, 1.0, z - j);
+
+    float height_wrtx = (a10 - a00) * differentiate_smoothstep(x - i) 
+        + (a11 + a00 - a01 - a10) * differentiate_smoothstep(x - i) * smoothstep(0.0, 1.0, z - j);
+    float height_wrtz = (a01 - a00) * differentiate_smoothstep(z - j) 
+		+ (a11 + a00 - a01 - a10) * smoothstep(0.0, 1.0, x - i) * differentiate_smoothstep(z - j);
+    vec3 normal = normalize(vec3(-height_wrtx, 1.0, -height_wrtz));
+
+    return vec4(height, normal);
 }
 
 // value noise
-float noise(float x, float z){
+// return (height, normal)
+vec4 noise(float x, float z){
     int i = int(floor(x));
 	int j = int(floor(z));
 	return noise_piece(x,z,i,j);
