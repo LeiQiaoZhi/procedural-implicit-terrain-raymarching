@@ -53,17 +53,18 @@ void CameraController::scroll_callback(GLFWwindow* _window, double _x_offset, do
 	zoom(1 + -glm::sign(_y_offset) * zoom_speed_);
 }
 
+// camera_position change
+// target, target_distance, camera_direction does not change
 void CameraController::zoom(float _zoom_factor)
 {
-	auto new_pos = target_ + _zoom_factor * (camera_->get_position() - target_);
+	auto new_pos = camera_->get_position() + ((_zoom_factor<1)?10.0f:-10.0f) * camera_->get_forward();
 	camera_->set_position(new_pos);
 }
 
+// camera_position, camera_direction change
+// target, target_distance does not change
 void CameraController::orbit(float _angle_x, float _angle_y)
 {
-	//std::cout << "orbit x:" << _angle_x << " y:" << _angle_y << std::endl;
-	auto target_dir = camera_->get_position() - target_;
-
 	// rotation matrices
 	glm::mat4 rot_x = glm::mat4(1.0f);
 	rot_x = glm::rotate(rot_x, _angle_x * rotate_speed_, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -74,8 +75,9 @@ void CameraController::orbit(float _angle_x, float _angle_y)
 	glm::vec4 new_forward = rot_x * rot_y * glm::vec4(camera_->get_forward(), 1.0f);
 	glm::vec4 new_up = rot_x * rot_y * glm::vec4(camera_->get_up(), 1.0f);
 	camera_->set_direction(glm::vec3(new_forward), glm::vec3(new_up));
-	glm::vec4 new_target_dir = rot_x * rot_y * glm::vec4(target_dir, 1.0f);
-	auto new_position = target_ + glm::vec3(new_target_dir);
+	
+	// update camera position
+	auto new_position = get_target() - target_distance_ * camera_->get_forward();
 	camera_->set_position(new_position);
 
 }

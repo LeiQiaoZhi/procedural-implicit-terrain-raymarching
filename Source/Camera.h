@@ -4,7 +4,7 @@
 
 // Reponsibilities:
 // 1. Stores states
-// 2. Calculates view and proj matrices
+// 2. Calculates view and proj matrices (don't need for now)
 class Camera
 {
 protected:
