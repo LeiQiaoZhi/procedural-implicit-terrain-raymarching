@@ -2,8 +2,8 @@
 
 namespace Constants {
 
-	constexpr int WIDTH = 1600;
-	constexpr int HEIGHT = 1600;
+	constexpr int WIDTH = 600;
+	constexpr int HEIGHT = 500;
 
 	constexpr float VERTICES[] = {
 		-1.0f,  1.0f, -1.0f,  // Top-left
