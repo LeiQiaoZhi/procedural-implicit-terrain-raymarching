@@ -57,7 +57,8 @@ void CameraController::scroll_callback(GLFWwindow* _window, double _x_offset, do
 // target, target_distance, camera_direction does not change
 void CameraController::zoom(float _zoom_factor)
 {
-	auto new_pos = camera_->get_position() + ((_zoom_factor<1)?10.0f:-10.0f) * camera_->get_forward();
+	auto speed = 100.0f;
+	auto new_pos = camera_->get_position() + ((_zoom_factor<1)?1:-1) * speed * camera_->get_forward();
 	camera_->set_position(new_pos);
 }
 
