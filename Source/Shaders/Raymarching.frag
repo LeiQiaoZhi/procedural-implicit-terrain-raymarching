@@ -28,14 +28,16 @@ uniform vec3 iCameraUp;
 const float focal_length = 1;
 
 // raymarching parameters
-const int MAX_STEPS = 500;
-const float step = 2;
+const int MAX_STEPS = 600;
+const float ep = 5;
 
 // light parameters
-const vec3 sunPos = vec3(300.0, 400.0, -200.0);
+const vec3 sunPos = vec3(200, 2000.0, 3000.0);
 
 void main() 
 {
+	// FragColor = vec4((1 + fbmd(gl_FragCoord.xy / 2000, 9).x) / 2, 0, 0, 1); return;
+
 	vec2 NDC = (gl_FragCoord.xy / min(iResolution.x, iResolution.y)) * 2.0 - 1.0;
 	vec3 screenCenter = iCameraPos + normalize(iCameraFwd) * focal_length;
 	vec3 pixelWorld = screenCenter 
@@ -46,15 +48,38 @@ void main()
 	vec3 pos = iCameraPos;
 	for (int i = 0; i < MAX_STEPS; i++) 
 	{
-		pos += ray * step;
-		vec4 result = layerNoise(pos.x,pos.z,heights, scales, offsets, rotations, 0);
-		float height = result.x;
-		vec3 normal = normalize(vec3(result.y, result.z, result.w));
+		pos += ray * ep;
+
+		vec4 heightd = terraind(pos.xz);
+		float height = heightd.x;
+		vec3 normal = heightd.yzw;
+
 		if (pos.y < height) 
 		{
+			pos = vec3(pos.x, height, pos.z);
 			vec3 pointToSun = normalize(sunPos - pos);
 			vec3 color = max(0,dot(normal, pointToSun)) * vec3(0.8, 0.4, 0.3);
+			
+			// shadow ray
+			vec3 shadowPos = pos + vec3(0, 0.001, 0);
+			for (int j = 0; j < 32; j++) 
+			{
+				shadowPos += pointToSun * 0.01;
+				if (shadowPos.y < terraind(shadowPos.xz).x) 
+				{
+					color = vec3(0.4,0,0);
+					break;
+				}
+			}
+
 			FragColor = vec4(color, 1.0);
+			return;
+		}
+
+		// render sun
+		if (dot(pos - sunPos, pos - sunPos) < 1000) 
+		{
+			FragColor = vec4(1.0, 1.0, 0.0, 1.0);
 			return;
 		}
 	}
