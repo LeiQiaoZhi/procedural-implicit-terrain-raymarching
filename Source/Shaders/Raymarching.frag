@@ -6,6 +6,7 @@ out vec4 FragColor;
 
 uniform float iTime;
 uniform vec2 iResolution;
+uniform int iShadowSteps;
 
 // noise layer parameters
 const float heights[NUM_LAYER] = float[3](200, 20, 2);
@@ -62,7 +63,7 @@ void main()
 			
 			// shadow ray
 			vec3 shadowPos = pos + vec3(0, 0.001, 0);
-			for (int j = 0; j < 32; j++) 
+			for (int j = 0; j < iShadowSteps; j++) 
 			{
 				shadowPos += pointToSun * 0.01;
 				if (shadowPos.y < terraind(shadowPos.xz).x) 
@@ -75,13 +76,14 @@ void main()
 			FragColor = vec4(color, 1.0);
 			return;
 		}
+	}
 
-		// render sun
-		if (dot(pos - sunPos, pos - sunPos) < 1000) 
-		{
-			FragColor = vec4(1.0, 1.0, 0.0, 1.0);
-			return;
-		}
+	// sun
+	vec3 camToSun = normalize(sunPos - iCameraPos);
+	if (dot(camToSun, ray) > 0.995) 
+	{
+		FragColor = vec4(0.8, 0.4, 0.1, 1.0);
+		return;
 	}
 
 	// light blue sky
