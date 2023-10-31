@@ -13,6 +13,9 @@ namespace UI {
 
 	public:
 		int shadow_steps_ = 32;
+		int max_steps_ = 500;
+		float step_size_ = 5.0f;
+		float focal_length_ = 1.0f;
 	private:
 		bool init_ = true;
 		Shader& shader_;
