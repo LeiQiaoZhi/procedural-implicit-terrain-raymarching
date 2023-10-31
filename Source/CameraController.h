@@ -36,4 +36,7 @@ public:
 	// queries
 	glm::vec3 get_position() { return camera_->get_position(); }
 	glm::vec3 get_target() { return camera_->get_position() + camera_->get_forward() * target_distance_; }
+	glm::vec3 get_forward() { return camera_->get_forward(); }
+	glm::vec3 get_up() { return camera_->get_up(); }
+	glm::vec3 get_right() { return camera_->get_right(); }
 };
