@@ -2,28 +2,31 @@
 
 #define NUM_LAYER 3
 
-const mat2 m2 = mat2(  0.80,  0.60,
+const mat2 rot = mat2(  0.80,  0.60,
                       -0.60,  0.80 );
-const mat2 m2i = mat2( 0.80, -0.60,
+const mat2 roti = mat2( 0.80, -0.60,
                        0.60,  0.80 );
 
-vec3 fbmd(in vec2 pos, in int num_layers)
+vec3 fbmd(in vec2 pos, in int num_layers,
+    float shrink_h = 1.9, // shrink factor horizontally (x,z)
+    float shrink_v_start = 0.5, // starting value for vertical (y) noise
+    float shrink_v = 0.53 // shrink factor vertically (y) (height)
+)
 {
-    float shrink_h = 1.9; // shrink factor horizontally (x,z)
+    float v = shrink_v_start;
     float height = 0.0; // cumulative height
-    float shrink_v = 0.5; // shrink factor vertically (y) (height)
-    vec2  dxz = vec2(0.0); // (dx, dz), cumulative slopes
-    mat2  m = mat2(1.0, 0.0, // matrix for chain rule
+    vec2 dxz = vec2(0.0); // (dx, dz), cumulative slopes
+    mat2 chain = mat2(1.0, 0.0, // matrix for chain rule
                    0.0, 1.0);
 
     for(int i = 0; i < num_layers; i++)
     {
-        vec3 noise = noised(pos);
-        height += shrink_v * noise.x;
-        dxz += shrink_v * m * noise.yz;
-        shrink_v *= 0.53;
-        pos = shrink_h * m2 * pos;
-        m = shrink_h * m2i * m;
+        vec3 noise = v * noised(pos);
+        height += noise.x;
+        dxz += chain * noise.yz;
+        v *= shrink_v;
+        pos = shrink_h * rot * pos;
+        chain = shrink_h * roti * chain;
     }
 
 	return vec3(height, dxz);
