@@ -1,9 +1,13 @@
 #include "CameraController.h"
+#include <imgui.h>
 #include <iostream>
 
 
 void CameraController::handle_inputs(GLFWwindow* _window, const int _width, const int _height)
 {
+	if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) ||
+		ImGui::IsAnyItemActive())
+		return;
 
 	glfwSetWindowUserPointer(_window, this);
 	// use lambda
