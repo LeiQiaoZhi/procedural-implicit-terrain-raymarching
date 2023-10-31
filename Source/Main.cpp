@@ -15,6 +15,7 @@
 #include "EBO.h"
 #include "CameraController.h"
 #include "DebugPanel.h"
+#include "CameraPanel.h"
 
 
 int main()
@@ -65,7 +66,13 @@ int main()
 
 	// imgui
 	UI::init(window, "#version 330");
+	UI::CameraPanel cameraPanel(camera_controller);
 	UI::DebugPanel debugPanel(shader);
+
+	UI::PanelsList panels = {
+		&cameraPanel,
+		&debugPanel
+	};
 
 	// render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -97,8 +104,8 @@ int main()
 
 		camera_controller.handle_inputs(window, width, height);
 
-		debugPanel.show();
-
+		UI::show_panels(panels);
+		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
