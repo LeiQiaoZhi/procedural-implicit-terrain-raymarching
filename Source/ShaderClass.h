@@ -22,4 +22,5 @@ public:
 	void set_uniform_vec2(const std::string& name, const glm::vec2& value) const;
 	void set_uniform_vec3(const std::string& name, const glm::vec3& value) const;
 	void set_uniform_float(const std::string& name, const float value) const;
+	void set_uniform_int(const std::string& name, const int value) const;
 };
