@@ -14,6 +14,7 @@
 #include "VAO.h"
 #include "EBO.h"
 #include "CameraController.h"
+#include "DebugPanel.h"
 
 
 int main()
@@ -28,7 +29,7 @@ int main()
 		return -1;
 	}
 
-	Init::setup_window(window);
+	Init::setup_window(window, false);
 
 	// load glad so it configures opengl
 	gladLoadGL();
@@ -62,6 +63,10 @@ int main()
 	// Enables the Depth Buffer (z-buffer)
 	glEnable(GL_DEPTH_TEST);
 
+	// imgui
+	UI::init(window, "#version 330");
+	UI::DebugPanel debugPanel(shader);
+
 	// render loop
 	while (!glfwWindowShouldClose(window)) {
 		// background color
@@ -91,6 +96,8 @@ int main()
 		glDrawElements(GL_TRIANGLES, sizeof(Constants::INDICES) / sizeof(int), GL_UNSIGNED_INT, 0);
 
 		camera_controller.handle_inputs(window, width, height);
+
+		debugPanel.show();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

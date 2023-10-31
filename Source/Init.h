@@ -4,5 +4,5 @@
 namespace Init 
 {
 	void init_glfw();
-	void setup_window(GLFWwindow* window);
+	void setup_window(GLFWwindow* window, const bool resizable = true);
 }
