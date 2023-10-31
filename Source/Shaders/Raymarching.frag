@@ -26,11 +26,11 @@ uniform vec3 iCameraPos;
 uniform vec3 iCameraFwd; 
 uniform vec3 iCameraRight; 
 uniform vec3 iCameraUp; 
-const float focal_length = 1;
+uniform float iFocalLength;
 
 // raymarching parameters
-const int MAX_STEPS = 600;
-const float ep = 5;
+uniform int iMaxSteps;
+uniform float iStepSize;
 
 // light parameters
 const vec3 sunPos = vec3(200, 2000.0, 3000.0);
@@ -40,16 +40,16 @@ void main()
 	// FragColor = vec4((1 + fbmd(gl_FragCoord.xy / 2000, 9).x) / 2, 0, 0, 1); return;
 
 	vec2 NDC = (gl_FragCoord.xy / min(iResolution.x, iResolution.y)) * 2.0 - 1.0;
-	vec3 screenCenter = iCameraPos + normalize(iCameraFwd) * focal_length;
+	vec3 screenCenter = iCameraPos + normalize(iCameraFwd) * iFocalLength;
 	vec3 pixelWorld = screenCenter 
 		+ NDC.x * normalize(iCameraRight) + NDC.y * normalize(iCameraUp);
 	vec3 ray = normalize(pixelWorld - iCameraPos);
 
 	// raymarching
 	vec3 pos = iCameraPos;
-	for (int i = 0; i < MAX_STEPS; i++) 
+	for (int i = 0; i < iMaxSteps; i++) 
 	{
-		pos += ray * ep;
+		pos += ray * iStepSize;
 
 		vec4 heightd = terraind(pos.xz);
 		float height = heightd.x;
