@@ -4,22 +4,9 @@
 
 out vec4 FragColor;
 
+// global parameters
 uniform float iTime;
 uniform vec2 iResolution;
-uniform int iShadowSteps;
-
-// noise layer parameters
-const float heights[NUM_LAYER] = float[3](200, 20, 2);
-const float scales[NUM_LAYER] = float[3](200.0, 100.0, 50.0);
-const vec2 offsets[NUM_LAYER] = vec2[3](
-    vec2(0.0,0.0), vec2(0.0,0.0), vec2(0.0,0.0)
-);
-// random different rotations using pythagorean theorem
-const mat2 rotations[NUM_LAYER] = mat2[3](
-	mat2(0.8, 0.6, -0.6, 0.8),
-	mat2(0.8, 0.6, -0.6, 0.8) * mat2(0.8, 0.6, -0.6, 0.8),
-	mat2(0.8, 0.6, -0.6, 0.8) * mat2(0.8, 0.6, -0.6, 0.8) * mat2(0.8, 0.6, -0.6, 0.8)
-);
 
 // camera parameters
 uniform vec3 iCameraPos;
@@ -31,14 +18,49 @@ uniform float iFocalLength;
 // raymarching parameters
 uniform int iMaxSteps;
 uniform float iStepSize;
+uniform int iShadowSteps;
 
 // light parameters
-const vec3 sunPos = vec3(200, 2000.0, 3000.0);
+const vec3 iSunPos = vec3(200, 2000.0, 3000.0);
+
+vec3 raymarchTerrain(
+	in vec3 pos,
+	in vec3	ray,
+	in int maxSteps,
+	in float stepSize,
+	out bool hit
+){
+	hit = false;
+
+	vec3 origin = pos;
+	float clip = 0.0;
+	float lastHeight;
+	float lastY;
+
+	for (float t = clip; t < maxSteps * stepSize; t+=stepSize) 
+	{
+		pos = origin + t * ray;
+
+		float height = terraind(pos.xz).x;
+		if (pos.y < height) 
+		{
+			// interpolation
+			pos -= ray * stepSize * 
+				(height - pos.y) / (lastY - lastHeight + height - pos.y);
+			pos.y = terraind(pos.xz).x;
+
+			hit = true;
+			break;
+		}
+
+		lastHeight = height;
+		lastY = pos.y;
+	}
+	return pos;
+}
 
 void main() 
 {
-	// FragColor = vec4((1 + fbmd(gl_FragCoord.xy / 2000, 9).x) / 2, 0, 0, 1); return;
-
 	vec2 NDC = (gl_FragCoord.xy / min(iResolution.x, iResolution.y)) * 2.0 - 1.0;
 	vec3 screenCenter = iCameraPos + normalize(iCameraFwd) * iFocalLength;
 	vec3 pixelWorld = screenCenter 
@@ -46,40 +68,33 @@ void main()
 	vec3 ray = normalize(pixelWorld - iCameraPos);
 
 	// raymarching
-	vec3 pos = iCameraPos;
-	for (int i = 0; i < iMaxSteps; i++) 
+	bool hit;
+	vec3 pos = raymarchTerrain(iCameraPos, ray, iMaxSteps, iStepSize, hit);
+
+	if (hit)
 	{
-		pos += ray * iStepSize;
-
-		vec4 heightd = terraind(pos.xz);
-		float height = heightd.x;
-		vec3 normal = heightd.yzw;
-
-		if (pos.y < height) 
-		{
-			pos = vec3(pos.x, height, pos.z);
-			vec3 pointToSun = normalize(sunPos - pos);
-			vec3 color = max(0,dot(normal, pointToSun)) * vec3(0.8, 0.4, 0.3);
+		vec3 normal = normalize(terraind(pos.xz).yzw);
+		vec3 pointToSun = normalize(iSunPos - pos);
+		vec3 color = max(0,dot(normal, pointToSun)) * vec3(0.8, 0.4, 0.3);
 			
-			// shadow ray
-			vec3 shadowPos = pos + vec3(0, 0.001, 0);
-			for (int j = 0; j < iShadowSteps; j++) 
+		// shadow ray
+		vec3 shadowPos = pos + vec3(0, 0.001, 0);
+		for (int j = 0; j < iShadowSteps; j++) 
+		{
+			shadowPos += pointToSun * 0.01;
+			if (shadowPos.y < terraind(shadowPos.xz).x) 
 			{
-				shadowPos += pointToSun * 0.01;
-				if (shadowPos.y < terraind(shadowPos.xz).x) 
-				{
-					color = vec3(0.4,0,0);
-					break;
-				}
+				color = vec3(0.4,0,0);
+				break;
 			}
-
-			FragColor = vec4(color, 1.0);
-			return;
 		}
-	}
+
+		FragColor = vec4(color, 1.0);
+		return;
+	}	
 
 	// sun
-	vec3 camToSun = normalize(sunPos - iCameraPos);
+	vec3 camToSun = normalize(iSunPos - iCameraPos);
 	if (dot(camToSun, ray) > 0.995) 
 	{
 		FragColor = vec4(0.8, 0.4, 0.1, 1.0);
