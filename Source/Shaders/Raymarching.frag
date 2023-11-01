@@ -18,12 +18,22 @@ uniform float iFocalLength;
 // raymarching parameters
 uniform int iMaxSteps;
 uniform float iStepSize;
+
 uniform int iShadowSteps;
+uniform float iFogStrength;
 
 // light parameters
 const vec3 iSunPos = vec3(200, 2000.0, 3000.0);
 
-vec3 raymarchTerrain(
+// material parameters
+uniform vec3 iGrassColor = vec3(0.2, 0.4, 0.1);
+uniform float iGrassThreshold;
+uniform vec3 iDirtColor = vec3(0.8, 0.4, 0.3);
+uniform float iDirtThreshold;
+
+
+// returns the distance to the terrain 
+float raymarchTerrain(
 	in vec3 pos,
 	in vec3	ray,
 	in int maxSteps,
@@ -45,18 +55,17 @@ vec3 raymarchTerrain(
 		if (pos.y < height) 
 		{
 			// interpolation
-			pos -= ray * stepSize * 
+			t -= stepSize * 
 				(height - pos.y) / (lastY - lastHeight + height - pos.y);
-			pos.y = terraind(pos.xz).x;
 
 			hit = true;
-			break;
+			return t;
 		}
 
 		lastHeight = height;
 		lastY = pos.y;
 	}
-	return pos;
+	return 0.0;
 }
 
 void main() 
@@ -69,25 +78,40 @@ void main()
 
 	// raymarching
 	bool hit;
-	vec3 pos = raymarchTerrain(iCameraPos, ray, iMaxSteps, iStepSize, hit);
+	float distanceToTerrain = raymarchTerrain(iCameraPos, ray, iMaxSteps, iStepSize, hit);
 
 	if (hit)
 	{
-		vec3 normal = normalize(terraind(pos.xz).yzw);
+		vec3 pos = iCameraPos + distanceToTerrain * ray;
+		vec4 heightd = terraind(pos.xz);
+		pos.y = heightd.x;
+		vec3 normal = normalize(heightd.yzw);
 		vec3 pointToSun = normalize(iSunPos - pos);
-		vec3 color = max(0,dot(normal, pointToSun)) * vec3(0.8, 0.4, 0.3);
+
+		// material
+		float grassFactor = 1 - smoothstepd(normal.y, iGrassThreshold, iDirtThreshold).x;
+		// float grassFactor = normal.y < 0.98 ? 1 : 0;
+		vec3 matColor = grassFactor * iGrassColor
+			+ (1 - grassFactor) * iDirtColor;
+
+		vec3 color = max(0,dot(normal, pointToSun)) * matColor;
 			
 		// shadow ray
-		vec3 shadowPos = pos + vec3(0, 0.001, 0);
-		for (int j = 0; j < iShadowSteps; j++) 
+		float shadowStepSize = 1;
+		float minR = 1;
+		for (float t = 1; t < iShadowSteps * shadowStepSize; t += shadowStepSize) 
 		{
-			shadowPos += pointToSun * 0.01;
-			if (shadowPos.y < terraind(shadowPos.xz).x) 
-			{
-				color = vec3(0.4,0,0);
-				break;
-			}
+			vec3 shadowPos = pos + t * pointToSun;
+			float d = shadowPos.y - terraind(shadowPos.xz).x;
+			minR = min(minR, 2 * d / t);
 		}
+
+		float shadow = smoothstep(0.0, 1.0, minR);
+		color = shadow * color;
+
+		// fog
+		float distanceDecay = exp(-0.0002 * iFogStrength * distanceToTerrain);
+		color = distanceDecay * color + (1-distanceDecay) * vec3(0.5);
 
 		FragColor = vec4(color, 1.0);
 		return;

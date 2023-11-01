@@ -10,12 +10,12 @@ vec2 smoothstepd(in float x, in float a = 0.0, in float b = 1.0){
         return vec2(1, 0);
     }
     return vec2(
-         t * t * (3.0 - 2.0 * t),
-         6.0 * t * (1.0 - t) / (b - a)
-    );
-    return vec2(
         t*t*t*(t*(t*6.0-15.0)+10.0),
         30.0*t*t*(t*(t-2.0)+1.0)
+    );
+    return vec2(
+         t * t * (3.0 - 2.0 * t),
+         6.0 * t * (1.0 - t) / (b - a)
     );
 }
 

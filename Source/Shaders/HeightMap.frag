@@ -10,7 +10,7 @@ const mat2 roti = mat2( 0.80, -0.60,
 vec3 fbmd(in vec2 pos, in int num_layers,
     float shrink_h = 1.9, // shrink factor horizontally (x,z)
     float shrink_v_start = 0.5, // starting value for vertical (y) noise
-    float shrink_v = 0.53 // shrink factor vertically (y) (height)
+    float shrink_v = 0.5 // shrink factor vertically (y) (height)
 )
 {
     float v = shrink_v_start;
@@ -35,9 +35,9 @@ vec3 fbmd(in vec2 pos, in int num_layers,
 // return (height, normal)
 vec4 terraind(in vec2 pos){
     const float max_height = 1200;
-    const float horizontal_scale = 4000.0;
+    const float horizontal_scale = 3000.0;
 
-	vec3 result = fbmd(pos / horizontal_scale, 9);
+	vec3 result = fbmd(pos / horizontal_scale, 12);
 	result *= max_height;
 	float height = result.x + 600;
 	result.yz /= horizontal_scale;
