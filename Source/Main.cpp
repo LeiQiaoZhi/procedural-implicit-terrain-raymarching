@@ -14,8 +14,7 @@
 #include "VAO.h"
 #include "EBO.h"
 #include "CameraController.h"
-#include "DebugPanel.h"
-#include "CameraPanel.h"
+#include "UIApp.h"
 
 
 int main()
@@ -65,14 +64,8 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	// imgui
-	UI::init(window, "#version 330");
-	UI::CameraPanel cameraPanel(camera_controller);
-	UI::DebugPanel debugPanel(shader);
-
-	UI::PanelsList panels = {
-		&cameraPanel,
-		&debugPanel
-	};
+	UI::UIApp imgui_app(window, "#version 330");
+	imgui_app.add_panels(shader, camera_controller);
 
 	// render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -104,7 +97,7 @@ int main()
 
 		camera_controller.handle_inputs(window, width, height);
 
-		UI::show_panels(panels);
+		imgui_app.show_panels();
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
