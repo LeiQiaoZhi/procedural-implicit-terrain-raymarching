@@ -16,14 +16,9 @@ namespace UI {
 				std::make_shared<SliderPropI>("Max Steps", "iMaxSteps", 1, 1000, 500),
 				std::make_shared<SliderPropF>("Step Size", "iStepSize", 0.1f, 100.0f, 50.0f),
 				std::make_shared<SliderPropF>("Fog Strength", "iFogStrength", 0.0f, 1.0f, 0.1f),
-				std::make_shared<SliderPropF>("Grass Threshold", "iGrassThreshold", 0.0f, 1.0f, 0.9f),
-				std::make_shared<SliderPropF>("Dirt Threshold", "iDirtThreshold", 0.0f, 1.0f, 0.95f),
 			};
 		}
 	protected:
 		void gui() override;
-
-	public:
-		glm::vec3 grass_color_ = glm::vec3(0.0f, 1.0f, 0.0f);
 	};
 }

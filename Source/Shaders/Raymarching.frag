@@ -89,8 +89,7 @@ void main()
 		vec3 pointToSun = normalize(iSunPos - pos);
 
 		// material
-		float grassFactor = 1 - smoothstepd(normal.y, iGrassThreshold, iDirtThreshold).x;
-		// float grassFactor = normal.y < 0.98 ? 1 : 0;
+		float grassFactor =  smoothstepd(normal.y, iGrassThreshold, iDirtThreshold).x;
 		vec3 matColor = grassFactor * iGrassColor
 			+ (1 - grassFactor) * iDirtColor;
 

@@ -1,6 +1,8 @@
 #include "ValueNoise.frag"
 
-#define NUM_LAYER 3
+uniform float iHorizontalScale;
+uniform float iMaxHeight;
+uniform int iNumLayers;
 
 const mat2 rot = mat2(  0.80,  0.60,
                       -0.60,  0.80 );
@@ -34,13 +36,13 @@ vec3 fbmd(in vec2 pos, in int num_layers,
 
 // return (height, normal)
 vec4 terraind(in vec2 pos){
-    const float max_height = 1200;
-    const float horizontal_scale = 3000.0;
-
-	vec3 result = fbmd(pos / horizontal_scale, 12);
-	result *= max_height;
+	vec3 result = fbmd(
+        pos / iHorizontalScale, 
+        iNumLayers
+    );
+	result *= iMaxHeight;
 	float height = result.x + 600;
-	result.yz /= horizontal_scale;
+	result.yz /= iHorizontalScale;
 	vec3 normal = normalize(vec3(-result.y, 1.0, -result.z));
     return vec4(height, normal);
 }
