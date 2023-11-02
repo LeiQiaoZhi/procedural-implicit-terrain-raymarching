@@ -1,7 +1,9 @@
 #include "UIApp.h"
 
+#include "CameraPanel.h"
+#include "DebugPanel.h"
 
-void UI::init(GLFWwindow* _window, const char* _version)
+UI::UIApp::UIApp(GLFWwindow* _window, const char* _version)
 {
 	// ImGui setup
 	IMGUI_CHECKVERSION();
@@ -11,7 +13,25 @@ void UI::init(GLFWwindow* _window, const char* _version)
 	ImGui_ImplOpenGL3_Init(_version);
 }
 
-void UI::show_panels(const UI::PanelsList& panels)
+UI::UIApp::~UIApp()
+{
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+}
+
+void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_controller)
+{
+	panels_.clear();
+	panels_.push_back(
+		std::move(std::make_unique<CameraPanel>(_shader, _camera_controller))
+	);
+	panels_.push_back(
+		std::move(std::make_unique<DebugPanel>(_shader))
+	);
+}
+
+void UI::UIApp::show_panels()
 {
 	// frame setup
 	ImGui_ImplOpenGL3_NewFrame();
@@ -19,37 +39,17 @@ void UI::show_panels(const UI::PanelsList& panels)
 	ImGui::NewFrame();
 
 	// UI code
-	for (auto* panel : panels) {
+	for (auto& panel : panels_) {
 		panel->show();
 	}
 
 	// render frame
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
 }
 
-
-void UI::shutdown()
-{
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-}
-
-void UI::set_ui_scale(float _scale)
+void UI::UIApp::set_ui_scale(float _scale)
 {
 	ImGuiIO& io = ImGui::GetIO();
 	io.FontGlobalScale = _scale;
-}
-
-void UI::UIPanel::show()
-{
-	ImGui::PushID(panel_name_.c_str());
-	ImGui::Begin(panel_name_.c_str());
-
-	gui();
-	
-	ImGui::End();
-	ImGui::PopID();
 }
