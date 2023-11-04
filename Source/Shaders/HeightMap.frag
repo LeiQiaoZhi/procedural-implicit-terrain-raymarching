@@ -4,6 +4,9 @@ uniform float iHorizontalScale;
 uniform float iMaxHeight;
 uniform int iNumLayers;
 uniform vec2 iFilterRange;
+uniform float iHorizontalShrink;
+uniform float iVerticalShrink;
+uniform float iVerticalShrinkStart;
 
 const mat2 rot = mat2(  0.80,  0.60,
                       -0.60,  0.80 );
@@ -24,12 +27,11 @@ vec3 fbmd(in vec2 pos, in int num_layers,
 
     for(int i = 0; i < num_layers; i++)
     {
-        if (i >= iFilterRange.x && i <= iFilterRange.y) {
-            continue;
-		}   
         vec3 noise = v * noised(pos);
-        height += noise.x;
-        dxz += chain * noise.yz;
+        if (i < iFilterRange.x || i >= iFilterRange.y) {
+            height += noise.x;
+            dxz += chain * noise.yz;
+		}   
         v *= shrink_v;
         pos = shrink_h * rot * pos;
         chain = shrink_h * roti * chain;
@@ -42,7 +44,10 @@ vec3 fbmd(in vec2 pos, in int num_layers,
 vec4 terraind(in vec2 pos){
 	vec3 result = fbmd(
         pos / iHorizontalScale, 
-        iNumLayers
+        iNumLayers,
+        iHorizontalShrink,
+        iVerticalShrinkStart,
+        iVerticalShrink
     );
 	result *= iMaxHeight;
 	float height = result.x + 600;
