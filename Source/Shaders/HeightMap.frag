@@ -3,6 +3,7 @@
 uniform float iHorizontalScale;
 uniform float iMaxHeight;
 uniform int iNumLayers;
+uniform vec2 iFilterRange;
 
 const mat2 rot = mat2(  0.80,  0.60,
                       -0.60,  0.80 );
@@ -23,6 +24,9 @@ vec3 fbmd(in vec2 pos, in int num_layers,
 
     for(int i = 0; i < num_layers; i++)
     {
+        if (i >= iFilterRange.x && i <= iFilterRange.y) {
+            continue;
+		}   
         vec3 noise = v * noised(pos);
         height += noise.x;
         dxz += chain * noise.yz;

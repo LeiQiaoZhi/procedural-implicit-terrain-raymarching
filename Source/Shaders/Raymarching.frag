@@ -23,7 +23,7 @@ uniform int iShadowSteps;
 uniform float iFogStrength;
 
 // light parameters
-const vec3 iSunPos = vec3(200, 2000.0, 3000.0);
+uniform vec3 iSunPos = vec3(200, 2000.0, 3000.0);
 
 // material parameters
 uniform vec3 iGrassColor = vec3(0.2, 0.4, 0.1);

@@ -1,8 +1,9 @@
 #include "UIApp.h"
 
 #include "CameraPanel.h"
-#include "DebugPanel.h"
+#include "RaymarchPanel.h"
 #include "TerrainPanel.h"
+#include "LightPanel.h"
 
 UI::UIApp::UIApp(GLFWwindow* _window, const char* _version)
 {
@@ -28,10 +29,13 @@ void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_cont
 		std::move(std::make_unique<CameraPanel>(_shader, _camera_controller))
 	);
 	panels_.push_back(
-		std::move(std::make_unique<DebugPanel>(_shader))
+		std::move(std::make_unique<RaymarchPanel>(_shader))
 	);
 	panels_.push_back(
 		std::move(std::make_unique<TerrainPanel>(_shader))
+	);
+	panels_.push_back(
+		std::move(std::make_unique<LightPanel>(_shader))
 	);
 }
 

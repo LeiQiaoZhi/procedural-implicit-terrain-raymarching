@@ -19,8 +19,9 @@ public:
 
 	// getters
 	glm::vec3 get_position() { return position_; }
-	glm::vec3 get_forward() { return forward_; }
-	glm::vec3 get_up() { return up_; }
+	glm::vec3& get_position_ref() { return position_; }
+	glm::vec3 get_forward() { return glm::normalize(forward_); }
+	glm::vec3 get_up() { return glm::normalize(up_); }
 	glm::vec3 get_right() { return glm::normalize(glm::cross(forward_, up_)); }
 
 	// state changers

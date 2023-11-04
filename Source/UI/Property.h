@@ -12,6 +12,6 @@ namespace UI {
 	class Property {
 	public:
 		virtual bool gui() = 0;
-		virtual void set_uniform(const Shader& _shader) = 0;
+		virtual void take_effect(const Shader& _shader) = 0;
 	};;
 }

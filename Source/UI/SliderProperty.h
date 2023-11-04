@@ -20,7 +20,7 @@ namespace UI {
 		// float
 		bool gui();
 
-		void set_uniform(const Shader& _shader);
+		void take_effect(const Shader& _shader);
 
 		float get_value() const { return value_; }
 		void set_value(float _value) { value_ = _value; }
@@ -37,15 +37,15 @@ namespace UI {
 	inline bool SliderProperty<T>::gui() { return false; }
 
 	template<typename T>
-	inline void SliderProperty<T>::set_uniform(const Shader& _shader) {}
+	inline void SliderProperty<T>::take_effect(const Shader& _shader) {}
 
 	template<>
 	inline bool SliderProperty<float>::gui() {
-		return ImGui::SliderFloat(name_.c_str(), &value_, min_, max_, "%.3f", step_);
+		return ImGui::SliderFloat(name_.c_str(), &value_, min_, max_, "%.2f", step_);
 	}
 
 	template<>
-	inline void SliderProperty<float>::set_uniform(const Shader& _shader) {
+	inline void SliderProperty<float>::take_effect(const Shader& _shader) {
 		_shader.set_uniform_float(uniform_name_, value_);
 	}
 
@@ -55,7 +55,7 @@ namespace UI {
 	}
 
 	template<>
-	inline void SliderProperty<int>::set_uniform(const Shader& _shader) {
+	inline void SliderProperty<int>::take_effect(const Shader& _shader) {
 		_shader.set_uniform_int(uniform_name_, value_);
 	}
 

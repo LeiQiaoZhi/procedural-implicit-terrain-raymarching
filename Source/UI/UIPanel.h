@@ -21,13 +21,13 @@ namespace UI {
 
 			if (init_) {
 				for (auto& prop : properties_)
-					prop->set_uniform(shader_);
+					prop->take_effect(shader_);
 				init_ = false;
 			}
 
 			for (auto& prop : properties_) {
 				if (prop->gui())
-					prop->set_uniform(shader_);
+					prop->take_effect(shader_);
 			}
 
 			gui();

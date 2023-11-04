@@ -7,10 +7,10 @@
 
 namespace UI {
 
-	class DebugPanel : public UIPanel {
+	class RaymarchPanel : public UIPanel {
 	public:
-		DebugPanel(const Shader& _shader)
-			: UIPanel("Debug", _shader) {
+		RaymarchPanel(const Shader& _shader)
+			: UIPanel("Raymarch", _shader) {
 			properties_ = {
 				std::make_shared<SliderPropI>("Shadow Steps", "iShadowSteps", 1, 1000, 32),
 				std::make_shared<SliderPropI>("Max Steps", "iMaxSteps", 1, 1000, 500),

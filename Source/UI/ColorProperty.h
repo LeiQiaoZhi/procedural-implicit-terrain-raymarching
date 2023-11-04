@@ -25,7 +25,7 @@ namespace UI {
 			return ImGui::ColorEdit3(name_.c_str(), colors_);
 		}
 
-		void set_uniform(const Shader& _shader) {
+		void take_effect(const Shader& _shader) {
 			auto color = glm::vec3(colors_[0], colors_[1], colors_[2]);
 			_shader.set_uniform_vec3(uniform_name_, color);
 		}

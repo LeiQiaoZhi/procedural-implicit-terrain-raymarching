@@ -5,15 +5,22 @@
 
 class CameraController
 {
+
+	struct CameraControllerSettings
+	{
+		float move_speed = 1.0f;
+		float rotate_speed = 1.0f;
+		float zoom_speed = 100.0f; // between 0 and 1 TODO: update
+		bool invert_x = false;
+		bool invert_y = false;
+		bool invert_zoom = false;
+	};
+
+public:
+	CameraControllerSettings settings;
+
 private:
 	Camera* camera_;
-
-	// settings
-	float move_speed_ = 1.0f;
-	float rotate_speed_ = 1.0f;
-	float zoom_speed_ = 0.1f; // between 0 and 1 TODO: update
-	bool invert_x_ = true;
-	bool invert_y_ = true; // TODO: fix
 
 	// states
 	//glm::vec3 target_ = glm::vec3(0.0f);
@@ -35,8 +42,20 @@ public:
 
 	// queries
 	glm::vec3 get_position() { return camera_->get_position(); }
+	glm::vec3& get_position_ref() { return camera_->get_position_ref(); }
 	glm::vec3 get_target() { return camera_->get_position() + camera_->get_forward() * target_distance_; }
 	glm::vec3 get_forward() { return camera_->get_forward(); }
 	glm::vec3 get_up() { return camera_->get_up(); }
 	glm::vec3 get_right() { return camera_->get_right(); }
+
+	// setters
+	void set_direction(glm::vec3 _forward) {
+		_forward = glm::normalize(_forward);
+		auto ref_up = glm::vec3(0,(_forward.y < 0 ? 0.999 : -0.999),0);
+		auto right = glm::cross(_forward, ref_up);
+		auto up = glm::cross(right, _forward);
+		if (up.y < 0)
+			up = -up;
+		camera_->set_direction(_forward, up);
+	}
 };
