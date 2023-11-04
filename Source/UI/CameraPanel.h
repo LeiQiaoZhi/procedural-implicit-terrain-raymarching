@@ -2,8 +2,8 @@
 
 #include "UIApp.h"
 #include "UIUtils.h"
-#include "CameraController.h"
-#include "SliderProperty.h"
+#include "Camera/CameraController.h"
+#include "UI/Properties/SliderProperty.h"
 
 namespace UI {
 
@@ -12,7 +12,7 @@ namespace UI {
 		CameraPanel(const Shader& _shader, CameraController& _camera) 
 			: UIPanel("Camera", _shader), camera_(_camera) {
 			properties_ = {
-				std::make_shared<SliderPropF>("Focal Length", "iFocalLength", 0.1f, 10.0f, 1.5f)
+				std::make_shared<SliderF>("Focal Length", "iFocalLength", 0.1f, 10.0f, 1.5f)
 			};
 		}
 	protected:

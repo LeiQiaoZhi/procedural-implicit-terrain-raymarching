@@ -59,7 +59,7 @@ namespace UI {
 		_shader.set_uniform_int(uniform_name_, value_);
 	}
 
-	using SliderPropF = SliderProperty<float>;
-	using SliderPropI = SliderProperty<int>;
+	using SliderF = SliderProperty<float>;
+	using SliderI = SliderProperty<int>;
 
 }

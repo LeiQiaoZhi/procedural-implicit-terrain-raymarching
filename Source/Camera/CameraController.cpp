@@ -1,7 +1,7 @@
-#include "CameraController.h"
 #include <imgui.h>
 #include <iostream>
 
+#include "CameraController.h"
 
 void CameraController::handle_inputs(GLFWwindow* _window, const int _width, const int _height)
 {

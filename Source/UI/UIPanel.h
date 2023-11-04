@@ -6,7 +6,7 @@
 #include <string>
 #include <memory>
 
-#include "SliderProperty.h"
+#include "Properties/SliderProperty.h"
 
 namespace UI {
 

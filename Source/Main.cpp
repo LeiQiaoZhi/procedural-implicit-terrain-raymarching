@@ -13,8 +13,8 @@
 #include "ShaderClass.h"
 #include "VAO.h"
 #include "EBO.h"
-#include "CameraController.h"
-#include "UIApp.h"
+#include "Camera/CameraController.h"
+#include "UI/UIApp.h"
 
 
 int main()

@@ -4,9 +4,9 @@
 
 #include "UIApp.h"
 #include "ShaderClass.h"
-#include "SliderProperty.h"
-#include "ColorProperty.h"
-#include "Float3Property.h"
+#include "UI/Properties/SliderProperty.h"
+#include "UI/Properties/ColorProperty.h"
+#include "UI/Properties/Float3Property.h"
 
 namespace UI {
 

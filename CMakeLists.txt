@@ -33,6 +33,7 @@ set_source_files_properties(${GIT} ${SHADERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 target_include_directories(TerrainApp PRIVATE
     "${CMAKE_SOURCE_DIR}/Libraries/include"
     "${CMAKE_SOURCE_DIR}/imgui"   # Assuming imgui is in the same directory as CMakeLists.txt
+    "${CMAKE_SOURCE_DIR}/Source"
     # Add other include directories here if needed
 )
 # print out the include directories

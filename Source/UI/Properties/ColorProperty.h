@@ -5,8 +5,8 @@
 #include <imgui_impl_glfw.h>;
 #include <imgui_impl_opengl3.h>;
 
-#include "UIUtils.h"
-#include "Property.h"
+#include "UI/UIUtils.h"
+#include "UI/Properties/Property.h"
 #include "ShaderClass.h"
 
 namespace UI {

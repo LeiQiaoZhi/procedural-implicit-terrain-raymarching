@@ -8,7 +8,7 @@
 #include <memory>
 
 #include "UIPanel.h"
-#include "CameraController.h"
+#include "Camera/CameraController.h"
 #include "ShaderClass.h"
 
 namespace UI {
