@@ -19,9 +19,16 @@ vec2 smoothstepd(in float x, in float a = 0.0, in float b = 1.0){
     );
 }
 
+// range [0, 1]
 float hash(in vec2 p) {
     float h = dot(p, vec2(127.1, 311.7));
     return fract(sin(h) * 43758.5453);
+}
+
+// range [0, 1]
+vec2 hash2(in vec2 p){
+    p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+    return fract(sin(p) * 43758.5453123);
 }
 
 // return (Noise(p), dx, dz)

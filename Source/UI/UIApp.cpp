@@ -4,6 +4,7 @@
 #include "RaymarchPanel.h"
 #include "TerrainPanel.h"
 #include "LightPanel.h"
+#include "DomainRepPanel.h"
 
 UI::UIApp::UIApp(GLFWwindow* _window, const char* _version)
 {
@@ -36,6 +37,9 @@ void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_cont
 	);
 	panels_.push_back(
 		std::move(std::make_unique<LightPanel>(_shader))
+	);
+	panels_.push_back(
+		std::move(std::make_unique<DomainRepPanel>(_shader))
 	);
 }
 

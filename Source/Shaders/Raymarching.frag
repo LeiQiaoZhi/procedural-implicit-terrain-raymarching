@@ -20,6 +20,7 @@ uniform int iMaxSteps;
 uniform float iStepSize;
 
 uniform int iShadowSteps;
+uniform int iTreeSteps;
 uniform float iFogStrength;
 
 // light parameters
@@ -31,41 +32,55 @@ uniform float iGrassThreshold;
 uniform vec3 iDirtColor = vec3(0.8, 0.4, 0.3);
 uniform float iDirtThreshold;
 
-
 // returns the distance to the terrain 
 float raymarchTerrain(
 	in vec3 pos,
 	in vec3	ray,
 	in int maxSteps,
 	in float stepSize,
-	out bool hit
+	out float tTree // distance to intersection with tree
 ){
-	hit = false;
+	// TODO: use max terrain height and max tree height to determine max distance
+
+	tTree = -1; // no tree hit
 
 	vec3 origin = pos;
 	float clip = 0.0;
 	float lastHeight;
 	float lastY;
+	float treeMaxHeight = 1.0 * iTreeHeight + iTreeOffset; 
 
-	for (float t = clip; t < maxSteps * stepSize; t+=stepSize) 
+	for (float t = clip; t < maxSteps * stepSize; t += stepSize) 
 	{
 		pos = origin + t * ray;
 
 		float height = terraind(pos.xz).x;
+		float treeHeight = height + treeMaxHeight;
+
+		// check for tree intersection
+		if (tTree < 0 && pos.y < treeHeight)
+		{
+			// interpolation
+			tTree = t - stepSize * 
+				(treeHeight - pos.y) /
+				(lastY - lastHeight - treeMaxHeight + treeHeight - pos.y); 	
+			// tTree = t - 1 * stepSize;
+		}
+
+		// check for terrain intersection
 		if (pos.y < height) 
 		{
 			// interpolation
 			t -= stepSize * 
 				(height - pos.y) / (lastY - lastHeight + height - pos.y);
 
-			hit = true;
 			return t;
 		}
 
 		lastHeight = height;
 		lastY = pos.y;
 	}
-	return 0.0;
+	return -1;
 }
 
 void main() 
@@ -77,12 +92,37 @@ void main()
 	vec3 ray = normalize(pixelWorld - iCameraPos);
 
 	// raymarching
-	bool hit;
-	float distanceToTerrain = raymarchTerrain(iCameraPos, ray, iMaxSteps, iStepSize, hit);
+	float distanceToTree;
+	float distanceToTerrain = raymarchTerrain(iCameraPos, ray, iMaxSteps, iStepSize, distanceToTree);
 
-	if (hit)
+	int obj = 0; // 0: sky, 1: terrain, 2: trees 
+	float distanceToObj = -1;
+	if (distanceToTerrain > 0){
+		obj = 1;
+		distanceToObj = distanceToTerrain;
+	}
+	if (distanceToTree > 0){
+		// detailed raymarching of trees SDF
+		for (int i = 0; i < iTreeSteps; i++){
+			vec3 pos = iCameraPos + distanceToTree * ray;
+			float d = treeSDF(pos);
+			// occulusion by terrain
+			if (distanceToTree > distanceToTerrain && distanceToTerrain > 0){
+				break;
+			}
+			// hit
+			if (d < 0.001 * distanceToTree){
+				obj = 2;
+				distanceToObj = distanceToTree;
+				break;
+			}
+			distanceToTree += min(d,iDomainSize);
+		}
+	}
+
+	if (obj > 0)
 	{
-		vec3 pos = iCameraPos + distanceToTerrain * ray;
+		vec3 pos = iCameraPos + distanceToObj * ray;
 		vec4 heightd = terraind(pos.xz);
 		pos.y = heightd.x;
 		vec3 normal = normalize(heightd.yzw);
@@ -107,6 +147,10 @@ void main()
 
 		float shadow = smoothstep(0.0, 1.0, minR);
 		color = shadow * color;
+
+		if (obj == 2){
+			color = vec3(1.0,0,0);
+		}
 
 		// fog
 		float distanceDecay = exp(-0.0002 * iFogStrength * distanceToTerrain);
