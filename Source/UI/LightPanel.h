@@ -6,7 +6,7 @@
 #include "ShaderClass.h"
 #include "UI/Properties/SliderProperty.h"
 #include "UI/Properties/ColorProperty.h"
-#include "UI/Properties/Float3Property.h"
+#include "UI/Properties/VecProperty.h"
 
 namespace UI {
 
@@ -15,7 +15,7 @@ namespace UI {
 		LightPanel(const Shader& _shader)
 			: UIPanel("Light", _shader) {
 			properties_ = {
-				std::make_shared<Float3Property>("Sun Position", "iSunPos", 200, 3000, 2000)
+				std::make_shared<Float3>("Sun Position", "iSunPos", 200, 3000, 2000)
 			};
 		}
 	protected:

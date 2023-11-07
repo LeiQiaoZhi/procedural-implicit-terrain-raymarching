@@ -20,8 +20,11 @@ uniform int iMaxSteps;
 uniform float iStepSize;
 
 uniform int iShadowSteps;
-uniform int iTreeSteps;
 uniform float iFogStrength;
+
+// tree parameters
+uniform int iTreeSteps;
+uniform vec3 iTreeColor;
 
 // light parameters
 uniform vec3 iSunPos = vec3(200, 2000.0, 3000.0);
@@ -48,7 +51,7 @@ float raymarchTerrain(
 	float clip = 0.0;
 	float lastHeight;
 	float lastY;
-	float treeMaxHeight = 1.0 * iTreeHeight + iTreeOffset; 
+	float treeMaxHeight = 1.0 * iTreeHeight + iTreeOffset + 0.5 * iTreeSizeRandomness.y; 
 
 	for (float t = clip; t < maxSteps * stepSize; t += stepSize) 
 	{
@@ -81,6 +84,46 @@ float raymarchTerrain(
 		lastY = pos.y;
 	}
 	return -1;
+}
+
+float terrainShadow(in vec3 pos, in vec3 pointToSun){
+	// shadow ray
+	float shadowStepSize = 1;
+	float minR = 1;
+	for (float t = 1; t < iShadowSteps * shadowStepSize; t += shadowStepSize) 
+	{
+		vec3 shadowPos = pos + t * pointToSun;
+		float d = shadowPos.y - terraind(shadowPos.xz).x;
+		minR = min(minR, 2 * d / t);
+
+		if (minR < 0.001){
+			break;
+		}
+	}
+
+	float shadow = smoothstep(0.0, 1.0, minR);
+	return shadow;
+}
+
+
+float treeShadow(in vec3 pos, in vec3 pointToSun){
+	// shadow ray
+	float minR = 1;
+	float t = 5;
+	for (float i = 0; i < iShadowSteps; i++) 
+	{
+		vec3 shadowPos = pos + t * pointToSun;
+		float d = treeSDF(shadowPos);
+		minR = min(minR, 5 * d / t);
+		t += 5;
+
+		if (minR < 0.001 || t > 200){
+			break;
+		}
+	}
+
+	float shadow = smoothstep(0.0, 1.0, minR);
+	return shadow;
 }
 
 void main() 
@@ -125,35 +168,33 @@ void main()
 		vec3 pos = iCameraPos + distanceToObj * ray;
 		vec4 heightd = terraind(pos.xz);
 		pos.y = heightd.x;
-		vec3 normal = normalize(heightd.yzw);
 		vec3 pointToSun = normalize(iSunPos - pos);
+
+		// normal
+		vec3 normal = normalize(heightd.yzw);
+		if (obj == 2){
+			normal = normalize(treeNormal(pos));
+		}
 
 		// material
 		float grassFactor =  smoothstepd(normal.y, iGrassThreshold, iDirtThreshold).x;
 		vec3 matColor = grassFactor * iGrassColor
 			+ (1 - grassFactor) * iDirtColor;
 
+		if (obj == 2){
+			matColor = iTreeColor;
+		}
+
+		// diffuse lighting
 		vec3 color = max(0,dot(normal, pointToSun)) * matColor;
 			
-		// shadow ray
-		float shadowStepSize = 1;
-		float minR = 1;
-		for (float t = 1; t < iShadowSteps * shadowStepSize; t += shadowStepSize) 
-		{
-			vec3 shadowPos = pos + t * pointToSun;
-			float d = shadowPos.y - terraind(shadowPos.xz).x;
-			minR = min(minR, 2 * d / t);
-		}
-
-		float shadow = smoothstep(0.0, 1.0, minR);
-		color = shadow * color;
-
-		if (obj == 2){
-			color = vec3(1.0,0,0);
-		}
+		// shadow 
+		float terrainShadow = terrainShadow(pos, pointToSun);
+		float treeShadow = treeShadow(pos + vec3(0, 5, 0), pointToSun);
+		color = treeShadow  * color;
 
 		// fog
-		float distanceDecay = exp(-0.0002 * iFogStrength * distanceToTerrain);
+		float distanceDecay = exp(-0.0002 * iFogStrength * distanceToObj);
 		color = distanceDecay * color + (1-distanceDecay) * vec3(0.5);
 
 		FragColor = vec4(color, 1.0);

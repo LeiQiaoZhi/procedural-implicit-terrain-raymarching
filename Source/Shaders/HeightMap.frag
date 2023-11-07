@@ -14,6 +14,7 @@ uniform float iTreeRadius;
 uniform float iTreeHeight;
 uniform float iTreeOffset;
 uniform float iTreeRandomness;
+uniform vec2 iTreeSizeRandomness;
 
 const mat2 rot = mat2(  0.80,  0.60,
                       -0.60,  0.80 );
@@ -78,9 +79,16 @@ float treeSDF(in vec3 pos){
             center.xz += signs * vec2(i,j) * iDomainSize;
             vec2 randomOffset =  hash2(m.xz + signs * vec2(i,j)) - 0.5; // range [-0.5, 0.5]
             center += iTreeRandomness * vec3(randomOffset.x, 0.0, randomOffset.y) * iDomainSize;
-            center.y = terraind(center.xz).x;
+            vec4 heightd = terraind(center.xz);
+            center.y = heightd.x;
 
-            vec3 r = vec3(iTreeRadius, iTreeHeight, iTreeRadius);
+            vec3 normal = heightd.yzw;
+            if (normal.y < 0.5) continue; // don't place trees on steep slopes
+
+            vec2 randomSizeOffset =  iTreeSizeRandomness * (hash2(m.xz + signs * vec2(i,j) + vec2(20.01,10.29)) - 0.5); 
+            vec3 r = vec3(iTreeRadius + randomSizeOffset.x, 
+                        iTreeHeight + randomSizeOffset.y, 
+                        iTreeRadius + randomSizeOffset.x);
             // local position
             vec3 w = pos - center - vec3(0.0, iTreeOffset, 0.0);
 
@@ -90,4 +98,12 @@ float treeSDF(in vec3 pos){
 	}
 
     return d;
+}
+
+vec3 treeNormal(in vec3 pos){
+    vec2 e = vec2(1, -1) * 0.5773 * 0.005;
+    return normalize(e.xyy * treeSDF(pos + e.xyy) + 
+  					e.yyx * treeSDF(pos + e.yyx) +
+					e.yxy * treeSDF(pos + e.yxy) + 
+					e.xxx * treeSDF(pos + e.xxx));
 }
