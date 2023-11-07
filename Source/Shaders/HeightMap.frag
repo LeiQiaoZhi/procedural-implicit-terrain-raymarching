@@ -15,6 +15,7 @@ uniform float iTreeHeight;
 uniform float iTreeOffset;
 uniform float iTreeRandomness;
 uniform vec2 iTreeSizeRandomness;
+uniform float iTreeSteepnessThreshold;
 
 const mat2 rot = mat2(  0.80,  0.60,
                       -0.60,  0.80 );
@@ -83,7 +84,7 @@ float treeSDF(in vec3 pos){
             center.y = heightd.x;
 
             vec3 normal = heightd.yzw;
-            if (normal.y < 0.5) continue; // don't place trees on steep slopes
+            if (normal.y < iTreeSteepnessThreshold) continue; // don't place trees on steep slopes
 
             vec2 randomSizeOffset =  iTreeSizeRandomness * (hash2(m.xz + signs * vec2(i,j) + vec2(20.01,10.29)) - 0.5); 
             vec3 r = vec3(iTreeRadius + randomSizeOffset.x, 
