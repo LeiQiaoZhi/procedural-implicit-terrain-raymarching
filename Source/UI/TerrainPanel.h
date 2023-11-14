@@ -27,6 +27,8 @@ namespace UI {
 				std::make_shared<ColorProperty>("Grass Color", "iGrassColor", "#5A9123"),
 				std::make_shared<ColorProperty>("Dirt Color", "iDirtColor", "#BD724F"),
 			};
+
+			std::cout << properties_[0]->to_json().dump(4) << std::endl;
 		}
 	protected:
 		void gui() override;

@@ -4,6 +4,7 @@
 #include <imgui.h>;
 #include <imgui_impl_glfw.h>;
 #include <imgui_impl_opengl3.h>;
+#include <nlohmann/json.hpp>
 
 #include "Property.h"
 #include "ShaderClass.h"
@@ -18,10 +19,21 @@ namespace UI {
 			: name_(_name), uniform_name_(_uniform_name), min_(_min), max_(_max), 
 			value_min_(_value_min), value_max_(_value_max), step_(_step) {}
 
-		// float
-		bool gui();
+		bool gui() override;
 
-		void take_effect(const Shader& _shader);
+		void take_effect(const Shader& _shader) override;
+
+		nlohmann::json to_json() const override {
+			return {
+				{"value_min", value_min_},
+				{"value_max", value_max_},
+			};
+		}
+
+		void from_json(const nlohmann::json& _json) override {
+			value_min_ = _json["value_min"];
+			value_max_ = _json["value_max"];
+		}
 
 		float get_value() const { return value_; }
 		void set_value(float _value) { value_ = _value; }

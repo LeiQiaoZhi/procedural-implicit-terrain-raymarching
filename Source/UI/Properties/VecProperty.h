@@ -4,6 +4,7 @@
 #include <imgui.h>;
 #include <imgui_impl_glfw.h>;
 #include <imgui_impl_opengl3.h>;
+#include <nlohmann/json.hpp>
 
 #include "UI/UIUtils.h"
 #include "Property.h"
@@ -23,9 +24,24 @@ namespace UI {
 			values_[2] = z;
 		}
 
-		bool gui();
+		bool gui() override;
 
-		void take_effect(const Shader& _shader);
+		void take_effect(const Shader& _shader) override;
+
+		nlohmann::json to_json() const override {
+			return { {"values", {values_[0], values_[1], values_[2]}} };
+		}
+
+		void from_json(const nlohmann::json& _json) override {
+			if (_json["values"].is_array() && _json["values"].size() == 3) {
+				for (size_t i = 0; i < _json["values"].size(); ++i) {
+					values_[i] = _json["values"].at(i);
+				}
+			}
+			else {
+				std::cerr << "JSON does not contain a float array of size 3." << std::endl;
+			}
+		}
 
 	private:
 		std::string name_;
