@@ -46,6 +46,7 @@ target_include_directories(TerrainApp PRIVATE
     "${CMAKE_SOURCE_DIR}/Libraries/include"
     "${CMAKE_SOURCE_DIR}/imgui"   # Assuming imgui is in the same directory as CMakeLists.txt
     "${CMAKE_SOURCE_DIR}/Source"
+    "${CMAKE_SOURCE_DIR}/nlohmann"
     # Add other include directories here if needed
 )
 # print out the include directories
@@ -78,4 +79,3 @@ set(SHADER_PATH "${SRC_PATH}/Shaders")
 add_definitions(-DDIR_PATH="${DIR_PATH}")
 add_definitions(-DSRC_PATH="${SRC_PATH}")
 add_definitions(-DSHADER_PATH="${SHADER_PATH}")
-
