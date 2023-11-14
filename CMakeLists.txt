@@ -8,8 +8,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 ### Set up the source groups ###
 
 # Collect all .cpp and .h files in the current directory
-file(GLOB_RECURSE CPP_SOURCES "Source/*.cpp")
-file(GLOB_RECURSE HEADER_FILES "Source/*.h")
+file(GLOB_RECURSE ALL_CPP "Source/*.cpp")
+file(GLOB_RECURSE ALL_HEADERS "Source/*.h")
+file(GLOB CPP_SOURCES "Source/*.cpp")
+file(GLOB HEADER_FILES "Source/*.h")
+file(GLOB_RECURSE CAMERA_CPP "Source/Camera/*.cpp")
+file(GLOB_RECURSE CAMERA_HEADERS "Source/Camera/*.h")
+file(GLOB_RECURSE UI_CPP "Source/UI/*.cpp")
+file(GLOB_RECURSE UI_HEADERS "Source/UI/*.h")
 file(GLOB_RECURSE IMGUI "${CMAKE_SOURCE_DIR}/imgui/*")
 file(GLOB_RECURSE GLAD "Source/glad.c")
 file(GLOB_RECURSE GIT ".gitignore" "README.*")
@@ -18,12 +24,16 @@ file(GLOB_RECURSE SHADERS "Source/*.frag" "Source/*.vert")
 # Set up filters for organizing the source files in the Visual Studio solution
 source_group("Source Files" FILES ${CPP_SOURCES})
 source_group("Header Files" FILES ${HEADER_FILES})
+source_group("Source Files\\Camera" FILES ${CAMERA_CPP})
+source_group("Header Files\\Camera" FILES ${CAMERA_HEADERS})
+source_group("Source Files\\UI" FILES ${UI_CPP})
+source_group("Header Files\\UI" FILES ${UI_HEADERS})
 source_group("Shader Files" FILES ${SHADERS})
 source_group("External\\Imgui" FILES ${IMGUI})
 source_group("External\\Glad" FILES ${GLAD})
 source_group("External\\Git" FILES ${GIT})
 
-add_executable(TerrainApp ${CPP_SOURCES} ${HEADER_FILES} ${IMGUI} ${GLAD} ${GIT} ${SHADERS})
+add_executable(TerrainApp ${ALL_CPP} ${ALL_HEADERS} ${IMGUI} ${GLAD} ${GIT} ${SHADERS})
 # don't compile shaders and gitignore files
 set_source_files_properties(${GIT} ${SHADERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
