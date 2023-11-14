@@ -15,21 +15,34 @@ namespace UI {
 		UIPanel(std::string _name, const Shader& _shader, float _scale = 1.5f)
 			: panel_name_(_name), shader_(_shader), scale_(_scale) {}
 
-		void show() {
+		virtual void show() {
 			ImGui::PushID(panel_name_.c_str());
 			ImGui::Begin(panel_name_.c_str());
 
+			// save and load buttons
+			if (ImGui::Button("Save")) {
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Save As")) {
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Load")) {
+			}
+
+			// init properties
 			if (init_) {
 				for (auto& prop : properties_)
 					prop->take_effect(shader_);
 				init_ = false;
 			}
 
+			// show properties and handle effects
 			for (auto& prop : properties_) {
 				if (prop->gui())
 					prop->take_effect(shader_);
 			}
 
+			// user defined gui
 			gui();
 
 			ImGui::End();
