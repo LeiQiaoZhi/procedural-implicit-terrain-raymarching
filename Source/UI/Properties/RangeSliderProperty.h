@@ -4,7 +4,6 @@
 #include <imgui.h>;
 #include <imgui_impl_glfw.h>;
 #include <imgui_impl_opengl3.h>;
-#include <nlohmann/json.hpp>
 
 #include "Property.h"
 #include "ShaderClass.h"
@@ -16,7 +15,7 @@ namespace UI {
 		RangeSliderProperty(
 			const std::string& _name, const std::string& _uniform_name,
 			T _min, T _max, T _value_min, T _value_max, float _step = 0.01f)
-			: name_(_name), uniform_name_(_uniform_name), min_(_min), max_(_max), 
+			: Property(_name, _uniform_name), min_(_min), max_(_max), 
 			value_min_(_value_min), value_max_(_value_max), step_(_step) {}
 
 		bool gui() override;
@@ -38,8 +37,6 @@ namespace UI {
 		float get_value() const { return value_; }
 		void set_value(float _value) { value_ = _value; }
 	private:
-		std::string name_;
-		std::string uniform_name_;
 		T min_;
 		T max_;
 		T value_min_;

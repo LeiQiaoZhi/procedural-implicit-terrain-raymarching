@@ -24,3 +24,18 @@ void UI::CameraPanel::gui()
 	}
 
 }
+
+nlohmann::json UI::CameraPanel::to_json() const
+{
+	nlohmann::json j = UIPanel::to_json();
+	j["camera_settings"] = camera_.settings.to_json();
+	j["camara_transform"] = camera_.get_transform_json();
+	return j;
+}
+
+void UI::CameraPanel::from_json(const nlohmann::json& _json)
+{
+	UIPanel::from_json(_json);
+	camera_.settings.from_json(_json["camera_settings"]);
+	camera_.set_transform_json(_json["camara_transform"]);
+}

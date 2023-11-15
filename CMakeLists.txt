@@ -72,10 +72,13 @@ target_link_libraries(TerrainApp PRIVATE
 
 # Assuming CMAKE_SOURCE_DIR points to your project's root
 set(DIR_PATH "${CMAKE_SOURCE_DIR}")
+set(CONFIG_PATH "${DIR_PATH}/Configs")
 set(SRC_PATH "${DIR_PATH}/Source")
 set(SHADER_PATH "${SRC_PATH}/Shaders")
 
 # Add these paths as compile definitions
 add_definitions(-DDIR_PATH="${DIR_PATH}")
+add_definitions(-DCONFIG_PATH="${CONFIG_PATH}")
 add_definitions(-DSRC_PATH="${SRC_PATH}")
 add_definitions(-DSHADER_PATH="${SHADER_PATH}")
+

@@ -205,8 +205,8 @@ void main()
 		color *= terrainShadow;
 
 		if (obj == 2){
-			float treeShadow = treeShadow(pos + vec3(0, 5, 0), pointToSun);
-			color *= treeShadow;
+			// float treeShadow = treeShadow(pos + vec3(0, 5, 0), pointToSun);
+			color = matColor;
 		}
 
 		// fog

@@ -4,7 +4,6 @@
 #include <imgui.h>;
 #include <imgui_impl_glfw.h>;
 #include <imgui_impl_opengl3.h>;
-#include <nlohmann/json.hpp>
 
 #include "UI/UIUtils.h"
 #include "Property.h"
@@ -18,7 +17,7 @@ namespace UI {
 		VecProperty(
 			const std::string& _name, const std::string& _uniform_name,
 			T x = 0, T y = 0, T z = 0
-		) : name_(_name), uniform_name_(_uniform_name) {
+		) : Property(_name, _uniform_name) {
 			values_[0] = x;
 			values_[1] = y;
 			values_[2] = z;
@@ -44,8 +43,6 @@ namespace UI {
 		}
 
 	private:
-		std::string name_;
-		std::string uniform_name_;
 		T values_[3];
 	};;
 

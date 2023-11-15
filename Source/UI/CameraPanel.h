@@ -17,6 +17,8 @@ namespace UI {
 		}
 	protected:
 		void gui() override;
+		nlohmann::json to_json() const override;
+		void from_json(const nlohmann::json& _json) override;
 
 	private:
 		CameraController& camera_;

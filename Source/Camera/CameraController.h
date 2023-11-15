@@ -1,7 +1,10 @@
 #pragma once
 #include <glad/glad.h>	
 #include <GLFW/glfw3.h>
+#include <nlohmann/json.hpp>
+
 #include "Camera.h"
+#include "JsonUtils.h"
 
 class CameraController
 {
@@ -14,6 +17,26 @@ class CameraController
 		bool invert_x = false;
 		bool invert_y = false;
 		bool invert_zoom = false;
+
+		nlohmann::json to_json() {
+			return {
+				{"move_speed", move_speed},
+				{"rotate_speed", rotate_speed},
+				{"zoom_speed", zoom_speed},
+				{"invert_x", invert_x},
+				{"invert_y", invert_y},
+				{"invert_zoom", invert_zoom}
+			};
+		}
+
+		void from_json(const nlohmann::json& _json) {
+			move_speed = _json["move_speed"];
+			rotate_speed = _json["rotate_speed"];
+			zoom_speed = _json["zoom_speed"];
+			invert_x = _json["invert_x"];
+			invert_y = _json["invert_y"];
+			invert_zoom = _json["invert_zoom"];
+		}
 	};
 
 public:
@@ -47,15 +70,30 @@ public:
 	glm::vec3 get_forward() { return camera_->get_forward(); }
 	glm::vec3 get_up() { return camera_->get_up(); }
 	glm::vec3 get_right() { return camera_->get_right(); }
+	nlohmann::json get_transform_json() {
+		return { {"position", JsonUtils::vec3_to_json_array(get_position())},
+				 {"forward", JsonUtils::vec3_to_json_array(get_forward())},
+				 {"up", JsonUtils::vec3_to_json_array(get_up())},
+				 {"right", JsonUtils::vec3_to_json_array(get_right())} 
+		};
+	}
 
 	// setters
 	void set_direction(glm::vec3 _forward) {
 		_forward = glm::normalize(_forward);
-		auto ref_up = glm::vec3(0,(_forward.y < 0 ? 0.999 : -0.999),0);
+		auto ref_up = glm::vec3(0, (_forward.y < 0 ? 0.999 : -0.999), 0);
 		auto right = glm::cross(_forward, ref_up);
 		auto up = glm::cross(right, _forward);
 		if (up.y < 0)
 			up = -up;
 		camera_->set_direction(_forward, up);
+	}
+	void set_transform_json(const nlohmann::json& _json) {
+		auto position = JsonUtils::json_array_to_vec3(_json["position"]);
+		auto forward = JsonUtils::json_array_to_vec3(_json["forward"]);
+		auto up = JsonUtils::json_array_to_vec3(_json["up"]);
+		auto right = JsonUtils::json_array_to_vec3(_json["right"]);
+		camera_->set_position(position);
+		camera_->set_direction(forward, up);
 	}
 };

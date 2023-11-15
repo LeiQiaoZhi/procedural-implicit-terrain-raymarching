@@ -7,6 +7,7 @@
 #include "DomainRepPanel.h"
 #include "SkyPanel.h"
 #include "MenuBarPanel.h"
+#include "JsonUtils.h"
 
 UI::UIApp::UIApp(GLFWwindow* _window, const char* _version)
 {
@@ -29,7 +30,7 @@ void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_cont
 {
 	panels_.clear();
 	panels_.push_back(
-		std::move(std::make_unique<MenuBarPanel>(_shader))
+		std::move(std::make_unique<MenuBarPanel>(_shader, this))
 	);
 	panels_.push_back(
 		std::move(std::make_unique<CameraPanel>(_shader, _camera_controller))
@@ -49,6 +50,10 @@ void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_cont
 	panels_.push_back(
 		std::move(std::make_unique<SkyPanel>(_shader))
 	);
+
+	// load default values
+	auto default_json = JsonUtils::json_from_default();
+	from_json(default_json);
 }
 
 void UI::UIApp::show_panels()
@@ -57,6 +62,7 @@ void UI::UIApp::show_panels()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+
 
 	// UI code
 	for (auto& panel : panels_) {
@@ -72,4 +78,20 @@ void UI::UIApp::set_ui_scale(float _scale)
 {
 	ImGuiIO& io = ImGui::GetIO();
 	io.FontGlobalScale = _scale;
+}
+
+nlohmann::json UI::UIApp::to_json() const
+{
+	nlohmann::json j;
+	for (auto& panel : panels_) {
+		j[panel->get_name()+" Panel"] = panel->to_json();
+	}
+	return j;
+}
+
+void UI::UIApp::from_json(const nlohmann::json& _json)
+{
+	for (auto& panel : panels_) {
+		panel->from_json(_json[panel->get_name()+" Panel"]);
+	}
 }

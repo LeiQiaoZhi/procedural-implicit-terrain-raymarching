@@ -7,7 +7,7 @@
 #include <nlohmann/json.hpp>
 
 #include "UI/UIUtils.h"
-#include "UI/Properties/Property.h"
+#include "Property.h"
 #include "ShaderClass.h"
 
 namespace UI {
@@ -17,7 +17,7 @@ namespace UI {
 		BoolProperty(
 			const std::string& _name, const std::string& _uniform_name,
 			bool _value
-		) : name_(_name), uniform_name_(_uniform_name), value_(_value) {}
+		) : Property(_name, _uniform_name), value_(_value) {}
 
 		// float
 		bool gui() override {
@@ -39,8 +39,6 @@ namespace UI {
 		}
 
 	private:
-		std::string name_;
-		std::string uniform_name_;
 		bool value_;
 	};;
 }

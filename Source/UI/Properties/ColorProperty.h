@@ -4,10 +4,9 @@
 #include <imgui.h>;
 #include <imgui_impl_glfw.h>;
 #include <imgui_impl_opengl3.h>;
-#include <nlohmann/json.hpp>
 
 #include "UI/UIUtils.h"
-#include "UI/Properties/Property.h"
+#include "Property.h"
 #include "ShaderClass.h"
 
 namespace UI {
@@ -17,7 +16,7 @@ namespace UI {
 		ColorProperty(
 			const std::string& _name, const std::string& _uniform_name,
 			const std::string& _hex
-		) : name_(_name), uniform_name_(_uniform_name) {
+		) : Property(_name, _uniform_name) {
 			hex_to_floats(_hex, colors_);
 		}
 
@@ -49,8 +48,6 @@ namespace UI {
 		}
 
 	private:
-		std::string name_;
-		std::string uniform_name_;
 		float colors_[3];
 	};;
 }

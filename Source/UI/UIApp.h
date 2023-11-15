@@ -25,6 +25,9 @@ namespace UI {
 
 		void set_ui_scale(float _scale);
 
+		nlohmann::json to_json() const;
+		void from_json(const nlohmann::json& _json);
+
 	private:
 		PanelsList panels_;
 	};

@@ -12,10 +12,14 @@ namespace UI {
 
 	class MenuBarPanel : public UIPanel {
 	public:
-		MenuBarPanel(const Shader& _shader)
-			: UIPanel("Menu Bar", _shader) {}
+		MenuBarPanel(const Shader& _shader, UIApp* _parent_app)
+			: UIPanel("Menu Bar", _shader), parent_app(_parent_app) {}
+
 	protected:
 		void show() override;
 		void gui() override;
+
+	private:
+		UIApp* parent_app;
 	};
 }
