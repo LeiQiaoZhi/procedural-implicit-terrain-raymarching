@@ -3,7 +3,8 @@
 void UI::CameraPanel::gui()
 {
 	// camera settings
-	ImGui::SliderFloat("Movement Speed", &camera_.settings.move_speed, 0.1f, 10.0f);
+	ImGui::SliderFloat("Movement Speed", &camera_.settings.move_speed, 0.1f, 1000.0f);
+	ImGui::SliderFloat("Keyboard Speed", &camera_.settings.keyboard_speed, 0.1f, 1000.0f);
 	ImGui::SliderFloat("Rotate Speed", &camera_.settings.rotate_speed, 0.1f, 10.0f);
 	ImGui::SliderFloat("Zoom Speed", &camera_.settings.zoom_speed, 0.1f, 1000.0f);
 	ImGui::Checkbox("Invert X", &camera_.settings.invert_x);

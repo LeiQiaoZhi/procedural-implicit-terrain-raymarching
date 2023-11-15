@@ -26,30 +26,57 @@ void CameraController::handle_inputs(GLFWwindow* _window, const int _width, cons
 		return;
 	}
 
+	// calculate delta time
+	float current_frame_time = glfwGetTime();
+	float delta_time = 100 * (current_frame_time - last_frame_time_);
+
 	float min_dimension = std::min(_width, _height);
 	float dx = (settings.invert_x ? -1 : 1) * (last_x_ - x_pos) / min_dimension;
 	float dy = (settings.invert_y ? -1 : 1) * (last_y_ - y_pos) / min_dimension;
 
-	if (dx == 0 && dy == 0)
-		return;
+	if (dx != 0 || dy != 0) {
+		// Handles mouse inputs
+		if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+			orbit(dx * delta_time, dy * delta_time);
+		else if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+			pan(dx * delta_time, dy * delta_time);
+		else if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE
+			|| glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_RELEASE)
+			first_mouse_ = true;
+	}
 
-	// Handles mouse inputs
-	if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-		orbit(dx, dy);
-	else if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS)
-		pan(dx, dy);
-	else if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE
-		|| glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_RELEASE)
-		first_mouse_ = true;
+	// Handles keyboard inputs
+	glm::vec2 input_direction{ 0,0 };
+	int vertical_input = 0;
+	if (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS)
+		input_direction.y += 1;
+	if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS)
+		input_direction.y -= 1;
+	if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS)
+		input_direction.x -= 1;
+	if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
+		input_direction.x += 1;
+	if (glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS)
+		vertical_input += 1;
+	if (glfwGetKey(_window, GLFW_KEY_Q) == GLFW_PRESS)
+		vertical_input -= 1;
+
+	if (input_direction.x != 0 || input_direction.y != 0)
+		camera_->move_foward_right(
+			input_direction.y * settings.keyboard_speed * delta_time, 
+			input_direction.x * settings.keyboard_speed * delta_time);
+	if (vertical_input != 0)
+		camera_->move_along_y(vertical_input * settings.keyboard_speed * delta_time);
 
 	last_x_ = x_pos;
 	last_y_ = y_pos;
+
+	last_frame_time_ = current_frame_time;
 }
 
 void CameraController::pan(float _dx, float _dy)
 {
-	//std::cout << "pan x:" << _dx << " y:" << _dy << std::endl;
-	camera_->move(_dx * settings.move_speed, _dy * settings.move_speed);
+	camera_->move_right_up(-_dx * settings.move_speed, _dy * settings.move_speed);
 }
 
 void CameraController::scroll_callback(GLFWwindow* _window, double _x_offset, double _y_offset)
@@ -79,7 +106,7 @@ void CameraController::orbit(float _angle_x, float _angle_y)
 	glm::vec4 new_forward = rot_x * rot_y * glm::vec4(camera_->get_forward(), 1.0f);
 	glm::vec4 new_up = rot_x * rot_y * glm::vec4(camera_->get_up(), 1.0f);
 	camera_->set_direction(glm::vec3(new_forward), glm::vec3(new_up));
-	
+
 	// update camera position
 	auto new_position = get_target() - target_distance_ * camera_->get_forward();
 	camera_->set_position(new_position);

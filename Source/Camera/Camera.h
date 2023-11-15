@@ -25,7 +25,9 @@ public:
 	glm::vec3 get_right() { return glm::normalize(glm::cross(forward_, up_)); }
 
 	// state changers
-	void move(float _d_right, float _d_up);
+	void move_along_y(float _d_up);
+	void move_right_up(float _d_right, float _d_up);
+	void move_foward_right(float _d_forward, float _d_right);
 	void set_direction(glm::vec3 _forward, glm::vec3 _up) { forward_ = _forward; up_ = _up; }
 	void set_position(glm::vec3 _position) { position_ = _position; }
 

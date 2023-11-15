@@ -11,9 +11,10 @@ class CameraController
 
 	struct CameraControllerSettings
 	{
-		float move_speed = 1.0f;
+		float move_speed = 100.0f;
+		float keyboard_speed = 20.0f;
 		float rotate_speed = 1.0f;
-		float zoom_speed = 100.0f; // between 0 and 1 TODO: update
+		float zoom_speed = 100.0f; 
 		bool invert_x = false;
 		bool invert_y = false;
 		bool invert_zoom = false;
@@ -21,6 +22,7 @@ class CameraController
 		nlohmann::json to_json() {
 			return {
 				{"move_speed", move_speed},
+				{"keyboard_speed", keyboard_speed},
 				{"rotate_speed", rotate_speed},
 				{"zoom_speed", zoom_speed},
 				{"invert_x", invert_x},
@@ -30,12 +32,13 @@ class CameraController
 		}
 
 		void from_json(const nlohmann::json& _json) {
-			move_speed = _json["move_speed"];
-			rotate_speed = _json["rotate_speed"];
-			zoom_speed = _json["zoom_speed"];
-			invert_x = _json["invert_x"];
-			invert_y = _json["invert_y"];
-			invert_zoom = _json["invert_zoom"];
+			move_speed = _json.value("move_speed", move_speed);
+			keyboard_speed = _json.value("keyboard_speed", keyboard_speed);
+			rotate_speed = _json.value("rotate_speed", rotate_speed);
+			zoom_speed = _json.value("zoom_speed", zoom_speed);
+			invert_x = _json.value("invert_x", invert_x);
+			invert_y = _json.value("invert_y", invert_y);
+			invert_zoom = _json.value("invert_zoom", invert_zoom);
 		}
 	};
 
@@ -51,6 +54,7 @@ private:
 	bool first_mouse_ = true;
 	double last_x_ = 0;
 	double last_y_ = 0;
+	float last_frame_time_ = 0;
 
 public:
 	CameraController(Camera* _camera) : camera_(_camera) {}
@@ -74,7 +78,7 @@ public:
 		return { {"position", JsonUtils::vec3_to_json_array(get_position())},
 				 {"forward", JsonUtils::vec3_to_json_array(get_forward())},
 				 {"up", JsonUtils::vec3_to_json_array(get_up())},
-				 {"right", JsonUtils::vec3_to_json_array(get_right())} 
+				 {"right", JsonUtils::vec3_to_json_array(get_right())}
 		};
 	}
 
