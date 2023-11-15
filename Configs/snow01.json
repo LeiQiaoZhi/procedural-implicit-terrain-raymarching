@@ -1,0 +1,190 @@
+{
+    "Camera Panel": {
+        "Focal Length": {
+            "value": 1.9600000381469727
+        },
+        "camara_transform": {
+            "forward": [
+                0.41481664776802063,
+                0.0539737306535244,
+                -0.908302903175354
+            ],
+            "position": [
+                2278.591796875,
+                286.3916931152344,
+                2854.585205078125
+            ],
+            "right": [
+                0.9096287488937378,
+                -2.5890767574310303e-07,
+                0.41542214155197144
+            ],
+            "up": [
+                -0.02242172509431839,
+                0.9985424280166626,
+                0.04909633472561836
+            ]
+        },
+        "camera_settings": {
+            "invert_x": false,
+            "invert_y": false,
+            "invert_zoom": false,
+            "move_speed": 1.0,
+            "rotate_speed": 1.0,
+            "zoom_speed": 100.0
+        }
+    },
+    "Light Panel": {
+        "Sun Position": {
+            "values": [
+                -2000.0,
+                3000.0,
+                -1000.0
+            ]
+        }
+    },
+    "Menu Bar Panel": null,
+    "Raymarch Panel": {
+        "Fog Color": {
+            "colors": [
+                0.456747442483902,
+                0.4695705771446228,
+                0.529411792755127
+            ]
+        },
+        "Fog Strength": {
+            "value": 1.100000023841858
+        },
+        "Max Steps": {
+            "value": 861
+        },
+        "Shadow Steps": {
+            "value": 1000
+        },
+        "Step Size": {
+            "value": 58.709999084472656
+        }
+    },
+    "Sky Panel": {
+        "Color Bottom": {
+            "colors": [
+                0.7745097875595093,
+                1.0,
+                0.9602076411247253
+            ]
+        },
+        "Color Top": {
+            "colors": [
+                0.03827853128314018,
+                0.33001652359962463,
+                0.8676470518112183
+            ]
+        },
+        "Fog Color": {
+            "colors": [
+                0.970588207244873,
+                0.8804701566696167,
+                0.8373702168464661
+            ]
+        },
+        "Fog Strength": {
+            "value": 0.6700000166893005
+        },
+        "Height": {
+            "value": 19166.669921875
+        },
+        "Lower Threshold": {
+            "value": -0.07999999821186066
+        },
+        "Scale": {
+            "value": 15087.5
+        },
+        "Upper Threshold": {
+            "value": 1.0
+        }
+    },
+    "Terrain Panel": {
+        "Band Pass (Layers to Filter Out)": {
+            "value_max": 4,
+            "value_min": 3
+        },
+        "Dirt Color": {
+            "colors": [
+                0.36274510622024536,
+                0.26454204320907593,
+                0.21871395409107208
+            ]
+        },
+        "Dirt Threshold": {
+            "value": 0.7599999904632568
+        },
+        "Grass Color": {
+            "colors": [
+                0.9681372046470642,
+                1.0,
+                0.936274528503418
+            ]
+        },
+        "Grass Threshold": {
+            "value": 0.3400000035762787
+        },
+        "Horizontal Scale": {
+            "value": 3000.0
+        },
+        "Horizontal Shirnk": {
+            "value": 1.8600000143051147
+        },
+        "Layers": {
+            "value": 9
+        },
+        "Max Height": {
+            "value": 3356.159912109375
+        },
+        "Starting Vertical Shrink": {
+            "value": 0.5
+        },
+        "Vertical Shrink": {
+            "value": 0.4399999976158142
+        }
+    },
+    "Tree Panel": {
+        "Color": {
+            "colors": [
+                0.2980392277240753,
+                0.6980392336845398,
+                0.1764705926179886
+            ]
+        },
+        "Domain Size": {
+            "value": 25.0
+        },
+        "Enable": {
+            "value": false
+        },
+        "Height": {
+            "value": 20.0
+        },
+        "Offset": {
+            "value": 0.0
+        },
+        "Position Randomness": {
+            "value": 0.800000011920929
+        },
+        "Radius": {
+            "value": 5.0
+        },
+        "Size Randomness": {
+            "values": [
+                4.0,
+                8.0,
+                0.0
+            ]
+        },
+        "Steepness Threshold": {
+            "value": 0.5
+        },
+        "Steps": {
+            "value": 64
+        }
+    }
+}
