@@ -1,25 +1,25 @@
 #include "UIPanel.h"
 
-void UI::UIPanel::show()
+UI::WindowInfo UI::UIPanel::show()
 {
 	ImGui::PushID(panel_name_.c_str());
 	ImGui::Begin(panel_name_.c_str());
 
 	// save and load buttons
 	if (ImGui::Button("Save")) {
-		auto default_json = JsonUtils::json_from_default();
+		auto default_json = JsonUtils::json_from_default_config();
 		default_json[panel_name_ + " Panel"] = to_json();
-		JsonUtils::json_to_default(default_json);
+		JsonUtils::json_to_default_config(default_json);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Reset")) {
-		auto default_json = JsonUtils::json_from_default();
+		auto default_json = JsonUtils::json_from_default_config();
 		from_json(default_json[panel_name_ + " Panel"]);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Save As")) {
 		auto path = UI::win_file_select();
-		auto default_json = JsonUtils::json_from_default();
+		auto default_json = JsonUtils::json_from_default_config();
 		default_json[panel_name_ + " Panel"] = to_json();
 		if (!path.empty())
 			JsonUtils::json_to_file(default_json, path);
@@ -49,8 +49,14 @@ void UI::UIPanel::show()
 	// user defined gui
 	gui();
 
+	WindowInfo info;
+	info.pos = ImGui::GetWindowPos();
+	info.size = ImGui::GetWindowSize();
+
 	ImGui::End();
 	ImGui::PopID();
+
+	return info;
 }
 
 nlohmann::json UI::UIPanel::to_json() const

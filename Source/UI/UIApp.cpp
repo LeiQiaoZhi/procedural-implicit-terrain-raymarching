@@ -30,30 +30,33 @@ void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_cont
 {
 	panels_.clear();
 	panels_.push_back(
-		std::move(std::make_unique<MenuBarPanel>(_shader, this))
+		std::move(std::make_shared<MenuBarPanel>(_shader, this))
 	);
 	panels_.push_back(
-		std::move(std::make_unique<CameraPanel>(_shader, _camera_controller))
+		std::move(std::make_shared<CameraPanel>(_shader, _camera_controller))
 	);
 	panels_.push_back(
-		std::move(std::make_unique<RaymarchPanel>(_shader))
+		std::move(std::make_shared<RaymarchPanel>(_shader))
 	);
 	panels_.push_back(
-		std::move(std::make_unique<TerrainPanel>(_shader))
+		std::move(std::make_shared<TerrainPanel>(_shader))
 	);
 	panels_.push_back(
-		std::move(std::make_unique<LightPanel>(_shader))
+		std::move(std::make_shared<LightPanel>(_shader))
 	);
 	panels_.push_back(
-		std::move(std::make_unique<DomainRepPanel>(_shader))
+		std::move(std::make_shared<DomainRepPanel>(_shader))
 	);
 	panels_.push_back(
-		std::move(std::make_unique<SkyPanel>(_shader))
+		std::move(std::make_shared<SkyPanel>(_shader))
 	);
 
 	// load default values
-	auto default_json = JsonUtils::json_from_default();
+	auto default_json = JsonUtils::json_from_default_config();
 	from_json(default_json);
+	// load default window layout
+	auto default_layout = JsonUtils::json_from_default_layout();
+	set_layout(default_layout);
 }
 
 void UI::UIApp::show_panels()
@@ -63,11 +66,22 @@ void UI::UIApp::show_panels()
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 
-
 	// UI code
+	std::vector<WindowInfo> window_infos;
 	for (auto& panel : panels_) {
-		panel->show();
+		// set window size and position
+		if (init_window_transforms_) {
+			auto& transform = window_transforms_to_set_[panel->get_name() + " Panel"];
+			ImGui::SetNextWindowSize(JsonUtils::json_array_to_imvec2(transform["size"]));
+			ImGui::SetNextWindowPos(JsonUtils::json_array_to_imvec2(transform["pos"]));
+		}
+		// show window
+		window_infos.push_back(panel->show());
 	}
+	window_infos_ = window_infos;
+
+	if (init_window_transforms_) 
+		init_window_transforms_ = false;
 
 	// render frame
 	ImGui::Render();
@@ -78,6 +92,12 @@ void UI::UIApp::set_ui_scale(float _scale)
 {
 	ImGuiIO& io = ImGui::GetIO();
 	io.FontGlobalScale = _scale;
+}
+
+void UI::UIApp::set_layout(const nlohmann::json& _json)
+{
+	window_transforms_to_set_ = _json;
+	init_window_transforms_ = true;
 }
 
 nlohmann::json UI::UIApp::to_json() const

@@ -2,9 +2,11 @@
 #include <nlohmann/json.hpp>
 #include <glm/glm.hpp>
 #include <fstream>
+#include <imgui.h>
 
 namespace JsonUtils {
-	constexpr char* Default_Filename = "//default.json";
+	constexpr char* Default_Config_Name = "//default.json";
+	constexpr char* Default_Layout_Name = "//Layouts//layout.json";
 
 	inline nlohmann::json vec3_to_json_array(glm::vec3 _vec) {
 		return nlohmann::json::array({ _vec.x, _vec.y, _vec.z });
@@ -12,6 +14,14 @@ namespace JsonUtils {
 
 	inline glm::vec3 json_array_to_vec3(nlohmann::json _json) {
 		return glm::vec3(_json[0], _json[1], _json[2]);
+	}
+
+	inline nlohmann::json imvec2_to_json_array(ImVec2 _vec) {
+		return nlohmann::json::array({ _vec.x, _vec.y });
+	}
+
+	inline ImVec2 json_array_to_imvec2(nlohmann::json _json) {
+		return ImVec2(_json[0], _json[1]);
 	}
 
 	inline void json_to_file(const nlohmann::json& _json, const std::string& _path) {
@@ -44,12 +54,20 @@ namespace JsonUtils {
 		return j;
 	}
 
-	inline void json_to_default(const nlohmann::json& _json) {
-		json_to_file(_json, CONFIG_PATH + std::string(Default_Filename));
+	inline void json_to_default_config(const nlohmann::json& _json) {
+		json_to_file(_json, CONFIG_PATH + std::string(Default_Config_Name));
 	}
 
-	inline nlohmann::json json_from_default() {
-		return json_from_file(CONFIG_PATH + std::string(Default_Filename));
+	inline nlohmann::json json_from_default_config() {
+		return json_from_file(CONFIG_PATH + std::string(Default_Config_Name));
+	}
+
+	inline void json_to_default_layout(const nlohmann::json& _json) {
+		json_to_file(_json, CONFIG_PATH + std::string(Default_Layout_Name));
+	}
+
+	inline nlohmann::json json_from_default_layout() {
+		return json_from_file(CONFIG_PATH + std::string(Default_Layout_Name));
 	}
 
 }

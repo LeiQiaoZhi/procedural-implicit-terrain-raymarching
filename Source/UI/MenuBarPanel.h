@@ -16,7 +16,7 @@ namespace UI {
 			: UIPanel("Menu Bar", _shader), parent_app(_parent_app) {}
 
 	protected:
-		void show() override;
+		WindowInfo show() override;
 		void gui() override;
 
 	private:
