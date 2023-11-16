@@ -27,6 +27,10 @@ uniform vec3 iFogColor;
 uniform bool iTreeEnabled;
 uniform int iTreeSteps;
 uniform vec3 iTreeColor;
+uniform int iTreeShadowSteps;
+uniform float iTreeShadowThreshold;
+uniform float iTreeShadowLower;
+uniform float iTreeNormalTerrainProportion;
 
 // light parameters
 uniform vec3 iSunPos = vec3(200, 2000.0, 3000.0);
@@ -120,35 +124,38 @@ float terrainShadow(in vec3 pos, in vec3 pointToSun){
 
 float treeShadow(in vec3 pos, in vec3 pointToSun){
 	// shadow ray
-	float minR = 1;
-	float t = 5;
-	for (float i = 0; i < iShadowSteps; i++) 
+	float accumulative = 0;
+	float rayDistance = 0;
+	float threshold = iTreeShadowThreshold;
+	for (float i = 0; i < iTreeShadowSteps; i++) 
 	{
-		vec3 shadowPos = pos + t * pointToSun;
+		vec3 shadowPos = pos + rayDistance * pointToSun;
 		float d = treeSDF(shadowPos);
-		minR = min(minR, 5 * d / t);
-		t += 5;
-
-		if (minR < 0.001 || t > 200){
-			break;
+		if (d < threshold){
+			accumulative += (d - threshold) * rayDistance;
 		}
+		rayDistance += 3;
 	}
 
-	float shadow = smoothstep(0.0, 1.0, minR);
+	float shadow = smoothstep(iTreeShadowLower, 0, accumulative);
 	return shadow;
 }
 
 void main() 
 {
+	float currentHeight = terraind(iCameraPos.xz).x;
+	vec3 cameraPos = iCameraPos;
+	cameraPos.y = max(currentHeight + 1, iCameraPos.y);
+
 	vec2 NDC = (gl_FragCoord.xy / min(iResolution.x, iResolution.y)) * 2.0 - 1.0; // [-1,1]
-	vec3 screenCenter = iCameraPos + normalize(iCameraFwd) * iFocalLength;
+	vec3 screenCenter = cameraPos + normalize(iCameraFwd) * iFocalLength;
 	vec3 pixelWorld = screenCenter 
 		+ NDC.x * normalize(iCameraRight) + NDC.y * normalize(iCameraUp);
-	vec3 ray = normalize(pixelWorld - iCameraPos);
+	vec3 ray = normalize(pixelWorld - cameraPos);
 
 	// raymarching
 	float distanceToTree;
-	float distanceToTerrain = raymarchTerrain(iCameraPos, ray, iMaxSteps, iStepSize, distanceToTree);
+	float distanceToTerrain = raymarchTerrain(cameraPos, ray, iMaxSteps, iStepSize, distanceToTree);
 
 	int obj = 0; // 0: sky, 1: terrain, 2: trees 
 	float distanceToObj = -1;
@@ -159,7 +166,7 @@ void main()
 	if (distanceToTree > 0 && iTreeEnabled){
 		// detailed raymarching of trees SDF
 		for (int i = 0; i < iTreeSteps; i++){
-			vec3 pos = iCameraPos + distanceToTree * ray;
+			vec3 pos = cameraPos + distanceToTree * ray;
 			float d = treeSDF(pos);
 			// occulusion by terrain
 			if (distanceToTree > distanceToTerrain && distanceToTerrain > 0){
@@ -177,15 +184,17 @@ void main()
 
 	if (obj > 0)
 	{
-		vec3 pos = iCameraPos + distanceToObj * ray;
+		vec3 pos = cameraPos + distanceToObj * ray;
 		vec4 heightd = terraind(pos.xz);
-		pos.y = heightd.x;
+		if (obj == 1){
+			pos.y = heightd.x;
+		}
 		vec3 pointToSun = normalize(iSunPos - pos);
 
 		// normal
 		vec3 normal = normalize(heightd.yzw);
 		if (obj == 2){
-			normal = normalize(treeNormal(pos));
+			normal = normalize(treeNormal(pos) + iTreeNormalTerrainProportion * normal);
 		}
 
 		// material
@@ -201,12 +210,12 @@ void main()
 		vec3 color = max(0,dot(normal, pointToSun)) * matColor;
 			
 		// shadow 
-		float terrainShadow = terrainShadow(pos, pointToSun);
-		color *= terrainShadow;
+		float terShadow = terrainShadow(pos + vec3(0, 0.1, 0), pointToSun);
+		color *= terShadow;
 
+		float trShadow = treeShadow(pos + vec3(0, 0, 0), pointToSun);
+		color *= trShadow;
 		if (obj == 2){
-			// float treeShadow = treeShadow(pos + vec3(0, 5, 0), pointToSun);
-			color = matColor;
 		}
 
 		// fog
@@ -221,7 +230,7 @@ void main()
 	}	
 
 	// sun
-	vec3 camToSun = normalize(iSunPos - iCameraPos);
+	vec3 camToSun = normalize(iSunPos - cameraPos);
 	if (dot(camToSun, ray) > 0.995) 
 	{
 		FragColor = vec4(0.8, 0.4, 0.1, 1.0);
@@ -232,7 +241,7 @@ void main()
     vec3 skyColor = mix(iSkyColorBot, iSkyColorTop,  (NDC.y + 1)/2);
 	// simple clouds
 	float factor = iCloudHeight / ray.y;
-	vec3 cloudPos = iCameraPos + factor * ray;
+	vec3 cloudPos = cameraPos + factor * ray;
 	
 	float cloudNoise = fbmd(cloudPos.xz / iCloudScale, 12).x;
 	cloudNoise = smoothstep(iCloudLowerThreshold, iCloudUpperThreshold, cloudNoise);

@@ -73,7 +73,9 @@ void UI::UIPanel::from_json(const nlohmann::json& _json)
 {
 	for (auto& prop : properties_)
 	{
-		prop->from_json(_json[prop->get_name()]);
-		prop->take_effect(shader_);
+		if (_json.contains(prop->get_name())) {
+			prop->from_json(_json[prop->get_name()]);
+			prop->take_effect(shader_);
+		}
 	}
 }

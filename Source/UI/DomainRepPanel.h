@@ -27,6 +27,11 @@ namespace UI {
 				std::make_shared<SliderF>("Steepness Threshold", "iTreeSteepnessThreshold",0.0f, 1.0f, 0.5f),
 				std::make_shared<Float2>("Size Randomness", "iTreeSizeRandomness", 4.0, 8.0, 0.0),
 				std::make_shared<ColorProperty>("Color", "iTreeColor", "#4CB22D"),
+				std::make_shared<SliderF>("Normal Epsilon", "iTreeNormalEpsilon",1.0f, 100.0f, 10.0f),
+				std::make_shared<SliderI>("Shadow Steps", "iTreeShadowSteps",0, 200, 16),
+				std::make_shared<SliderF>("Shadow Threshold", "iTreeShadowThreshold",0.0f, 50.0f, 0.5f),
+				std::make_shared<SliderF>("Shadow Lower", "iTreeShadowLower",-10000.0f, 0.0f, -100.0f),
+				std::make_shared<SliderF>("Terrain Normal Proportion", "iTreeNormalTerrainProportion",0.0f, 10.0f, 2.0f),
 			};
 		}
 	protected:
