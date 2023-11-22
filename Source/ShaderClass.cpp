@@ -1,5 +1,6 @@
 #include "ShaderClass.h"
 #include <regex>
+#include <set>
 
 namespace
 {
@@ -46,14 +47,27 @@ namespace
 
 	void process_includes(std::string& file_content)
 	{
+		// create a set for processed includes to avoid infinite recursion
+		std::set<std::string> processed_includes;
 		const std::regex include_regex("#include \"(.*)\"");
 		std::smatch include_match;
 
 		while (std::regex_search(file_content, include_match, include_regex))
 		{
-			const std::string include_file_path = SHADER_PATH + std::string("/") + include_match[1].str();
-			const std::string include_file_contents = get_file_contents(include_file_path.c_str());
-			file_content.replace(include_match.position(), include_match.length(), include_file_contents);
+			const std::string match_path = include_match[1].str();
+			if (processed_includes.find(match_path) == processed_includes.end())
+			{
+				const std::string include_file_path = SHADER_PATH + std::string("/") + match_path;
+				const std::string include_file_contents = get_file_contents(include_file_path.c_str());
+				file_content.replace(include_match.position(), include_match.length(), include_file_contents);
+				processed_includes.insert(match_path);
+			}
+			else
+			{
+				std::cout << "WARNING: Shader include " << match_path << " already processed. Skipping." << std::endl;
+				file_content.erase(include_match.position(), include_match.length());
+				break;
+			}
 		}
 	}
 }
