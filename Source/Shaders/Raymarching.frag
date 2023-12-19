@@ -1,6 +1,7 @@
 #version 330 core
 
-#include "HeightMap.frag"
+#include "Tree.frag"
+#include "Atmosphere.frag"
 
 out vec4 FragColor;
 
@@ -25,11 +26,7 @@ uniform vec3 iFogColor;
 
 // tree parameters
 uniform bool iTreeEnabled;
-uniform int iTreeSteps;
 uniform vec3 iTreeColor;
-uniform int iTreeShadowSteps;
-uniform float iTreeShadowThreshold;
-uniform float iTreeShadowLower;
 uniform float iTreeNormalTerrainProportion;
 
 // light parameters
@@ -42,6 +39,7 @@ uniform vec3 iDirtColor = vec3(0.8, 0.4, 0.3);
 uniform float iDirtThreshold;
 
 // sky parameters
+uniform vec3 iFogFallOff;
 uniform vec3 iSkyColorTop;
 uniform vec3 iSkyColorBot;
 uniform float iCloudHeight;
@@ -50,6 +48,8 @@ uniform float iCloudLowerThreshold;
 uniform float iCloudUpperThreshold;
 uniform float iSkyFogStrength;
 uniform vec3 iSkyFogColor;
+
+uniform float iRayleighStrength;
 
 // returns the distance to the terrain 
 float raymarchTerrain(
@@ -64,12 +64,12 @@ float raymarchTerrain(
 	tTree = -1; // no tree hit
 
 	vec3 origin = pos;
-	float clip = 0.0;
+	float clipNear = 0.1;
 	float lastHeight;
 	float lastY;
 	float treeMaxHeight = 1.0 * iTreeHeight + iTreeOffset + 0.5 * iTreeSizeRandomness.y; 
 
-	for (float t = clip; t < maxSteps * stepSize; t += stepSize) 
+	for (float t = clipNear; t < maxSteps * stepSize; t += stepSize) 
 	{
 		pos = origin + t * ray;
 
@@ -98,6 +98,7 @@ float raymarchTerrain(
 
 		lastHeight = height;
 		lastY = pos.y;
+
 	}
 	return -1;
 }
@@ -122,27 +123,10 @@ float terrainShadow(in vec3 pos, in vec3 pointToSun){
 }
 
 
-float treeShadow(in vec3 pos, in vec3 pointToSun){
-	// shadow ray
-	float accumulative = 0;
-	float rayDistance = 0;
-	float threshold = iTreeShadowThreshold;
-	for (float i = 0; i < iTreeShadowSteps; i++) 
-	{
-		vec3 shadowPos = pos + rayDistance * pointToSun;
-		float d = treeSDF(shadowPos);
-		if (d < threshold){
-			accumulative += (d - threshold) * rayDistance;
-		}
-		rayDistance += 3;
-	}
-
-	float shadow = smoothstep(iTreeShadowLower, 0, accumulative);
-	return shadow;
-}
-
 void main() 
 {
+	vec3 color = vec3(0.0);
+
 	float currentHeight = terraind(iCameraPos.xz).x;
 	vec3 cameraPos = iCameraPos;
 	cameraPos.y = max(currentHeight + 1, iCameraPos.y);
@@ -207,7 +191,7 @@ void main()
 		}
 
 		// diffuse lighting
-		vec3 color = max(0,dot(normal, pointToSun)) * matColor;
+		color = max(0,dot(normal, pointToSun)) * matColor;
 			
 		// shadow 
 		float terShadow = terrainShadow(pos + vec3(0, 0.1, 0), pointToSun);
@@ -225,9 +209,29 @@ void main()
 		// post processing
 		color = smoothstep(0.0, 1.0, color);
 
-		FragColor = vec4(color, 1.0);
-		return;
+		// color *= exp(-opticalDepth(ray * distanceToObj, cameraPos, 100));
+		// float density = atmosphereDensity(pos.y);
+		// FragColor = vec4(vec3(density), 1.0);
+		// return;
 	}	
+
+	if (distanceToObj < 0){
+		distanceToObj = 10000;
+	}
+
+	vec3 start = cameraPos;
+	vec3 end = cameraPos + ray * distanceToObj;
+	bool inAtmosphere = rayInsideAtmosphere(start, end);
+	if (inAtmosphere){
+		vec3 rayleigh = iRayleighStrength * rayleigh(start, end, 20, iSunPos);
+		float viewRayOpticalDepth = opticalDepth(start, end, 10);
+		color = color * exp(-viewRayOpticalDepth * iFogFallOff) + rayleigh;
+	}
+	// color = vec3(opticalDepth(start, end, 20)) / 1000;
+	// color = vec3(distanceToObj/10000);
+	FragColor = vec4(color, 1.0);
+	return;
+
 
 	// sun
 	vec3 camToSun = normalize(iSunPos - cameraPos);

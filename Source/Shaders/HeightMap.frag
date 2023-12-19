@@ -8,16 +8,6 @@ uniform float iHorizontalShrink;
 uniform float iVerticalShrink;
 uniform float iVerticalShrinkStart;
 
-// tree SDF
-uniform float iDomainSize;
-uniform float iTreeRadius;
-uniform float iTreeHeight;
-uniform float iTreeOffset;
-uniform float iTreeRandomness;
-uniform vec2 iTreeSizeRandomness;
-uniform float iTreeSteepnessThreshold;
-uniform float iTreeNormalEpsilon;
-
 const mat2 rot = mat2(  0.80,  0.60,
                       -0.60,  0.80 );
 const mat2 roti = mat2( 0.80, -0.60,
@@ -64,59 +54,4 @@ vec4 terraind(in vec2 pos){
 	result.yz /= iHorizontalScale;
 	vec3 normal = normalize(vec3(-result.y, 1.0, -result.z));
     return vec4(height, normal);
-}
-
-// with domain repetition
-float treeSDF(in vec3 pos){
-	vec3 m = floor(pos / iDomainSize); // coord of domain
-    float d = 1e10;
-
-    // which neighbouring domains to check
-    // vec2 signs = sign(pos.xz - (m.xz + 0.5) * iDomainSize);
-    // check every neighbouring domain
-    vec2 signs = vec2(1.0, 1.0);
-
-    // check neighbouring domains
-    for (int i = -1; i <= 1; i++){
-		for(int j = -1; j <= 1; j++){
-	        vec3 center = (m + 0.5) * iDomainSize; // center of domain in world space
-            center.xz += signs * vec2(i,j) * iDomainSize;
-            vec2 randomOffset =  hash2(m.xz + signs * vec2(i,j)) - 0.5; // range [-0.5, 0.5]
-            center += iTreeRandomness * vec3(randomOffset.x, 0.0, randomOffset.y) * iDomainSize;
-            vec4 heightd = terraind(center.xz);
-            center.y = heightd.x;
-
-            vec3 normal = heightd.yzw;
-            if (normal.y < iTreeSteepnessThreshold) continue; // don't place trees on steep slopes
-
-            vec2 randomSizeOffset =  iTreeSizeRandomness * (hash2(m.xz + signs * vec2(i,j) + vec2(20.01,10.29)) - 0.5); 
-            vec3 r = vec3(iTreeRadius + randomSizeOffset.x, 
-                        iTreeHeight + randomSizeOffset.y, 
-                        iTreeRadius + randomSizeOffset.x);
-            // local position
-            vec3 w = pos - center - vec3(0.0, iTreeOffset, 0.0);
-
-            float wr = length(w/r);
-            d = min(d, wr * (wr - 1.0) / length(w / (r * r)));
-        }
-	}
-
-    return d;
-}
-
-vec3 treeNormal1(in vec3 pos){
-    vec2 e = vec2(1, -1) * 0.5773;
-    return normalize(e.xyy * treeSDF(pos + e.xyy * iTreeNormalEpsilon * 0.0001) + 
-  					e.yyx * treeSDF(pos + e.yyx * iTreeNormalEpsilon * 0.0001) +
-					e.yxy * treeSDF(pos + e.yxy * iTreeNormalEpsilon * 0.0001) + 
-					e.xxx * treeSDF(pos + e.xxx * iTreeNormalEpsilon * 0.0001));
-}
-
-vec3 treeNormal( in vec3 p ) 
-{
-    float eps = 0.0001 * iTreeNormalEpsilon; 
-    vec2 h = vec2(eps,0);
-    return normalize( vec3(treeSDF(p+h.xyy) - treeSDF(p-h.xyy),
-                           treeSDF(p+h.yxy) - treeSDF(p-h.yxy),
-                           treeSDF(p+h.yyx) - treeSDF(p-h.yyx) ) );
 }
