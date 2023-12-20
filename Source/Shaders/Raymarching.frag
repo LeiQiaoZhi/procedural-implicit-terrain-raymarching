@@ -2,6 +2,7 @@
 
 #include "Tree.frag"
 #include "Atmosphere.frag"
+#include "Debug.frag"
 
 out vec4 FragColor;
 
@@ -127,11 +128,23 @@ void main()
 {
 	vec3 color = vec3(0.0);
 
+	// set up coordinate system
+	vec2 NDC = (gl_FragCoord.xy / min(iResolution.x, iResolution.y)) * 2.0 - 1.0; // [-1,1]
+
+	// DEBUG noise
+	if (iDebugRenderTarget == NOISE2D_RENDER_TARGET){
+		float scale = 1 * pow(1.002,(iCameraPos.y+3000));
+		vec2 noise_pos = NDC * scale
+			+ 10 * vec2(-iCameraPos.x, iCameraPos.z);
+		color = vec3((terraind(noise_pos).x / iMaxHeight + 1) * 0.5);
+		FragColor = vec4(color,1.0);	
+		return;
+	}
+
+	// naive way to prevent clipping through terrain
 	float currentHeight = terraind(iCameraPos.xz).x;
 	vec3 cameraPos = iCameraPos;
 	cameraPos.y = max(currentHeight + 1, iCameraPos.y);
-
-	vec2 NDC = (gl_FragCoord.xy / min(iResolution.x, iResolution.y)) * 2.0 - 1.0; // [-1,1]
 	vec3 screenCenter = cameraPos + normalize(iCameraFwd) * iFocalLength;
 	vec3 pixelWorld = screenCenter 
 		+ NDC.x * normalize(iCameraRight) + NDC.y * normalize(iCameraUp);
@@ -227,8 +240,14 @@ void main()
 		float viewRayOpticalDepth = opticalDepth(start, end, 10);
 		color = color * exp(-viewRayOpticalDepth * iFogFallOff) + rayleigh;
 	}
-	// color = vec3(opticalDepth(start, end, 20)) / 1000;
-	// color = vec3(distanceToObj/10000);
+	if (iDebugRenderTarget == DEPTH_RENDER_TARGET){
+		color = vec3(distanceToObj/10000);
+		FragColor = vec4(color, 1.0); return;
+	}
+	if (iDebugRenderTarget == OPTICAL_DEPTH_RENDER_TARGET){
+		color = vec3(opticalDepth(start, end, 20)) / 10;
+		FragColor = vec4(color, 1.0); return;
+	}
 	FragColor = vec4(color, 1.0);
 	return;
 

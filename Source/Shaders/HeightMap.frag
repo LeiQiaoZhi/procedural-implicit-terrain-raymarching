@@ -50,7 +50,7 @@ vec4 terraind(in vec2 pos){
         iVerticalShrink
     );
 	result *= iMaxHeight;
-	float height = result.x + 600;
+	float height = result.x;
 	result.yz /= iHorizontalScale;
 	vec3 normal = normalize(vec3(-result.y, 1.0, -result.z));
     return vec4(height, normal);
