@@ -30,8 +30,8 @@ namespace UI {
 		}
 
 		void from_json(const nlohmann::json& _json) override {
-			value_min_ = _json["value_min"];
-			value_max_ = _json["value_max"];
+			value_min_ = _json.value("value_min", min_);
+			value_max_ = _json.value("value_max", max_);
 		}
 
 		float get_value() const { return value_; }

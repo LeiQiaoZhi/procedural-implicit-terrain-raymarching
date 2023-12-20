@@ -35,7 +35,7 @@ namespace UI {
 		}
 
 		void from_json(const nlohmann::json& _json) override {
-			value_ = _json["value"];
+			value_ = _json.value("value", false);
 		}
 
 	private:

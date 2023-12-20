@@ -38,7 +38,7 @@ namespace UI {
 				}
 			}
 			else {
-				std::cerr << "JSON does not contain a float array of size 3." << std::endl;
+				std::cout << "VecProperty::from_json: invalid json" << std::endl;
 			}
 		}
 

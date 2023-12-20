@@ -6,6 +6,7 @@
 #include "LightPanel.h"
 #include "DomainRepPanel.h"
 #include "SkyPanel.h"
+#include "DebugPanel.h"
 #include "MenuBarPanel.h"
 #include "JsonUtils.h"
 
@@ -50,6 +51,9 @@ void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_cont
 	panels_.push_back(
 		std::move(std::make_shared<SkyPanel>(_shader))
 	);
+	panels_.push_back(
+		std::move(std::make_shared<DebugPanel>(_shader))
+	);
 
 	// load default values
 	auto default_json = JsonUtils::json_from_default_config();
@@ -70,8 +74,9 @@ void UI::UIApp::show_panels()
 	std::vector<WindowInfo> window_infos;
 	for (auto& panel : panels_) {
 		// set window size and position
-		if (init_window_transforms_) {
-			auto& transform = window_transforms_to_set_[panel->get_name() + " Panel"];
+		auto key = panel->get_name() + " Panel";
+		if (init_window_transforms_ && window_transforms_to_set_.contains(key)) {
+			auto& transform = window_transforms_to_set_[key];
 			ImGui::SetNextWindowSize(JsonUtils::json_array_to_imvec2(transform["size"]));
 			ImGui::SetNextWindowPos(JsonUtils::json_array_to_imvec2(transform["pos"]));
 		}
@@ -112,6 +117,8 @@ nlohmann::json UI::UIApp::to_json() const
 void UI::UIApp::from_json(const nlohmann::json& _json)
 {
 	for (auto& panel : panels_) {
-		panel->from_json(_json[panel->get_name()+" Panel"]);
+		auto key_name = panel->get_name() + " Panel";
+		if (_json.contains(key_name))
+			panel->from_json(_json[key_name]);
 	}
 }
