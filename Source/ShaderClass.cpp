@@ -66,7 +66,6 @@ namespace
 			{
 				std::cout << "WARNING: Shader include " << match_path << " already processed. Skipping." << std::endl;
 				file_content.erase(include_match.position(), include_match.length());
-				break;
 			}
 		}
 	}
