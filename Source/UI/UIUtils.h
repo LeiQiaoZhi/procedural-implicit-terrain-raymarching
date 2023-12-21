@@ -67,4 +67,59 @@ namespace UI {
 		}
 		return std::string(); // return empty string if failed or canceled
 	}
+
+	template<typename T, int N>
+	inline bool InputVec(const char* _label, T* _v, const char* _format = nullptr) { return false; }
+	template<>
+	inline bool InputVec<float, 2>(const char* _label, float* _v, const char* _format) {
+		return ImGui::InputFloat2(_label, _v, _format);
+	}
+	template<>
+	inline bool InputVec<float, 3>(const char* _label, float* _v, const char* _format) {
+		return ImGui::InputFloat3(_label, _v, _format);
+	}
+	template<>
+	inline bool InputVec<int, 2>(const char* _label, int* _v, const char* _format) {
+		return ImGui::InputInt2(_label, _v);
+	}
+	template<>
+	inline bool InputVec<int, 3>(const char* _label, int* _v, const char* _format) {
+		return ImGui::InputInt3(_label, _v);
+	}
+
+	template<typename T, int N>
+	inline bool SliderVec(const char* _label, T* _v, T _min, T _max, const char* _format = nullptr) {
+		return false;
+	}
+	template<>
+	inline bool SliderVec<float, 2>(const char* _label, float* _v, float _min, float _max, const char* _format) {
+		return ImGui::SliderFloat2(_label, _v, _min, _max, _format);
+	}
+	template<>
+	inline bool SliderVec<float, 3>(const char* _label, float* _v, float _min, float _max, const char* _format) {
+		return ImGui::SliderFloat3(_label, _v, _min, _max, _format);
+	}
+	template<>
+	inline bool SliderVec<int, 2>(const char* _label, int* _v, int _min, int _max, const char* _format) {
+		return ImGui::SliderInt2(_label, _v, _min, _max, _format);
+	}
+	template<>
+	inline bool SliderVec<int, 3>(const char* _label, int* _v, int _min, int _max, const char* _format) {
+		return ImGui::SliderInt3(_label, _v, _min, _max, _format);
+	}
+
+	template<typename T>
+	inline bool SliderT(const char* _label, T* _v, T _min, T _max, const char* _format = nullptr) {
+		return false;
+	}
+	template<>
+	inline bool SliderT<float>(const char* _label, float* _v, float _min, float _max, const char* _format) {
+		return ImGui::SliderFloat(_label, _v, _min, _max, _format);
+	}
+	template<>
+	inline bool SliderT<int>(const char* _label, int* _v, int _min, int _max, const char* _format) {
+		return ImGui::SliderInt(_label, _v, _min, _max, _format);
+	}
+
+
 }
