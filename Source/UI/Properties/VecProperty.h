@@ -16,76 +16,38 @@ namespace UI {
 	public:
 		VecProperty(
 			const std::string& _name, const std::string& _uniform_name,
-			T x = 0, T y = 0, T z = 0
-		) : Property(_name, _uniform_name) {
-			values_[0] = x;
-			values_[1] = y;
-			values_[2] = z;
+			std::array<T, size> _values
+		) : Property(_name, _uniform_name), values_(_values) {}
+
+		bool gui() override {
+			return UI::InputVec<T, size>(name_.c_str(), values_.data(), "%.2f");
 		}
 
-		bool gui() override;
-
-		void take_effect(const Shader& _shader) override;
+		void take_effect(const Shader& _shader) override {
+			if constexpr (size == 2) {
+				const auto vec2 = glm::vec2(values_[0], values_[1]);
+				_shader.set_uniform_vec2(uniform_name_, vec2);
+			}
+			else if constexpr (size == 3) {
+				const auto vec3 = glm::vec3(values_[0], values_[1], values_[2]);
+				_shader.set_uniform_vec3(uniform_name_, vec3);
+			}
+		}
 
 		nlohmann::json to_json() const override {
-			return { {"values", {values_[0], values_[1], values_[2]}} };
+			nlohmann::json json;
+			json["values"] = values_;
+			return json;
 		}
 
 		void from_json(const nlohmann::json& _json) override {
-			if (_json["values"].is_array() && _json["values"].size() == 3) {
-				for (size_t i = 0; i < _json["values"].size(); ++i) {
-					values_[i] = _json["values"].at(i);
-				}
-			}
-			else {
-				std::cout << "VecProperty::from_json: invalid json" << std::endl;
-			}
+			values_ = _json["values"].get<std::array<T, size>>();
 		}
 
 	private:
-		T values_[3];
+		std::array<T, size> values_;
 	};;
 
-
-	template<typename T, int size>
-	inline bool VecProperty<T, size>::gui() { return false; }
-
-	template<typename T, int size>
-	inline void VecProperty<T, size>::take_effect(const Shader& _shader)
-	{
-		if constexpr (size == 2) {
-			const auto vec2 = glm::vec2(values_[0], values_[1]);
-			_shader.set_uniform_vec2(uniform_name_, vec2);
-		}
-		else if constexpr (size == 3) {
-			const auto vec3 = glm::vec3(values_[0], values_[1], values_[2]);
-			_shader.set_uniform_vec3(uniform_name_, vec3);
-		}
-	}
-
-	template<>
-	inline bool VecProperty<float, 3>::gui()
-	{
-		return ImGui::InputFloat3(name_.c_str(), values_, "%.2f");
-	}
-
-	template<>
-	inline bool VecProperty<float, 2>::gui()
-	{
-		return ImGui::InputFloat2(name_.c_str(), values_, "%.2f");
-	}
-
-	template<>
-	inline bool VecProperty<int, 3>::gui()
-	{
-		return ImGui::InputInt3(name_.c_str(), values_);
-	}
-
-	template<>
-	inline bool VecProperty<int, 2>::gui()
-	{
-		return ImGui::InputInt2(name_.c_str(), values_);
-	}
 
 	using Float3 = VecProperty<float, 3>;
 	using Float2 = VecProperty<float, 2>;

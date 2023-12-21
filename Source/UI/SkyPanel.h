@@ -19,8 +19,8 @@ namespace UI {
 				std::make_shared<SliderF>("Rayleigh Strength", "iRayleighStrength", 0, 10, 0),
 				std::make_shared<SliderF>("Density Fall Off", "iAtmosphereDensityFallOff", 0.01, 1, 0.01),
 				std::make_shared<SliderF>("Atmos Height", "iAtmosphereMaxHeight", 0, 100000, 1),
-				std::make_shared<Float3>("Scattering Coefficients", "iScatteringCoefficient", 0, 0.1, 0.001),
-				std::make_shared<Float3>("Fog Falloff", "iFogFallOff", 0, 0.1, 0.001),
+				std::make_shared<Float3>("Scattering Coefficients", "iScatteringCoefficient", std::array<float, 3>{0,0,0}),
+				std::make_shared<Float3>("Fog Falloff", "iFogFallOff", std::array<float, 3>{0,0,0}),
 				std::make_shared<ColorProperty>("Color Top", "iSkyColorTop", "#387EFF"),
 				std::make_shared<ColorProperty>("Color Bottom", "iSkyColorBot", "#AAFFF0"),
 				std::make_shared<SliderF>("Height", "iCloudHeight", 0, 50000, 10000),
@@ -32,6 +32,6 @@ namespace UI {
 			};
 		}
 	protected:
-		void gui() override;	
+		void gui() override;
 	};
 }
