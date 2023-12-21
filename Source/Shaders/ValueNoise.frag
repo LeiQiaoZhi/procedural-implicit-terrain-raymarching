@@ -1,4 +1,4 @@
-const float PI = 3.1415926535897932384626433832795;
+#include "Constants.frag"
 
 // return (f(x), f'(x))
 vec2 smoothstepd(in float x, in float a = 0.0, in float b = 1.0){
