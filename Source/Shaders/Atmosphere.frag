@@ -1,3 +1,5 @@
+// #include "Constants.frag"
+
 uniform float iAtmosphereDensityFallOff;
 uniform float iAtmosphereMaxHeight;
 uniform vec3 iScatteringCoefficient;
@@ -30,6 +32,7 @@ float atmosphereDensity(in float y){
 	return exp(-y * 0.001 * iAtmosphereDensityFallOff) * (iAtmosphereMaxHeight - 0.5 * y) / iAtmosphereMaxHeight;
 }
 
+
 // sample the atmosphere density along a ray 
 float opticalDepth(
 		in vec3 start,
@@ -48,6 +51,16 @@ float opticalDepth(
 	return od * stepSize;
 }
 
+
+float rayleighPhaseFunction(
+	in vec3 toRayStart,
+	in vec3 toSun
+){
+	float cosTheta = dot(normalize(toRayStart), normalize(toSun));
+	return 0.75 * (1.0 + cosTheta * cosTheta);
+}
+
+
 vec3 rayleigh(
 	in vec3 start,
 	in vec3 end,
@@ -65,14 +78,16 @@ vec3 rayleigh(
 		vec3 toSun = sunPos - scatterPoint;
 		vec3 sunEnd = scatterPoint + toSun * (iAtmosphereMaxHeight - scatterPoint.y) / toSun.y;
 		bool sunInsideAtmosphere = rayInsideAtmosphere(scatterPoint, sunEnd);
+
 		float odSun = sunInsideAtmosphere
 			? opticalDepth(scatterPoint, sunEnd, 10) 
 			: 0.0;
 		float odEye = opticalDepth(scatterPoint, start, 10);
-		// TODO: consider theta
-		 rayleigh += atmosphereDensity(scatterPoint.y) 
+
+		float phase = rayleighPhaseFunction(-ray, toSun);
+		rayleigh += atmosphereDensity(scatterPoint.y) 
 			* exp(-(odSun+odEye) * iScatteringCoefficient)
-			* iScatteringCoefficient;
+			* iScatteringCoefficient * phase;
 			// exp(-(odSun + odEye)) * stepSize;
 	}
 	return rayleigh * stepSize;
