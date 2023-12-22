@@ -34,7 +34,6 @@ namespace
 		GLint success;
 		GLchar infoLog[512];
 
-		// Check vertex shader compilation
 		glGetShaderiv(_shader, GL_COMPILE_STATUS, &success);
 		if (!success)
 		{
