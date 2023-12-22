@@ -140,6 +140,24 @@ void main()
 		FragColor = vec4(color,1.0);	
 		return;
 	}
+	if (iDebugRenderTarget == NOISE3D_RENDER_TARGET){
+		float scale = 1 * pow(1.002,(iCameraPos.y+3000));
+		vec2 noise_pos = NDC * scale
+			+ 10 * vec2(-iCameraPos.x, iCameraPos.z);
+		color = vec3((terrain(noise_pos) / iMaxHeight + 1) * 0.5);
+		FragColor = vec4(color,1.0);	
+		return;
+	}
+	if (iDebugRenderTarget == NOISE3D_RENDER_TARGET){
+		float scale = 1 * pow(1.001,(iCameraPos.y));
+		vec2 noise_pos = NDC * scale
+			+ 0.01 * vec2(-iCameraPos.x, iCameraPos.z);
+		color = vec3((noise3D(vec3(noise_pos,iDebugNoise3DZ)) + 1) * 0.5);
+		FragColor = vec4(color,1.0);	
+		return;
+	}
+
+
 
 	// naive way to prevent clipping through terrain
 	float currentHeight = terraind(iCameraPos.xz).x;

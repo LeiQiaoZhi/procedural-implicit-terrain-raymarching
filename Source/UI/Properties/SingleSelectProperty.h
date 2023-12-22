@@ -42,6 +42,10 @@ namespace UI {
 			selected_ = _json.value("value", 0);
 		}
 
+		// getters
+		int get_selected() const { return selected_; }
+		std::string get_selected_str() const { return item_strs_[selected_]; }
+
 	private:
 		int selected_;
 		std::vector<std::string> item_strs_;
