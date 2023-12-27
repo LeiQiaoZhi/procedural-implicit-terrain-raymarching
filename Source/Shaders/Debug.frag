@@ -6,4 +6,9 @@ uniform int iDebugRenderTarget;
 #define OPTICAL_DEPTH_RENDER_TARGET 3
 #define NOISE3D_RENDER_TARGET 4
 
+// Noise 3D
 uniform float iDebugNoise3DZ = 0;
+
+// Depth
+uniform float iDebugMaxRayDistance = 0;
+uniform bool iDebugMarkNotInAtmosphere = false;

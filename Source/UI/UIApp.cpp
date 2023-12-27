@@ -43,7 +43,7 @@ void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_cont
 		std::move(std::make_shared<TerrainPanel>(_shader))
 	);
 	panels_.push_back(
-		std::move(std::make_shared<LightPanel>(_shader))
+		std::move(std::make_shared<LightPanel>(_shader, _camera_controller))
 	);
 	panels_.push_back(
 		std::move(std::make_shared<DomainRepPanel>(_shader))

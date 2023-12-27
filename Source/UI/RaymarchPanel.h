@@ -16,7 +16,7 @@ namespace UI {
 			properties_ = {
 				std::make_shared<SliderI>("Shadow Steps", "iShadowSteps", 0, 1000, 32),
 				std::make_shared<SliderI>("Max Steps", "iMaxSteps", 1, 1000, 500),
-				std::make_shared<SliderF>("Step Size", "iStepSize", 0.1f, 100.0f, 50.0f),
+				std::make_shared<SliderF>("Step Size", "iStepSize", 0.1f, 1000.0f, 100.0f),
 				std::make_shared<SliderF>("Fog Strength", "iFogStrength", 0.0f, 10.0f, 0.7f),
 				std::make_shared<ColorProperty>("Fog Color", "iFogColor", "#8C8E91"),
 			};

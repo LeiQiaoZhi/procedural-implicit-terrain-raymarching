@@ -40,7 +40,6 @@ uniform vec3 iDirtColor = vec3(0.8, 0.4, 0.3);
 uniform float iDirtThreshold;
 
 // sky parameters
-uniform vec3 iFogFallOff;
 uniform vec3 iSkyColorTop;
 uniform vec3 iSkyColorBot;
 uniform float iCloudHeight;
@@ -50,7 +49,9 @@ uniform float iCloudUpperThreshold;
 uniform float iSkyFogStrength;
 uniform vec3 iSkyFogColor;
 
-uniform float iRayleighStrength;
+uniform float iTheta;
+uniform float iPhi;
+uniform float iRadius;
 
 // returns the distance to the terrain 
 float raymarchTerrain(
@@ -126,6 +127,12 @@ float terrainShadow(in vec3 pos, in vec3 pointToSun){
 
 void main() 
 {
+	vec3 sunPos = iRadius * vec3(
+		sin(iTheta) * cos(iPhi),
+		cos(iTheta),
+		sin(iTheta) * sin(iPhi)
+	);
+
 	vec3 color = vec3(0.0);
 
 	// set up coordinate system
@@ -148,16 +155,6 @@ void main()
 		FragColor = vec4(color,1.0);	
 		return;
 	}
-	if (iDebugRenderTarget == NOISE3D_RENDER_TARGET){
-		float scale = 1 * pow(1.001,(iCameraPos.y));
-		vec2 noise_pos = NDC * scale
-			+ 0.01 * vec2(-iCameraPos.x, iCameraPos.z);
-		color = vec3((noise3D(vec3(noise_pos,iDebugNoise3DZ)) + 1) * 0.5);
-		FragColor = vec4(color,1.0);	
-		return;
-	}
-
-
 
 	// naive way to prevent clipping through terrain
 	float currentHeight = terraind(iCameraPos.xz).x;
@@ -204,7 +201,7 @@ void main()
 		if (obj == 1){
 			pos.y = heightd.x;
 		}
-		vec3 pointToSun = normalize(iSunPos - pos);
+		vec3 pointToSun = normalize(sunPos - pos);
 
 		// normal
 		vec3 normal = normalize(heightd.yzw);
@@ -239,39 +236,43 @@ void main()
 
 		// post processing
 		color = smoothstep(0.0, 1.0, color);
-
-		// color *= exp(-opticalDepth(ray * distanceToObj, cameraPos, 100));
-		// float density = atmosphereDensity(pos.y);
-		// FragColor = vec4(vec3(density), 1.0);
-		// return;
 	}	
 
 	if (distanceToObj < 0){
-		distanceToObj = 10000;
+		distanceToObj = 100000;
 	}
 
 	vec3 start = cameraPos;
 	vec3 end = cameraPos + ray * distanceToObj;
 	bool inAtmosphere = rayInsideAtmosphere(start, end);
-	if (inAtmosphere){
-		vec3 rayleigh = iRayleighStrength * rayleigh(start, end, 20, iSunPos);
-		float viewRayOpticalDepth = opticalDepth(start, end, 10);
-		color = color * exp(-viewRayOpticalDepth * iFogFallOff) + rayleigh;
-	}
+	// inAtmosphere = false;
+
 	if (iDebugRenderTarget == DEPTH_RENDER_TARGET){
-		color = vec3(distanceToObj/10000);
+		color = vec3(distance(start,end)/iDebugMaxRayDistance);
+		if (iDebugMarkNotInAtmosphere && !inAtmosphere){
+			color.yz = vec2(0);
+		}
 		FragColor = vec4(color, 1.0); return;
 	}
 	if (iDebugRenderTarget == OPTICAL_DEPTH_RENDER_TARGET){
 		color = vec3(opticalDepth(start, end, 20)) / 10;
 		FragColor = vec4(color, 1.0); return;
 	}
+	if (inAtmosphere){
+		vec3 rayleigh = iRayleighStrength * rayleigh(start, end, iRayleighSteps, sunPos);
+		float viewRayOpticalDepth = opticalDepth(start, end, iOpticalDepthSteps);
+		// viewRayOpticalDepth = 100000.0;
+		// color = vec3(distance(start,end)/iDebugMaxRayDistance);
+		// color = vec3(viewRayOpticalDepth)/10;
+		color = color * exp(-viewRayOpticalDepth * iRayleighFogFallOff * iRayleighFogStrength) + rayleigh;
+	}
 	FragColor = vec4(color, 1.0);
 	return;
 
+	/// OLD CODE ///
 
 	// sun
-	vec3 camToSun = normalize(iSunPos - cameraPos);
+	vec3 camToSun = normalize(sunPos - cameraPos);
 	if (dot(camToSun, ray) > 0.995) 
 	{
 		FragColor = vec4(0.8, 0.4, 0.1, 1.0);
