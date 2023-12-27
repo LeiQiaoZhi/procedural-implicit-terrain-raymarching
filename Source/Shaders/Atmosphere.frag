@@ -1,7 +1,16 @@
 // #include "Constants.frag"
 
+uniform float iRayleighStrength;
+
+uniform int iOpticalDepthSteps;
+uniform int iRayleighSteps;
+
 uniform float iAtmosphereDensityFallOff;
 uniform float iAtmosphereMaxHeight;
+
+uniform vec3 iRayleighFogFallOff;
+uniform float iRayleighFogStrength;
+
 uniform vec3 iScatteringCoefficient;
 
 bool rayInsideAtmosphere(
@@ -61,34 +70,41 @@ float rayleighPhaseFunction(
 }
 
 
+// Pinpoint to: UNDEFINED BEHAVIOR inside
+// when sun is inside atmosphere
 vec3 rayleigh(
 	in vec3 start,
 	in vec3 end,
 	in int steps,
 	in vec3 sunPos
 ){
-	vec3 ray = normalize(end - start);
 	float rayLength = length(end - start);
+	if (rayLength < 0.0001) {
+		return vec3(0.0);
+	}
+	vec3 ray = (end - start) / rayLength;
 	float stepSize = rayLength / float(steps);
 	vec3 rayleigh = vec3(0.0);
-	for (float t = 0.01; t < rayLength; t += stepSize){
+	for (float t = 0.01; t < rayLength - 0.01; t += stepSize){
 		vec3 scatterPoint = start + t * ray;
 		// rayleigh scattering
 		// TODO: only up to top of atmosphere
 		vec3 toSun = sunPos - scatterPoint;
+		if (toSun.y < 0.01) { // sun is below the horizon
+			continue;
+		}
 		vec3 sunEnd = scatterPoint + toSun * (iAtmosphereMaxHeight - scatterPoint.y) / toSun.y;
 		bool sunInsideAtmosphere = rayInsideAtmosphere(scatterPoint, sunEnd);
 
 		float odSun = sunInsideAtmosphere
-			? opticalDepth(scatterPoint, sunEnd, 10) 
+			? opticalDepth(scatterPoint, sunEnd, iOpticalDepthSteps) 
 			: 0.0;
-		float odEye = opticalDepth(scatterPoint, start, 10);
+		float odEye = opticalDepth(scatterPoint, start, iOpticalDepthSteps);
 
 		float phase = rayleighPhaseFunction(-ray, toSun);
 		rayleigh += atmosphereDensity(scatterPoint.y) 
 			* exp(-(odSun+odEye) * iScatteringCoefficient)
 			* iScatteringCoefficient * phase;
-			// exp(-(odSun + odEye)) * stepSize;
 	}
 	return rayleigh * stepSize;
 }
