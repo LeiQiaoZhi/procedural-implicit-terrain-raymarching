@@ -151,7 +151,7 @@ void main()
 		float scale = 1 * pow(1.002,(iCameraPos.y+3000));
 		vec2 noise_pos = NDC * scale
 			+ 10 * vec2(-iCameraPos.x, iCameraPos.z);
-		color = vec3((terrain(noise_pos) / iMaxHeight + 1) * 0.5);
+		color = vec3((terrain(vec3(noise_pos, iDebugNoise3DZ)) / iMaxHeight + 1) * 0.5);
 		FragColor = vec4(color,1.0);	
 		return;
 	}
@@ -225,9 +225,9 @@ void main()
 		float terShadow = terrainShadow(pos + vec3(0, 0.1, 0), pointToSun);
 		color *= terShadow;
 
-		float trShadow = treeShadow(pos + vec3(0, 0, 0), pointToSun);
-		color *= trShadow;
-		if (obj == 2){
+		if (iTreeEnabled){
+			float trShadow = treeShadow(pos + vec3(0, 0, 0), pointToSun);
+			color *= trShadow;
 		}
 
 		// fog

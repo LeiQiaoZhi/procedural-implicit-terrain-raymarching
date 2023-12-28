@@ -5,7 +5,7 @@ void UI::DebugPanel::gui()
 	std::string selectedStr = render_target_property_->get_selected_str();
 
 	if (selectedStr == "Noise3D") {
-		if (ImGui::SliderFloat("Z", &noise3D_z_, 0.0f, 10.0f)) 
+		if (ImGui::SliderFloat("Z", &noise3D_z_, 0.0f, 10000.0f)) 
 			shader_.set_uniform_float("iDebugNoise3DZ", noise3D_z_);
 	}
 	else if (selectedStr == "Depth") {
