@@ -15,7 +15,9 @@
 #include "EBO.h"
 #include "Camera/CameraController.h"
 #include "UI/UIApp.h"
-
+#include "CallbackManager.h"
+#include "Window.h"
+#include "Utils.h"
 
 int main()
 {
@@ -29,14 +31,15 @@ int main()
 		return -1;
 	}
 
-	Init::setup_window(window, false);
+	// encapsulate the window in an object
+	Window window_obj(window, Constants::WIDTH, Constants::HEIGHT);
 
 	// load glad so it configures opengl
 	gladLoadGL();
 
-	Shader shader((SHADER_PATH "\\Minimum.vert"),{ 
-		(SHADER_PATH "\\Raymarching.frag") 
-	});
+	Shader shader((SHADER_PATH "\\Minimum.vert"), {
+		(SHADER_PATH "\\Raymarching.frag")
+		});
 
 	// set up vertex array object
 	VAO vao;
@@ -67,6 +70,12 @@ int main()
 	UI::UIApp imgui_app(window, "#version 330");
 	imgui_app.add_panels(shader, camera_controller);
 
+	// glfw callbacks
+	CallbackManager callback_manager(window);
+	imgui_app.set_callbacks(callback_manager);
+	camera_controller.set_callbacks(callback_manager);
+	window_obj.set_callbacks(callback_manager);
+
 	// render loop
 	while (!glfwWindowShouldClose(window)) {
 		// background color
@@ -77,11 +86,8 @@ int main()
 		shader.activate();
 
 		// set the uniforms
-		GLint viewport[4];
-		glGetIntegerv(GL_VIEWPORT, viewport);
-		const GLint width = viewport[2];
-		const GLint height = viewport[3];
-		shader.set_uniform_vec2("iResolution", glm::vec2(width, height));
+		glm::vec2 viewport_size = GLFWUtils::get_viewport_size(window);
+		shader.set_uniform_vec2("iResolution", viewport_size);
 
 		const auto current_time = std::chrono::high_resolution_clock::now();
 		const float time = std::chrono::duration<float, std::chrono::seconds::period>(current_time - start_time).count();
@@ -95,10 +101,11 @@ int main()
 		vao.bind();
 		glDrawElements(GL_TRIANGLES, sizeof(Constants::INDICES) / sizeof(int), GL_UNSIGNED_INT, 0);
 
-		camera_controller.handle_inputs(window, width, height);
+		camera_controller.handle_inputs(window, viewport_size.x, viewport_size.y);
 
+		imgui_app.handle_inputs();
 		imgui_app.show_panels();
-		
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

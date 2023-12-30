@@ -20,13 +20,16 @@ void Init::init_glfw()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
 
-void Init::setup_window(GLFWwindow* window, const bool resizable)
+void Init::setup_window(GLFWwindow* _window)
 {
 	// make the window into the current context (show it)
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(_window);
+}
 
-	// set the framebuffer size callback for dynamic viewport resizing
-	if (resizable)
-		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
+void Init::set_window_fullscreen(GLFWwindow* _window, bool _fullscreen)
+{
+	if (_fullscreen)
+		glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
+	else 
+		glfwSetFramebufferSizeCallback(_window, nullptr);
 }

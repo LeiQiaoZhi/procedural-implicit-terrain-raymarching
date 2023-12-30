@@ -3,17 +3,19 @@
 
 #include "CameraController.h"
 
+void CameraController::set_callbacks(CallbackManager& _callback_manager)
+{
+	_callback_manager.register_scroll_callback([this](GLFWwindow* _window, double _x_offset, double _y_offset) {
+		scroll_callback(_window, _x_offset, _y_offset);
+		});
+}
+
 void CameraController::handle_inputs(GLFWwindow* _window, const int _width, const int _height)
 {
 	if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) ||
 		ImGui::IsAnyItemActive())
 		return;
 
-	glfwSetWindowUserPointer(_window, this);
-	// use lambda
-	glfwSetScrollCallback(_window, [](GLFWwindow* _window, double _x_offset, double _y_offset) {
-		static_cast<CameraController*>(glfwGetWindowUserPointer(_window))->scroll_callback(_window, _x_offset, _y_offset);
-		});
 	// get mouse pos
 	double x_pos, y_pos;
 	glfwGetCursorPos(_window, &x_pos, &y_pos);
@@ -63,7 +65,7 @@ void CameraController::handle_inputs(GLFWwindow* _window, const int _width, cons
 
 	if (input_direction.x != 0 || input_direction.y != 0)
 		camera_->move_foward_right(
-			input_direction.y * settings.keyboard_speed * delta_time, 
+			input_direction.y * settings.keyboard_speed * delta_time,
 			input_direction.x * settings.keyboard_speed * delta_time);
 	if (vertical_input != 0)
 		camera_->move_along_y(vertical_input * settings.keyboard_speed * delta_time);

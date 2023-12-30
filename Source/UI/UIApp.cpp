@@ -7,11 +7,13 @@
 #include "DomainRepPanel.h"
 #include "SkyPanel.h"
 #include "DebugPanel.h"
+#include "CloudPanel.h"
 #include "MenuBarPanel.h"
 #include "JsonUtils.h"
 
 UI::UIApp::UIApp(GLFWwindow* _window, const char* _version)
 {
+	window_ = _window;
 	// ImGui setup
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -54,6 +56,9 @@ void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_cont
 	panels_.push_back(
 		std::move(std::make_shared<DebugPanel>(_shader))
 	);
+	panels_.push_back(
+		std::move(std::make_shared<CloudPanel>(_shader))
+	);
 
 	// load default values
 	auto default_json = JsonUtils::json_from_default_config();
@@ -63,8 +68,24 @@ void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_cont
 	set_layout(default_layout);
 }
 
+void UI::UIApp::set_callbacks(CallbackManager& _callback_manager)
+{
+	_callback_manager.register_key_callback(
+		[this](GLFWwindow* _window, int _key, int _scancode, int _action, int _mods) {
+			if (_key == GLFW_KEY_SPACE && _action == GLFW_PRESS)
+				hide_ui_ = !hide_ui_;
+		}
+	);
+}
+
+void UI::UIApp::handle_inputs()
+{
+}
+
 void UI::UIApp::show_panels()
 {
+	if (hide_ui_) return;
+
 	// frame setup
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -85,7 +106,7 @@ void UI::UIApp::show_panels()
 	}
 	window_infos_ = window_infos;
 
-	if (init_window_transforms_) 
+	if (init_window_transforms_)
 		init_window_transforms_ = false;
 
 	// render frame
@@ -109,7 +130,7 @@ nlohmann::json UI::UIApp::to_json() const
 {
 	nlohmann::json j;
 	for (auto& panel : panels_) {
-		j[panel->get_name()+" Panel"] = panel->to_json();
+		j[panel->get_name() + " Panel"] = panel->to_json();
 	}
 	return j;
 }

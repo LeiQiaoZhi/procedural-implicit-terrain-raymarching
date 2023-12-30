@@ -5,6 +5,7 @@
 
 #include "Camera.h"
 #include "JsonUtils.h"
+#include "CallbackManager.h"
 
 class CameraController
 {
@@ -14,7 +15,7 @@ class CameraController
 		float move_speed = 100.0f;
 		float keyboard_speed = 20.0f;
 		float rotate_speed = 1.0f;
-		float zoom_speed = 100.0f; 
+		float zoom_speed = 100.0f;
 		bool invert_x = false;
 		bool invert_y = false;
 		bool invert_zoom = false;
@@ -59,6 +60,9 @@ private:
 public:
 	CameraController(Camera* _camera) : camera_(_camera) {}
 
+	// called once
+	void set_callbacks(CallbackManager& _callback_manager);
+	// called every frame
 	void handle_inputs(GLFWwindow* _window, const int _width, const int _height);
 	void scroll_callback(GLFWwindow* _window, double _x_offset, double _y_offset);
 
