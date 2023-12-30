@@ -3,6 +3,7 @@
 #include "Tree.frag"
 #include "Atmosphere.frag"
 #include "Debug.frag"
+#include "Clouds.frag"
 
 out vec4 FragColor;
 
@@ -237,6 +238,13 @@ void main()
 		// post processing
 		color = smoothstep(0.0, 1.0, color);
 	}	
+	// sky
+	else if (iEnableClouds){
+		// clouds
+		vec3 cloud_color = raymarch_clouds(cameraPos, ray);
+		color = iCloudStrength * cloud_color;
+		// FragColor = vec4(color, 1.0); return;
+	}
 
 	if (distanceToObj < 0){
 		distanceToObj = 100000;
