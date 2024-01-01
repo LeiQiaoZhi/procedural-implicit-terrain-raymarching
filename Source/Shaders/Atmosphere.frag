@@ -1,34 +1,33 @@
 // #include "Constants.frag"
 
 uniform float iRayleighStrength;
-
-uniform int iOpticalDepthSteps;
-uniform int iRayleighSteps;
-
+// density 
 uniform float iAtmosphereDensityFallOff;
 uniform float iAtmosphereMaxHeight;
-
+// sampling
+uniform int iOpticalDepthSteps;
+uniform int iRayleighSteps;
+// blending with original color
 uniform vec3 iRayleighFogFallOff;
 uniform float iRayleighFogStrength;
-
+// rayleigh scattering of RGB
 uniform vec3 iScatteringCoefficient;
 
-bool rayInsideAtmosphere(
-	inout vec3 start,
-	inout vec3 end
+bool ray_inside_atmosphere_i(
+	inout vec3 _start,
+	inout vec3 _end
 ){
-	if (start.y > iAtmosphereMaxHeight && end.y > iAtmosphereMaxHeight){
+	if (_start.y > iAtmosphereMaxHeight && _end.y > iAtmosphereMaxHeight)
 		return false;
+
+	// TODO: what if ray.y == 0?
+	vec3 ray = _end - _start;
+	if (_start.y > iAtmosphereMaxHeight){
+		_start = _start + ray * (iAtmosphereMaxHeight - _start.y) / ray.y;
 	}
 
-	// what if ray.y == 0?
-	vec3 ray = end - start;
-	if (start.y > iAtmosphereMaxHeight){
-		start = start + ray * (iAtmosphereMaxHeight - start.y) / ray.y;
-	}
-
-	if (end.y > iAtmosphereMaxHeight){
-		end = start + ray * (iAtmosphereMaxHeight - start.y) / ray.y;
+	if (_end.y > iAtmosphereMaxHeight){
+		_end = _start + ray * (iAtmosphereMaxHeight - _start.y) / ray.y;
 	}
 
 	return true;
@@ -36,75 +35,81 @@ bool rayInsideAtmosphere(
 
 
 // returns 0-1
-float atmosphereDensity(in float y){
-	y += iAtmosphereMaxHeight; // move the ground level to 0
-	return exp(-y * 0.001 * iAtmosphereDensityFallOff) * (iAtmosphereMaxHeight - 0.5 * y) / iAtmosphereMaxHeight;
+float atmosphere_density(
+	in float _y
+){
+	_y += iAtmosphereMaxHeight; // move the ground level to 0
+	return exp(-_y * 0.001 * iAtmosphereDensityFallOff) 
+			* (iAtmosphereMaxHeight - 0.5 * _y) 
+			/ iAtmosphereMaxHeight;
 }
 
 
 // sample the atmosphere density along a ray 
-float opticalDepth(
-		in vec3 start,
-		in vec3 end,
-		in int steps
+float optical_depth(
+		in vec3 _start,
+		in vec3 _end,
+		in int _steps
 ){
-	vec3 ray = end - start;
-	float stepSize = length(ray) / float(steps);
-	vec3 rayDir = normalize(ray);
+	vec3 ray = _end - _start;
+	float step_size = length(ray) / float(_steps);
+	vec3 ray_dir = normalize(ray);
 
 	float od = 0.0;
-	for(float t = 0.0; t <= length(ray); t+=stepSize){
-		float density = atmosphereDensity((start + rayDir * t).y);
+	for(float t = 0.0; t <= length(ray); t += step_size){
+		float density = atmosphere_density((_start + ray_dir * t).y);
 		od += density;
 	}
-	return od * stepSize;
+	return od * step_size;
 }
 
 
-float rayleighPhaseFunction(
-	in vec3 toRayStart,
-	in vec3 toSun
+float rayleigh_phase_function(
+	in vec3 _to_ray_origin,
+	in vec3 _to_sun
 ){
-	float cosTheta = dot(normalize(toRayStart), normalize(toSun));
-	return 0.75 * (1.0 + cosTheta * cosTheta);
+	float cos_theta = dot(normalize(_to_ray_origin), normalize(_to_sun));
+	return 0.75 * (1.0 + cos_theta * cos_theta);
 }
 
 
 // Pinpoint to: UNDEFINED BEHAVIOR inside
 // when sun is inside atmosphere
 vec3 rayleigh(
-	in vec3 start,
-	in vec3 end,
-	in int steps,
-	in vec3 sunPos
+	in vec3 _start,
+	in vec3 _end,
+	in int _steps,
+	in vec3 _sun_pos
 ){
-	float rayLength = length(end - start);
-	if (rayLength < 0.0001) {
+	float ray_length = length(_end - _start);
+	if (ray_length < 0.0001) 
 		return vec3(0.0);
-	}
-	vec3 ray = (end - start) / rayLength;
-	float stepSize = rayLength / float(steps);
+
+	vec3 ray = (_end - _start) / ray_length;
+	float step_size = ray_length / float(_steps);
+
 	vec3 rayleigh = vec3(0.0);
-	for (float t = 0.01; t < rayLength - 0.01; t += stepSize){
-		vec3 scatterPoint = start + t * ray;
-		// rayleigh scattering
-		// TODO: only up to top of atmosphere
-		vec3 toSun = sunPos - scatterPoint;
-		if (toSun.y < 0.01) { // sun is below the horizon
+	for (float t = 0.01; t < ray_length - 0.01; t += step_size){
+		vec3 scatter_point = _start + t * ray;
+
+		vec3 to_sun = _sun_pos - scatter_point;
+		if (to_sun.y < 0.01)  // sun is below the horizon
 			continue;
-		}
-		vec3 sunEnd = scatterPoint + toSun * (iAtmosphereMaxHeight - scatterPoint.y) / toSun.y;
-		bool sunInsideAtmosphere = rayInsideAtmosphere(scatterPoint, sunEnd);
 
-		float odSun = sunInsideAtmosphere
-			? opticalDepth(scatterPoint, sunEnd, iOpticalDepthSteps) 
+		// only use the segment of the sun ray that is inside the atmosphere
+		vec3 sun_end = scatter_point + to_sun * (iAtmosphereMaxHeight - scatter_point.y) / to_sun.y;
+		bool sun_inside_atmos = ray_inside_atmosphere_i(scatter_point, sun_end);
+
+		float od_sun = sun_inside_atmos
+			? optical_depth(scatter_point, sun_end, iOpticalDepthSteps) 
 			: 0.0;
-		float odEye = opticalDepth(scatterPoint, start, iOpticalDepthSteps);
+		float od_eye = optical_depth(scatter_point, _start, iOpticalDepthSteps);
 
-		float phase = rayleighPhaseFunction(-ray, toSun);
-		rayleigh += atmosphereDensity(scatterPoint.y) 
-			* exp(-(odSun+odEye) * iScatteringCoefficient)
+		float phase = rayleigh_phase_function(-ray, to_sun);
+		rayleigh += atmosphere_density(scatter_point.y) 
+			* exp(-(od_sun + od_eye) * iScatteringCoefficient)
 			* iScatteringCoefficient * phase;
 	}
-	return rayleigh * stepSize;
+	// since step_size is constant, we can factor it out
+	return rayleigh * step_size;
 }

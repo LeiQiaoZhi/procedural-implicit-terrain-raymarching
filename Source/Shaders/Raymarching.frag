@@ -272,27 +272,26 @@ void main()
 
 	vec3 start = cameraPos;
 	vec3 end = cameraPos + ray * distanceToObj;
-	bool inAtmosphere = rayInsideAtmosphere(start, end);
-	// inAtmosphere = false;
+	bool in_atmosphere = ray_inside_atmosphere_i(start, end);
 
 	if (iDebugRenderTarget == DEPTH_RENDER_TARGET){
 		color = vec3(distance(start,end)/iDebugMaxRayDistance);
-		if (iDebugMarkNotInAtmosphere && !inAtmosphere){
+		if (iDebugMarkNotInAtmosphere && !in_atmosphere){
 			color.yz = vec2(0);
 		}
 		FragColor = vec4(color, 1.0); return;
 	}
 	if (iDebugRenderTarget == OPTICAL_DEPTH_RENDER_TARGET){
-		color = vec3(opticalDepth(start, end, 20)) / 10;
+		color = vec3(optical_depth(start, end, 20)) / 10;
 		FragColor = vec4(color, 1.0); return;
 	}
-	if (inAtmosphere){
+	if (in_atmosphere){
 		vec3 rayleigh = iRayleighStrength * rayleigh(start, end, iRayleighSteps, sunPos);
-		float viewRayOpticalDepth = opticalDepth(start, end, iOpticalDepthSteps);
-		// viewRayOpticalDepth = 100000.0;
-		// color = vec3(distance(start,end)/iDebugMaxRayDistance);
-		// color = vec3(viewRayOpticalDepth)/10;
-		color = color * exp(-viewRayOpticalDepth * iRayleighFogFallOff * iRayleighFogStrength) + rayleigh;
+		float view_ray_od = optical_depth(start, end, iOpticalDepthSteps);
+		// blending with object color
+		color = 
+			color * exp(-view_ray_od * iRayleighFogFallOff * iRayleighFogStrength) 
+			+ rayleigh;
 	}
 	FragColor = vec4(color, 1.0);
 	return;
