@@ -50,9 +50,16 @@ uniform float iCloudUpperThreshold;
 uniform float iSkyFogStrength;
 uniform vec3 iSkyFogColor;
 
+// sun position
 uniform float iTheta;
 uniform float iPhi;
 uniform float iRadius;
+
+// sun
+uniform bool iEnableSunDisk;
+uniform float iSunDiskThreshold;
+uniform vec3 iSunDiskColor;
+uniform int iSunDiskDotPower;
 
 // returns the distance to the terrain 
 float raymarchTerrain(
@@ -238,12 +245,16 @@ void main()
 		// post processing
 		color = smoothstep(0.0, 1.0, color);
 	}	
-	// sky
-	else if (iEnableClouds){
-		// clouds
-		vec3 cloud_color = raymarch_clouds(cameraPos, ray);
-		color = iCloudStrength * cloud_color;
-		// FragColor = vec4(color, 1.0); return;
+	else { // no hit, sky
+		if (iEnableSunDisk){
+			vec3 sun_ray = normalize(sunPos - cameraPos);
+			float sun_dot = dot(ray, sun_ray);
+			if (100 * sun_dot > iSunDiskThreshold){
+				color += iSunDiskColor
+							* pow(max(0, dot(ray, sun_ray)), iSunDiskDotPower);
+			}
+		}
+	}
 	}
 
 	if (distanceToObj < 0){

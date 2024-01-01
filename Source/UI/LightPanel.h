@@ -5,6 +5,8 @@
 #include "UIApp.h"
 #include "ShaderClass.h"
 #include "UI/Properties/VecSliderProperty.h"
+#include "UI/Properties/BoolProperty.h"
+#include "UI/Properties/ColorProperty.h"
 
 namespace UI {
 
@@ -18,7 +20,11 @@ namespace UI {
 					-100000, 100000),*/
 				std::make_shared<SliderF>("Theta", "iTheta", 0.0f, 3.14f, 0.0f),
 				std::make_shared<SliderF>("Phi", "iPhi", 0.0f, 2 * 3.14f, 0.0f),
-				std::make_shared<SliderF>("Radius", "iRadius", 0.0f, 1000000.0f, 40000.0f)
+				std::make_shared<SliderF>("Radius", "iRadius", 0.0f, 1000000.0f, 40000.0f),
+				std::make_shared<BoolProperty>("Enable Sun Disk", "iEnableSunDisk", true),
+				std::make_shared<SliderF>("Dot Product Threshold", "iSunDiskThreshold", 95.0f, 100.0f, 95.0f),
+				std::make_shared<ColorProperty>("Sun Disk Color", "iSunDiskColor", "#ffffff"),
+				std::make_shared<SliderI>("Dot Power", "iSunDiskDotPower", 1, 1000, 1),
 			};
 		}
 		nlohmann::json to_json() const override;
