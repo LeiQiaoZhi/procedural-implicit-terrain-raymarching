@@ -255,6 +255,15 @@ void main()
 			}
 		}
 	}
+	if (obj == 0 || // no hit
+		cameraPos.y > iCloudBoxLowerY && ray.y < 0){ // above cloud looking down
+		if (iEnableClouds){
+			// clouds
+			float cloud_density;
+			vec3 cloud_color = iCloudStrength * inigo_raymarch_clouds(cameraPos, ray, cloud_density);
+			color = exp(-cloud_density) * color + (1-exp(-cloud_density)) * cloud_color;
+			// FragColor = vec4(color, 1.0); return;
+		}
 	}
 
 	if (distanceToObj < 0){
