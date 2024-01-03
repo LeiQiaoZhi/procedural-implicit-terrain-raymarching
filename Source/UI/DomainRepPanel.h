@@ -18,7 +18,7 @@ namespace UI {
 			: UIPanel("Tree", _shader) {
 			properties_ = {
 				std::make_shared<BoolProperty>("Enable", "iTreeEnabled", true),
-				std::make_shared<SliderF>("Domain Size", "iDomainSize", 0.1f, 100.0f, 25.0f),
+				std::make_shared<SliderF>("Domain Size", "iTreeDomainSize", 0.1f, 100.0f, 25.0f),
 				std::make_shared<SliderF>("Radius", "iTreeRadius", 0.1f, 100.0f, 5.0f),
 				std::make_shared<SliderF>("Height", "iTreeHeight", 0.1f, 100.0f, 20.0f),
 				std::make_shared<SliderF>("Offset", "iTreeOffset", -50.0f, 50.0f, 0.0f),

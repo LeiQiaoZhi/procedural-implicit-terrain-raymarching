@@ -1,12 +1,16 @@
 #include "Constants.frag"
 
 // return (f(x), f'(x))
-vec2 smoothstepd(in float x, in float a = 0.0, in float b = 1.0){
-    float t = (x - a) / (b - a);
-    if (x < a){
+vec2 smoothstep_d(
+    in float _x,
+    in float _a = 0.0,
+    in float _b = 1.0
+){
+    float t = (_x - _a) / (_b - _a);
+    if (_x < _a){
         return vec2(0, 0);
     }
-    if (x > b){
+    if (_x > _b){
         return vec2(1, 0);
     }
     return vec2(
@@ -15,37 +19,38 @@ vec2 smoothstepd(in float x, in float a = 0.0, in float b = 1.0){
     );
     return vec2(
          t * t * (3.0 - 2.0 * t),
-         6.0 * t * (1.0 - t) / (b - a)
+         6.0 * t * (1.0 - t) / (_b - _a)
     );
 }
 
 // range [0, 1]
-float hash(in vec2 p) {
-    float h = dot(p, vec2(127.1, 311.7));
+float hash(in vec2 _p) {
+    float h = dot(_p, vec2(127.1, 311.7));
     return fract(sin(h) * 43758.5453);
 }
 
-float hash(in float n)
+float hash(in float _p)
 {
-    return fract( n*17.0*fract( n*0.3183099 ));
+    return fract(_p*17.0*fract(_p*0.3183099));
 }
 
 // range [0, 1]
-vec2 hash2(in vec2 p){
-    p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
-    return fract(sin(p) * 43758.5453123);
+vec2 hash2(in vec2 _p){
+    _p = vec2(dot(_p, vec2(127.1, 311.7)), dot(_p, vec2(269.5, 183.3)));
+    return fract(sin(_p) * 43758.5453123);
 }
+
 
 // return (Noise(p), dx, dz)
 // Noise(p) between -1 and 1
-vec3 noised(in vec2 p){
-    vec2 ij = floor(p);
-    vec2 xz = fract(p);
+vec3 noise_d(in vec2 _p){
+    vec2 ij = floor(_p);
+    vec2 xz = fract(_p);
 
-    vec2 s1 = smoothstepd(xz.x);
+    vec2 s1 = smoothstep_d(xz.x);
     float sx = s1.x;
     float dsx = s1.y;
-    vec2 s2 = smoothstepd(xz.y);
+    vec2 s2 = smoothstep_d(xz.y);
     float sz = s2.x;
     float dsz = s2.y;
 
@@ -65,17 +70,18 @@ vec3 noised(in vec2 p){
     return vec3(2 * height - 1, 2 * dx, 2 * dy);
 }
 
+
 // return (Noise(p), dx, dz)
 // Noise(p) between -1 and 1
-float noise3D(in vec3 p){
-    vec3 ijk = floor(p);
-    vec3 xyz = fract(p);
+float noise_3D(in vec3 _p){
+    vec3 ijk = floor(_p);
+    vec3 xyz = fract(_p);
 
-    vec2 s1 = smoothstepd(xyz.x);
+    vec2 s1 = smoothstep_d(xyz.x);
     float sx = s1.x;
-    vec2 s2 = smoothstepd(xyz.y);
+    vec2 s2 = smoothstep_d(xyz.y);
     float sy = s2.x;
-    vec2 s3 = smoothstepd(xyz.z);
+    vec2 s3 = smoothstep_d(xyz.z);
     float sz = s3.x;
 
     float id = ijk.x + ijk.y * 157.0 + 113.0 * ijk.z;
@@ -100,3 +106,7 @@ float noise3D(in vec3 p){
 
     return 2 * height - 1;
 }
+
+
+
+// TODO: noise_3D_d

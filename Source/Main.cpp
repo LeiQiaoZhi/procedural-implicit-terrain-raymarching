@@ -37,8 +37,8 @@ int main()
 	// load glad so it configures opengl
 	gladLoadGL();
 
-	Shader shader((SHADER_PATH "\\Minimum.vert"), {
-		(SHADER_PATH "\\Raymarching.frag")
+	Shader shader((SHADER_PATH "\\Others\\Minimum.vert"), {
+		(SHADER_PATH "\\Main.frag")
 		});
 
 	// set up vertex array object

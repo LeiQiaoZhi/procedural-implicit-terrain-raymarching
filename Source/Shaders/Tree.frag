@@ -1,37 +1,42 @@
-#include "HeightMap.frag"
+#include "Terrain.frag"
 
-uniform float iDomainSize;
+uniform bool iTreeEnabled;
+// sdf
+uniform float iTreeDomainSize;
 uniform float iTreeRadius;
 uniform float iTreeHeight;
 uniform float iTreeOffset;
 uniform float iTreeRandomness;
 uniform vec2 iTreeSizeRandomness;
 uniform float iTreeSteepnessThreshold;
-
+// normal
 uniform float iTreeNormalEpsilon;
-
+// rendering
 uniform int iTreeSteps;
 uniform int iTreeShadowSteps;
 uniform float iTreeShadowThreshold;
 uniform float iTreeShadowLower;
+uniform vec3 iTreeColor;
+uniform float iTreeNormalTerrainProportion;
+
 
 // with domain repetition
 float treeSDF(in vec3 pos){
-	vec3 m = floor(pos / iDomainSize); // coord of domain
+	vec3 m = floor(pos / iTreeDomainSize); // coord of domain
     float d = 1e10;
 
     // which neighbouring domains to check
-    // vec2 signs = sign(pos.xz - (m.xz + 0.5) * iDomainSize);
+    // vec2 signs = sign(pos.xz - (m.xz + 0.5) * iTreeDomainSize);
     // check every neighbouring domain
     vec2 signs = vec2(1.0, 1.0);
 
     // check neighbouring domains
     for (int i = -1; i <= 1; i++){
 		for(int j = -1; j <= 1; j++){
-	        vec3 center = (m + 0.5) * iDomainSize; // center of domain in world space
-            center.xz += signs * vec2(i,j) * iDomainSize;
+	        vec3 center = (m + 0.5) * iTreeDomainSize; // center of domain in world space
+            center.xz += signs * vec2(i,j) * iTreeDomainSize;
             vec2 randomOffset =  hash2(m.xz + signs * vec2(i,j)) - 0.5; // range [-0.5, 0.5]
-            center += iTreeRandomness * vec3(randomOffset.x, 0.0, randomOffset.y) * iDomainSize;
+            center += iTreeRandomness * vec3(randomOffset.x, 0.0, randomOffset.y) * iTreeDomainSize;
             vec4 heightd = terraind(center.xz);
             center.y = heightd.x;
 

@@ -24,14 +24,6 @@ namespace UI {
 				std::make_shared<SliderF>("Fog Strength", "iRayleighFogStrength", 0.01, 100, 1),
 				std::make_shared<SliderI>("Rayleigh Steps", "iRayleighSteps", 1, 20, 1),
 				std::make_shared<SliderI>("OD Steps", "iOpticalDepthSteps", 1, 20, 1),
-				/*std::make_shared<ColorProperty>("Color Top", "iSkyColorTop", "#387EFF"),
-				std::make_shared<ColorProperty>("Color Bottom", "iSkyColorBot", "#AAFFF0"),
-				std::make_shared<SliderF>("Height", "iCloudHeight", 0, 50000, 10000),
-				std::make_shared<SliderF>("Scale", "iCloudScale", 1000, 50000, 10000),
-				std::make_shared<SliderF>("Lower Threshold", "iCloudLowerThreshold", -5, 5, 0),
-				std::make_shared<SliderF>("Upper Threshold", "iCloudUpperThreshold", -5, 5, 1),
-				std::make_shared<SliderF>("Fog Strength", "iSkyFogStrength", 0, 10, 0.2),
-				std::make_shared<ColorProperty>("Fog Color", "iSkyFogColor", "#F9FDDA"),*/
 			};
 		}
 	protected:

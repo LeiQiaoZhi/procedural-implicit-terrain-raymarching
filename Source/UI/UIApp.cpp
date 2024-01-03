@@ -8,6 +8,7 @@
 #include "SkyPanel.h"
 #include "DebugPanel.h"
 #include "CloudPanel.h"
+#include "TwoDSkyPanel.h"
 #include "MenuBarPanel.h"
 #include "JsonUtils.h"
 
@@ -58,6 +59,9 @@ void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_cont
 	);
 	panels_.push_back(
 		std::move(std::make_shared<CloudPanel>(_shader))
+	);
+	panels_.push_back(
+		std::move(std::make_shared<TwoDSkyPanel>(_shader))
 	);
 
 	// load default values

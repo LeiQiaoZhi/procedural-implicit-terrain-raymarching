@@ -1,4 +1,4 @@
-#include "HeightMap.frag"
+#include "Fbm.frag"
 
 // overall
 uniform bool iEnableClouds;
@@ -20,6 +20,7 @@ uniform float iCloudSampleAlpha; // front to back blending
 uniform float iCloudMaxCumAlpha; 
 
 
+
 float cloud_density(vec3 _p) {
 	float half_height = (iCloudBoxUpperY - iCloudBoxLowerY) * 0.1;
 	float center_y = (iCloudBoxLowerY + iCloudBoxUpperY) * 0.5;
@@ -27,6 +28,7 @@ float cloud_density(vec3 _p) {
 	d += iCloudFbmStrength * terrain(_p);
 	return min(-d, 0.25);
 }
+
 
 vec3 inigo_raymarch_clouds(
 	in vec3 _camera_pos,
@@ -84,5 +86,28 @@ vec3 inigo_raymarch_clouds(
 	}
 	_cum_density /= t;
 	return cum_color.rgb / (t);
-	// return exp(-0.0001 * distance(start.xz, _camera_pos.xz)) * vec3(cum_density/100000);
+}
+
+
+
+void inigo_render_clouds_i(
+	in int _obj,
+	in vec3 _camera_pos,
+	in vec3 _view_ray,
+	inout vec3 _color
+){
+	if (_obj > 0 && (_camera_pos.y < iCloudBoxLowerY || _view_ray.y < 0))
+		return;
+	if (!iEnableClouds)
+		return;
+
+	float cloud_density;
+	vec3 cloud_color = 
+		iCloudStrength 
+		* inigo_raymarch_clouds(_camera_pos, _view_ray, cloud_density);
+
+	// blending with original color
+	_color = 
+		exp(-cloud_density) * _color 
+		+ (1-exp(-cloud_density)) * cloud_color;
 }

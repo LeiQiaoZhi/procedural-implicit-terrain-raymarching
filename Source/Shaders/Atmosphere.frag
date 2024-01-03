@@ -1,5 +1,3 @@
-// #include "Constants.frag"
-
 uniform float iRayleighStrength;
 // density 
 uniform float iAtmosphereDensityFallOff;
