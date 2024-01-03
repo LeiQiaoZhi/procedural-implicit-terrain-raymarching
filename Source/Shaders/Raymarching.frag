@@ -35,7 +35,7 @@ float raymarchTerrain(
 	{
 		pos = origin + t * ray;
 
-		float height = terraind(pos.xz).x;
+		float height = terrain_fbm_d(pos.xz).x;
 		float treeHeight = height + treeMaxHeight;
 
 		// check for tree intersection

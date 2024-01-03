@@ -41,7 +41,7 @@ vec2 hash2(in vec2 _p){
 }
 
 
-// return (Noise(p), dx, dz)
+// return (Noise(p), dN/dx, dN/dz)
 // Noise(p) between -1 and 1
 vec3 noise_d(in vec2 _p){
     vec2 ij = floor(_p);
@@ -109,4 +109,60 @@ float noise_3D(in vec3 _p){
 
 
 
-// TODO: noise_3D_d
+vec4 noise_3D_d(in vec3 _p){
+    vec3 ijk = floor(_p);
+    vec3 xyz = fract(_p);
+
+    vec2 s1 = smoothstep_d(xyz.x);
+    float sx = s1.x;
+    float dsx = s1.y;
+    vec2 s2 = smoothstep_d(xyz.y);
+    float sy = s2.x;
+    float dsy = s2.y;
+    vec2 s3 = smoothstep_d(xyz.z);
+    float sz = s3.x;
+    float dsz = s3.y;
+
+    float id = ijk.x + ijk.y * 157.0 + 113.0 * ijk.z;
+    float a = hash(id + 0.0);
+    float b = hash(id + 1.0);
+    float c = hash(id + 157.0);
+    float d = hash(id + 158.0);
+    float e = hash(id + 113.0);
+    float f = hash(id + 114.0);
+    float g = hash(id + 270.0);
+    float h = hash(id + 271.0);
+
+    float ba = b - a;
+    float ca = c - a;
+    float ea = e - a;
+    float abcd = a - b - c + d;
+    float aceg = a - c - e + g;
+    float abef = a - b - e + f;
+    float abcdefgh = -a + b + c - d + e - f - g + h;
+
+    float height = 
+        a 
+        + ba * sx + ca * sy + ea * sz
+        + abcd * sx * sy 
+        + aceg * sy * sz 
+        + abef * sx * sz 
+        + abcdefgh * sx * sy * sz;
+    float dx = 
+	    ba * dsx 
+		+ abcd * dsx * sy 
+        + abef * dsx * sz 
+		+ abcdefgh * dsx * sy * sz;
+    float dy =
+        ca * dsy
+        + abcd * sx * dsy
+        + aceg * dsy * sz
+        + abcdefgh * sx * dsy * sz;
+    float dz =
+		ea * dsz
+		+ aceg * sy * dsz
+		+ abef * sx * dsz
+		+ abcdefgh * sx * sy * dsz;
+
+    return vec4(2 * height - 1, 2 * dx, 2 * dy, 2 * dz);
+}

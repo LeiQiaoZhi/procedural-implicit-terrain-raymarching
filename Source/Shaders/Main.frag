@@ -30,7 +30,6 @@ uniform float iDirtThreshold;
 void main() 
 {
 	vec3 color = vec3(0.0);
-	vec3 sun_pos = get_sun_pos();
 
 	// set up coordinate system
 	vec2 NDC = (gl_FragCoord.xy / min(iResolution.x, iResolution.y)) * 2.0 - 1.0; // [-1,1]
@@ -41,10 +40,12 @@ void main()
 	}
 
 	// naive way to prevent clipping through terrain
-	float current_height = terraind(iCameraPos.xz).x;
+	float current_height = terrain_fbm_d(iCameraPos.xz).x;
 	vec3 camera_pos = iCameraPos;
 	camera_pos.y = max(current_height + 1, iCameraPos.y);
 	vec3 ray = get_view_ray(NDC);
+
+	vec3 sun_pos = get_sun_pos(camera_pos);
 
 	// raymarching
 	float tree_start_distance;
@@ -69,7 +70,7 @@ void main()
 	if (obj > 0)
 	{
 		vec3 pos = camera_pos + distance_to_obj * ray;
-		vec4 heightd = terraind(pos.xz);
+		vec4 heightd = terrain_fbm_d(pos.xz);
 		if (obj == TERRAIN_OBJ){
 			pos.y = heightd.x;
 		}

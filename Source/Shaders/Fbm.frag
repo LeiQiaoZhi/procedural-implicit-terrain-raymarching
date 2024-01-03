@@ -42,9 +42,9 @@ vec3 fbm_d(
 }
 
 
-// TODO: calculate derivatives
+
 // use 3d noise
-float fbm(
+vec4 fbm_3D_d(
 	in vec3 _pos, 
 	in int _num_layers,
 	in float _shrink_h = 1.9, // shrink factor horizontally (x,z)
@@ -55,19 +55,21 @@ float fbm(
 {
 	float v = _shrink_v_start;
 	float height = 0.0; // cumulative height
+	vec3 gradient = vec3(0.0); // cumulative gradient
 	mat3 chain = mat3(1.0,0.0,0.0,
                    0.0,1.0,0.0,
                    0.0,0.0,1.0); // cumulative matrix for chain rule
 	for(int i = 0; i < _num_layers; i++)
 	{
-		float noise = v * noise_3D(_pos);
+		vec4 noise_d = v * noise_3D_d(_pos);
 		if (i < _filter_range.x || i >= _filter_range.y) {
-			height += noise;
+			height += noise_d.x;
+			gradient += chain * noise_d.yzw;
 		}   
 		v *= _shrink_v;
 		_pos = _shrink_h * ROT_3 * _pos;
 		chain = _shrink_h * ROT_3I * chain;
 	}
 
-	return height;
+	return vec4(height, gradient);
 }

@@ -37,7 +37,7 @@ float treeSDF(in vec3 pos){
             center.xz += signs * vec2(i,j) * iTreeDomainSize;
             vec2 randomOffset =  hash2(m.xz + signs * vec2(i,j)) - 0.5; // range [-0.5, 0.5]
             center += iTreeRandomness * vec3(randomOffset.x, 0.0, randomOffset.y) * iTreeDomainSize;
-            vec4 heightd = terraind(center.xz);
+            vec4 heightd = terrain_fbm_d(center.xz);
             center.y = heightd.x;
 
             vec3 normal = heightd.yzw;

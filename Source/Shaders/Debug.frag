@@ -16,6 +16,8 @@ uniform float iDebugNoise3DZ = 0;
 uniform float iDebugMaxRayDistance = 0;
 uniform bool iDebugMarkNotInAtmosphere = false;
 
+
+
 bool debug_noises(
 	in vec2 _ndc,
 	in vec3 _camera_pos,
@@ -27,7 +29,7 @@ bool debug_noises(
 		vec2 noise_pos = _ndc * scale
 			+ 10 * vec2(-_camera_pos.x, _camera_pos.z);
 		_color = vec3(
-			(terraind(noise_pos).x 
+			(terrain_fbm_d(noise_pos).x 
 			/ _max_height + 1) * 0.5
 		);
 		return true;
@@ -37,13 +39,15 @@ bool debug_noises(
 		vec2 noise_pos = _ndc * scale
 			+ 10 * vec2(-_camera_pos.x, _camera_pos.z);
 		_color = vec3(
-			(terrain(vec3(noise_pos, iDebugNoise3DZ)) 
+			(terrain_3D_fbm_d(vec3(noise_pos, iDebugNoise3DZ)).x
 			/ _max_height + 1) * 0.5
 		);
 		return true;
 	}
 	return false;
 }
+
+
 
 bool debug_depth_and_od(
 	in vec3 _start,

@@ -25,7 +25,7 @@ float cloud_density(vec3 _p) {
 	float half_height = (iCloudBoxUpperY - iCloudBoxLowerY) * 0.1;
 	float center_y = (iCloudBoxLowerY + iCloudBoxUpperY) * 0.5;
 	float d = abs(_p.y - center_y) - half_height;
-	d += iCloudFbmStrength * terrain(_p);
+	d += iCloudFbmStrength * terrain_3D_fbm_d(_p).x;
 	return min(-d, 0.25);
 }
 

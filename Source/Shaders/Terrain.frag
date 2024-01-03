@@ -11,8 +11,9 @@ uniform float iVerticalShrinkStart;
 // shadow
 uniform int iTerrainShadowSteps;
 
-float terrain(in vec3 pos){
-	float result = fbm(
+
+vec4 terrain_3D_fbm_d(in vec3 pos){
+	vec4 result = fbm_3D_d(
 		pos / iHorizontalScale, 
 		iNumLayers,
 		iHorizontalShrink,
@@ -21,12 +22,14 @@ float terrain(in vec3 pos){
 		iFilterRange
 	);
 	result *= iMaxHeight;
-	float height = result;
-	return height;
+	float height = result.x;
+	result.yzw /= iHorizontalScale;
+	return vec4(height, normalize(result.yzw));
 }
 
+
 // return (height, normal)
-vec4 terraind(in vec2 pos){
+vec4 terrain_fbm_d(in vec2 pos){
 	vec3 result = fbm_d(
 		pos / iHorizontalScale, 
 		iNumLayers,
@@ -42,6 +45,7 @@ vec4 terraind(in vec2 pos){
 	return vec4(height, normal);
 }
 
+
 float terrainShadow(in vec3 pos, in vec3 pointToSun){
 	// shadow ray
 	float shadowStepSize = 1;
@@ -49,7 +53,7 @@ float terrainShadow(in vec3 pos, in vec3 pointToSun){
 	for (float t = 1; t < iTerrainShadowSteps * shadowStepSize; t += shadowStepSize) 
 	{
 		vec3 shadowPos = pos + t * pointToSun;
-		float d = shadowPos.y - terraind(shadowPos.xz).x;
+		float d = shadowPos.y - terrain_fbm_d(shadowPos.xz).x;
 		minR = min(minR, 2 * d / t);
 
 		if (minR < 0.001){
