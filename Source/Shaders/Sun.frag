@@ -1,7 +1,10 @@
 // sun position
-uniform float iTheta;
-uniform float iPhi;
-uniform float iRadius;
+uniform bool iCameraAsCenter;
+uniform vec3 iSunCenter;
+
+uniform float iSunTheta;
+uniform float iSunPhi;
+uniform float iSunRadius;
 
 // sun disk
 uniform bool iEnableSunDisk;
@@ -9,13 +12,20 @@ uniform float iSunDiskThreshold;
 uniform vec3 iSunDiskColor;
 uniform int iSunDiskDotPower;
 
-vec3 get_sun_pos() {
-	return iRadius * vec3(
-		sin(iTheta) * cos(iPhi),
-		cos(iTheta),
-		sin(iTheta) * sin(iPhi)
+
+
+vec3 get_sun_pos(
+	in vec3 _camera_pos
+) {
+	vec3 center = iCameraAsCenter ? _camera_pos : iSunCenter;
+	return center + iSunRadius * vec3(
+		sin(iSunTheta) * cos(iSunPhi),
+		cos(iSunTheta),
+		sin(iSunTheta) * sin(iSunPhi)
 	);
 }
+
+
 
 vec3 sun_disk(
 	in vec3 _sun_pos,
