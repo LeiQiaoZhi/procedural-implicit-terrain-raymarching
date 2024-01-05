@@ -8,37 +8,33 @@
 
 #include "UI/UIUtils.h"
 #include "Property.h"
-#include "ShaderClass.h"
 
 namespace UI {
 
-	class BoolProperty : public Property {
+	class LabelProperty : public Property {
 	public:
-		BoolProperty(
-			std::string_view _name, std::string_view _uniform_name,
-			bool _value
-		) : Property(_name, _uniform_name), value_(_value) {}
+		LabelProperty(
+			std::string_view _label
+		) : Property(_label, ""), label_(_label) {}
 
 		// float
 		bool gui() override {
-			return ImGui::Checkbox(name_.data(), &value_);
+			ImGui::Text(label_.data());
+			return true;
 		}
 
 		void take_effect(const Shader& _shader) override {
-			_shader.set_uniform_bool(uniform_name_.data(), value_);
 		}
 
 		nlohmann::json to_json() const override {
 			return {
-				{ "value", value_ }
 			};
 		}
 
 		void from_json(const nlohmann::json& _json) override {
-			value_ = _json.value("value", false);
 		}
 
 	private:
-		bool value_;
+		std::string_view label_;
 	};;
 }

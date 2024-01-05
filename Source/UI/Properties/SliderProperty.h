@@ -13,7 +13,7 @@ namespace UI {
 	class SliderProperty : public Property {
 	public:
 		SliderProperty(
-			const std::string& _name, const std::string& _uniform_name,
+			std::string_view _name, std::string_view _uniform_name,
 			T _min, T _max, T _value, float _step = 0.01f)
 			: Property(_name, _uniform_name), min_(_min), max_(_max), value_(_value), step_(_step) {}
 
@@ -50,22 +50,22 @@ namespace UI {
 
 	template<>
 	inline bool SliderProperty<float>::gui() {
-		return ImGui::SliderFloat(name_.c_str(), &value_, min_, max_, "%.2f", step_);
+		return ImGui::SliderFloat(name_.data(), &value_, min_, max_, "%.2f", step_);
 	}
 
 	template<>
 	inline void SliderProperty<float>::take_effect(const Shader& _shader) {
-		_shader.set_uniform_float(uniform_name_, value_);
+		_shader.set_uniform_float(uniform_name_.data(), value_);
 	}
 
 	template<>
 	inline bool SliderProperty<int>::gui() {
-		return ImGui::SliderInt(name_.c_str(), &value_, min_, max_);
+		return ImGui::SliderInt(name_.data(), &value_, min_, max_);
 	}
 
 	template<>
 	inline void SliderProperty<int>::take_effect(const Shader& _shader) {
-		_shader.set_uniform_int(uniform_name_, value_);
+		_shader.set_uniform_int(uniform_name_.data(), value_);
 	}
 
 	using SliderF = SliderProperty<float>;

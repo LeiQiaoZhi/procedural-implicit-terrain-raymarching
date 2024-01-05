@@ -14,7 +14,7 @@ namespace UI {
 	class ColorProperty : public Property {
 	public:
 		ColorProperty(
-			const std::string& _name, const std::string& _uniform_name,
+			std::string_view _name, std::string_view _uniform_name,
 			const std::string& _hex
 		) : Property(_name, _uniform_name) {
 			hex_to_floats(_hex, colors_);
@@ -22,12 +22,12 @@ namespace UI {
 
 		// float
 		bool gui() override {
-			return ImGui::ColorEdit3(name_.c_str(), colors_);
+			return ImGui::ColorEdit3(name_.data(), colors_);
 		}
 
 		void take_effect(const Shader& _shader) override {
 			auto color = glm::vec3(colors_[0], colors_[1], colors_[2]);
-			_shader.set_uniform_vec3(uniform_name_, color);
+			_shader.set_uniform_vec3(uniform_name_.data(), color);
 		}
 
 		nlohmann::json to_json() const override {

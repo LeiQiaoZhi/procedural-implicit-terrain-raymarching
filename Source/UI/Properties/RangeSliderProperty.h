@@ -13,7 +13,7 @@ namespace UI {
 	class RangeSliderProperty : public Property {
 	public:
 		RangeSliderProperty(
-			const std::string& _name, const std::string& _uniform_name,
+			std::string_view _name, std::string_view _uniform_name,
 			T _min, T _max, T _value_min, T _value_max, float _step = 0.01f)
 			: Property(_name, _uniform_name), min_(_min), max_(_max), 
 			value_min_(_value_min), value_max_(_value_max), step_(_step) {}
@@ -66,13 +66,13 @@ namespace UI {
 
 	template<>
 	inline void RangeSliderProperty<float>::take_effect(const Shader& _shader) {
-		_shader.set_uniform_vec2(uniform_name_, glm::vec2(value_min_, value_max_));
+		_shader.set_uniform_vec2(uniform_name_.data(), glm::vec2(value_min_, value_max_));
 	}
 
 	template<>
 	inline bool RangeSliderProperty<int>::gui() {
 
-		if (!ImGui::CollapsingHeader(name_.c_str()))
+		if (!ImGui::CollapsingHeader(name_.data()))
 			return false;
 
 		bool b1 = ImGui::SliderInt("Min", &value_min_, min_, max_);
@@ -90,7 +90,7 @@ namespace UI {
 
 	template<>
 	inline void RangeSliderProperty<int>::take_effect(const Shader& _shader) {
-		_shader.set_uniform_vec2(uniform_name_, glm::vec2(value_min_, value_max_));
+		_shader.set_uniform_vec2(uniform_name_.data(), glm::vec2(value_min_, value_max_));
 	}
 
 	using RangeSliderF= RangeSliderProperty<float>;

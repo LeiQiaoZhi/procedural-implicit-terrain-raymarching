@@ -15,7 +15,7 @@ namespace UI {
 	class SingleSelectProperty : public Property {
 	public:
 		SingleSelectProperty(
-			const std::string& _name, const std::string& _uniform_name,
+			std::string_view _name, std::string_view _uniform_name,
 			int _selected, std::vector<std::string> _items
 		) : Property(_name, _uniform_name), selected_(_selected), item_strs_(std::move(_items))  {
 			// convert vector of strings to vector of const char*
@@ -25,11 +25,11 @@ namespace UI {
 
 		// float
 		bool gui() override {
-			return ImGui::Combo(name_.c_str(), &selected_, items_.data(), items_.size());
+			return ImGui::Combo(name_.data(), &selected_, items_.data(), items_.size());
 		}
 
 		void take_effect(const Shader& _shader) override {
-			_shader.set_uniform_int(uniform_name_, selected_);
+			_shader.set_uniform_int(uniform_name_.data(), selected_);
 		}
 
 		nlohmann::json to_json() const override {
