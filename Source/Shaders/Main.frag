@@ -118,7 +118,7 @@ void main()
 		}
 	}
 
-	inigo_render_clouds_i(obj, camera_pos, ray, color);
+	inigo_render_clouds_i(obj, camera_pos, ray, sun_pos, color);
 	
 	if (distance_to_obj < 0){
 		distance_to_obj = 100000;
