@@ -11,6 +11,17 @@
 
 namespace UI {
 
+	inline ImVec4 hex_to_imvec4(std::string_view hexString) {
+		if (hexString.size() != 7 || hexString[0] != '#') {
+			return ImVec4(1.0f, 0.0f, 0.0f, 1.0f); // RED: Invalid format
+		}
+
+		int r, g, b;
+		sscanf(hexString.data(), "#%02x%02x%02x", &r, &g, &b);
+
+		return ImVec4(r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
+	}
+
 	inline bool hex_to_floats(const std::string& hexString, float outColor[3]) {
 		if (hexString.size() != 7 || hexString[0] != '#') {
 			return false; // Invalid format

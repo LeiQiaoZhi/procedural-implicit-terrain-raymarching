@@ -1,4 +1,5 @@
 #include "UIApp.h"
+#include "UIUtils.h"
 
 #include "CameraPanel.h"
 #include "RaymarchPanel.h"
@@ -21,6 +22,14 @@ UI::UIApp::UIApp(GLFWwindow* _window, const char* _version)
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(_window, true);
 	ImGui_ImplOpenGL3_Init(_version);
+
+	// Styles
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.Colors[ImGuiCol_Border] = ImVec4(1.0f, 1.0f, 1.0f, 0.4f);
+	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+	style.Colors[ImGuiCol_TitleBgActive] = hex_to_imvec4("#3A7698");
+	style.Colors[ImGuiCol_FrameBgActive] = hex_to_imvec4("#3A7698");
+
 }
 
 UI::UIApp::~UIApp()
