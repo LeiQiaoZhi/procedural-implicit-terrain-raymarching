@@ -18,15 +18,17 @@ uniform float iTreeShadowThreshold;
 uniform float iTreeShadowLower;
 uniform vec3 iTreeColor;
 uniform float iTreeNormalTerrainProportion;
+// fbm
+uniform float iTreeFbmStrength;
 
 
 // with domain repetition
-float treeSDF(in vec3 pos){
-	vec3 m = floor(pos / iTreeDomainSize); // coord of domain
+float tree_sdf(
+    in vec3 _pos
+){
+	vec3 m = floor(_pos / iTreeDomainSize); // coord of domain
     float d = 1e10;
 
-    // which neighbouring domains to check
-    // vec2 signs = sign(pos.xz - (m.xz + 0.5) * iTreeDomainSize);
     // check every neighbouring domain
     vec2 signs = vec2(1.0, 1.0);
 
@@ -48,22 +50,27 @@ float treeSDF(in vec3 pos){
                         iTreeHeight + randomSizeOffset.y, 
                         iTreeRadius + randomSizeOffset.x);
             // local position
-            vec3 w = pos - center - vec3(0.0, iTreeOffset, 0.0);
+            vec3 w = _pos - center - vec3(0.0, iTreeOffset, 0.0);
 
+            // sdf of ellipsoid
             float wr = length(w/r);
             d = min(d, wr * (wr - 1.0) / length(w / (r * r)));
         }
 	}
+
+    // distort with 3d noise
+    float noise = cloud_fbm_d(_pos).x;
+    d += iTreeFbmStrength * noise * noise * 0.001;
 
     return d;
 }
 
 vec3 treeNormal(in vec3 pos){
     vec2 e = vec2(1, -1) * 0.5773;
-    return normalize(e.xyy * treeSDF(pos + e.xyy * iTreeNormalEpsilon * 0.0001) + 
-  					e.yyx * treeSDF(pos + e.yyx * iTreeNormalEpsilon * 0.0001) +
-					e.yxy * treeSDF(pos + e.yxy * iTreeNormalEpsilon * 0.0001) + 
-					e.xxx * treeSDF(pos + e.xxx * iTreeNormalEpsilon * 0.0001));
+    return normalize(e.xyy * tree_sdf(pos + e.xyy * iTreeNormalEpsilon * 0.0001) + 
+  					e.yyx * tree_sdf(pos + e.yyx * iTreeNormalEpsilon * 0.0001) +
+					e.yxy * tree_sdf(pos + e.yxy * iTreeNormalEpsilon * 0.0001) + 
+					e.xxx * tree_sdf(pos + e.xxx * iTreeNormalEpsilon * 0.0001));
 }
 
 float treeShadow(in vec3 pos, in vec3 pointToSun){
@@ -74,7 +81,7 @@ float treeShadow(in vec3 pos, in vec3 pointToSun){
 	for (float i = 0; i < iTreeShadowSteps; i++) 
 	{
 		vec3 shadowPos = pos + rayDistance * pointToSun;
-		float d = treeSDF(shadowPos);
+		float d = tree_sdf(shadowPos);
 		if (d < threshold){
 			accumulative += (d - threshold) * rayDistance;
 		}
