@@ -21,13 +21,17 @@ namespace UI {
 
 		bool gui() override {
 			if constexpr (verbose) {
-				if (!ImGui::CollapsingHeader(name_.data()))
-					return false;
-				bool changed = false;
-				for (int i = 0; i < size; ++i) {
-					changed |= UI::SliderT<T>(std::to_string(i).c_str(), &values_[i], min_, max_, "%.2f");
+				if (ImGui::TreeNodeEx(name_.data(), ImGuiTreeNodeFlags_DefaultOpen)) {
+
+					bool changed = false;
+					for (int i = 0; i < size; ++i) {
+						changed |= UI::SliderT<T>(std::to_string(i).c_str(), &values_[i], min_, max_, "%.2f");
+					}
+
+					ImGui::TreePop();
+					return changed;
 				}
-				return changed;
+				return false;
 			}
 
 			return UI::SliderVec<T, size>(name_.data(), values_.data(), min_, max_, "%.2f");

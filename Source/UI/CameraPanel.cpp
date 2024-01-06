@@ -12,7 +12,7 @@ void UI::CameraPanel::gui()
 	ImGui::Checkbox("Invert Zoom", &camera_.settings.invert_zoom);
 
 	// show camera information
-	if (ImGui::CollapsingHeader("Transform")) {
+	if (ImGui::TreeNodeEx("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
 		ImGui::InputFloat3("Position", &camera_.get_position_ref()[0], "%.0f");
 
 		auto forward = camera_.get_forward();
@@ -22,6 +22,8 @@ void UI::CameraPanel::gui()
 		print_vector("Forward", camera_.get_forward());
 		print_vector("Up", camera_.get_up());
 		print_vector("Right", camera_.get_right());
+
+		ImGui::TreePop();
 	}
 
 }

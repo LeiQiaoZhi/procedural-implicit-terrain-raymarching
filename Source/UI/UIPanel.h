@@ -30,12 +30,20 @@ namespace UI {
 			: panel_name_(_name), shader_(_shader), scale_(_scale) {}
 
 		virtual WindowInfo show();
-		std::string get_name() { return panel_name_; }
 		virtual nlohmann::json to_json() const;
 		virtual void from_json(const nlohmann::json& _json);
 
-	protected:
 		virtual void gui() = 0;
+
+		virtual void save_load_buttons();
+		virtual void init_properties();
+		void show_properties();
+
+		// getters
+		std::string get_name() { return panel_name_; }
+		std::vector<std::shared_ptr<Property>>& get_properties() { return properties_; }
+
+		
 
 		// fields
 	protected:

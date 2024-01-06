@@ -11,6 +11,7 @@
 #include "CloudPanel.h"
 #include "TwoDSkyPanel.h"
 #include "MenuBarPanel.h"
+#include "TabsPanel.h"
 #include "JsonUtils.h"
 
 UI::UIApp::UIApp(GLFWwindow* _window, const char* _version)
@@ -24,11 +25,18 @@ UI::UIApp::UIApp(GLFWwindow* _window, const char* _version)
 	ImGui_ImplOpenGL3_Init(_version);
 
 	// Styles
+	auto& accent = hex_to_imvec4("#3A7698");
+	auto& gray = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+	auto& black = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.Colors[ImGuiCol_Border] = ImVec4(1.0f, 1.0f, 1.0f, 0.4f);
-	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
-	style.Colors[ImGuiCol_TitleBgActive] = hex_to_imvec4("#3A7698");
-	style.Colors[ImGuiCol_FrameBgActive] = hex_to_imvec4("#3A7698");
+	style.Colors[ImGuiCol_WindowBg] = black;
+	style.Colors[ImGuiCol_TitleBgActive] = accent;
+	style.Colors[ImGuiCol_FrameBgActive] = accent;
+	style.Colors[ImGuiCol_TabActive] = accent;
+	style.Colors[ImGuiCol_Tab] = gray;
+	style.Colors[ImGuiCol_Header] = ImVec4(1.0f, 1.0f, 1.0f, 0.2f);
 
 }
 
@@ -46,31 +54,30 @@ void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_cont
 		std::move(std::make_shared<MenuBarPanel>(_shader, this))
 	);
 	panels_.push_back(
-		std::move(std::make_shared<CameraPanel>(_shader, _camera_controller))
-	);
-	panels_.push_back(
-		std::move(std::make_shared<RaymarchPanel>(_shader))
-	);
-	panels_.push_back(
-		std::move(std::make_shared<TerrainPanel>(_shader))
-	);
-	panels_.push_back(
-		std::move(std::make_shared<LightPanel>(_shader, _camera_controller))
-	);
-	panels_.push_back(
-		std::move(std::make_shared<DomainRepPanel>(_shader))
-	);
-	panels_.push_back(
-		std::move(std::make_shared<SkyPanel>(_shader))
-	);
-	panels_.push_back(
 		std::move(std::make_shared<DebugPanel>(_shader))
 	);
-	panels_.push_back(
-		std::move(std::make_shared<CloudPanel>(_shader))
+
+	panels_.push_back(std::move(std::make_shared<TabsPanel>("Short 1", _shader,
+			PanelsList{
+				std::make_shared<CameraPanel>(_shader, _camera_controller),
+				std::make_shared<RaymarchPanel>(_shader)
+			}))
 	);
-	panels_.push_back(
-		std::move(std::make_shared<TwoDSkyPanel>(_shader))
+
+	panels_.push_back(std::move(std::make_shared<TabsPanel>("Short 2", _shader,
+		PanelsList{
+			std::make_shared<LightPanel>(_shader, _camera_controller),
+			std::make_shared<TwoDSkyPanel>(_shader)
+		}))
+	);
+
+	panels_.push_back(std::move(std::make_shared<TabsPanel>("Long 1", _shader,
+		PanelsList{
+			std::make_shared<TerrainPanel>(_shader),
+			std::make_shared<DomainRepPanel>(_shader),
+			std::make_shared<SkyPanel>(_shader),
+			std::make_shared<CloudPanel>(_shader)
+		}))
 	);
 
 	// load default values
@@ -115,7 +122,8 @@ void UI::UIApp::show_panels()
 			ImGui::SetNextWindowPos(JsonUtils::json_array_to_imvec2(transform["pos"]));
 		}
 		// show window
-		window_infos.push_back(panel->show());
+		auto& window_info = panel->show();
+		window_infos.push_back(window_info);
 	}
 	window_infos_ = window_infos;
 
