@@ -86,12 +86,26 @@ void CameraController::scroll_callback(GLFWwindow* _window, double _x_offset, do
 	zoom((settings.invert_zoom ? -1 : 1) * glm::sign(_y_offset));
 }
 
+void CameraController::set_shader_uniforms(Shader& _shader)
+{
+	_shader.set_uniform_vec3("iCameraPos",get_position());
+	_shader.set_uniform_vec3("iCameraFwd", get_forward());
+	_shader.set_uniform_vec3("iCameraUp", get_up());
+	_shader.set_uniform_vec3("iCameraRight", get_right());
+	_shader.set_uniform_float("iFocalLength", camera_->get_focal_length());
+}
+
 // camera_position change
 // target, target_distance, camera_direction does not change
 void CameraController::zoom(float _zoom_factor)
 {
-	auto new_pos = camera_->get_position() + _zoom_factor * settings.zoom_speed * camera_->get_forward();
-	camera_->set_position(new_pos);
+	// positional zoom
+	//auto new_pos = camera_->get_position() + _zoom_factor * settings.zoom_speed * camera_->get_forward();
+	//camera_->set_position(new_pos);
+
+	// focal length zoom
+	auto new_focal_length = camera_->get_focal_length() + _zoom_factor * settings.zoom_speed;
+	camera_->set_focal_length(new_focal_length);
 }
 
 // camera_position, camera_direction change

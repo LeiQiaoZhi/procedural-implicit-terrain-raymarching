@@ -93,10 +93,7 @@ int main()
 		const float time = std::chrono::duration<float, std::chrono::seconds::period>(current_time - start_time).count();
 		shader.set_uniform_float("iTime", time);
 
-		shader.set_uniform_vec3("iCameraPos", camera.get_position());
-		shader.set_uniform_vec3("iCameraFwd", camera.get_forward());
-		shader.set_uniform_vec3("iCameraUp", camera.get_up());
-		shader.set_uniform_vec3("iCameraRight", camera.get_right());
+		camera_controller.set_shader_uniforms(shader);
 
 		vao.bind();
 		glDrawElements(GL_TRIANGLES, sizeof(Constants::INDICES) / sizeof(int), GL_UNSIGNED_INT, 0);

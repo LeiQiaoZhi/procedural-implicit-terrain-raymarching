@@ -36,7 +36,7 @@ UI::UIApp::UIApp(GLFWwindow* _window, const char* _version)
 	style.Colors[ImGuiCol_FrameBgActive] = accent;
 	style.Colors[ImGuiCol_TabActive] = accent;
 	style.Colors[ImGuiCol_Tab] = gray;
-	style.Colors[ImGuiCol_Header] = ImVec4(1.0f, 1.0f, 1.0f, 0.2f);
+	style.Colors[ImGuiCol_Header] = ImVec4(1.0f, 1.0f, 1.0f, 0.14f);
 
 }
 

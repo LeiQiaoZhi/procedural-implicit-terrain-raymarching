@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "JsonUtils.h"
 #include "CallbackManager.h"
+#include "ShaderClass.h"
 
 class CameraController
 {
@@ -50,7 +51,6 @@ private:
 	Camera* camera_;
 
 	// states
-	//glm::vec3 target_ = glm::vec3(0.0f);
 	float target_distance_ = 1.0f;
 	bool first_mouse_ = true;
 	double last_x_ = 0;
@@ -65,6 +65,7 @@ public:
 	// called every frame
 	void handle_inputs(GLFWwindow* _window, const int _width, const int _height);
 	void scroll_callback(GLFWwindow* _window, double _x_offset, double _y_offset);
+	void set_shader_uniforms(Shader& _shader);
 
 	// operations
 	void pan(float _dx, float _dy);
@@ -78,6 +79,7 @@ public:
 	glm::vec3 get_forward() { return camera_->get_forward(); }
 	glm::vec3 get_up() { return camera_->get_up(); }
 	glm::vec3 get_right() { return camera_->get_right(); }
+	float get_focal_length() { return camera_->get_focal_length(); }
 	nlohmann::json get_transform_json() {
 		return { {"position", JsonUtils::vec3_to_json_array(get_position())},
 				 {"forward", JsonUtils::vec3_to_json_array(get_forward())},
@@ -87,6 +89,7 @@ public:
 	}
 
 	// setters
+	void set_focal_length(float _fov) { camera_->set_focal_length(_fov); }
 	void set_direction(glm::vec3 _forward) {
 		_forward = glm::normalize(_forward);
 		auto ref_up = glm::vec3(0, (_forward.y < 0 ? 0.999 : -0.999), 0);
