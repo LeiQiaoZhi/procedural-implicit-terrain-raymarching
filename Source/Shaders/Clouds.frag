@@ -125,7 +125,7 @@ vec3 inigo_raymarch_clouds(
 			color *= diffuse;
 
 			// front to back blending
-			float alpha = clamp(0.1 * iCloudSampleAlpha * density * dt, 0.0, 1.0);
+			float alpha = clamp(0.001 * iCloudSampleAlpha * density * dt, 0.0, 1.0);
 			color *= alpha;
 			cum_color += vec4(color, alpha) * (iCloudMaxCumAlpha-cum_color.a);
 		}else{

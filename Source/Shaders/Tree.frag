@@ -20,6 +20,29 @@ uniform vec3 iTreeColor;
 uniform float iTreeNormalTerrainProportion;
 // fbm
 uniform float iTreeFbmStrength;
+uniform float iTreeHorizontalScale;
+uniform float iTreeMaxHeight;
+uniform int iTreeNumLayers;
+uniform vec2 iTreeFilterRange;
+uniform float iTreeHorizontalShrink;
+uniform float iTreeVerticalShrink;
+uniform float iTreeVerticalShrinkStart;
+
+
+vec4 tree_fbm_d(in vec3 pos){
+	vec4 result = fbm_3D_d(
+		pos / iTreeHorizontalScale, 
+		iTreeNumLayers,
+		iTreeHorizontalShrink,
+		iTreeVerticalShrinkStart,
+		iTreeVerticalShrink,
+		iTreeFilterRange
+	);
+	result *= iTreeMaxHeight;
+	float height = result.x;
+	result.yzw /= iTreeHorizontalScale;
+	return vec4(height, normalize(result.yzw));
+}
 
 
 // with domain repetition
@@ -45,10 +68,10 @@ float tree_sdf(
             vec3 normal = heightd.yzw;
             if (normal.y < iTreeSteepnessThreshold) continue; // don't place trees on steep slopes
 
-            vec2 randomSizeOffset =  iTreeSizeRandomness * (hash2(m.xz + signs * vec2(i,j) + vec2(20.01,10.29)) - 0.5); 
-            vec3 r = vec3(iTreeRadius + randomSizeOffset.x, 
-                        iTreeHeight + randomSizeOffset.y, 
-                        iTreeRadius + randomSizeOffset.x);
+            vec2 random_size_offset =  iTreeSizeRandomness * (hash2(m.xz + signs * vec2(i,j) + vec2(20.01,10.29)) - 0.5); 
+            vec3 r = vec3(iTreeRadius + random_size_offset.x, 
+                        iTreeHeight + random_size_offset.y, 
+                        iTreeRadius + random_size_offset.x);
             // local position
             vec3 w = _pos - center - vec3(0.0, iTreeOffset, 0.0);
 
@@ -59,11 +82,12 @@ float tree_sdf(
 	}
 
     // distort with 3d noise
-    float noise = cloud_fbm_d(_pos).x;
+    float noise = tree_fbm_d(mod(_pos,1000)).x;
     d += iTreeFbmStrength * noise * noise * 0.001;
 
     return d;
 }
+
 
 vec3 treeNormal(in vec3 pos){
     vec2 e = vec2(1, -1) * 0.5773;
@@ -72,6 +96,7 @@ vec3 treeNormal(in vec3 pos){
 					e.yxy * tree_sdf(pos + e.yxy * iTreeNormalEpsilon * 0.0001) + 
 					e.xxx * tree_sdf(pos + e.xxx * iTreeNormalEpsilon * 0.0001));
 }
+
 
 float treeShadow(in vec3 pos, in vec3 pointToSun){
 	// shadow ray
