@@ -10,7 +10,10 @@ uniform float iSunRadius;
 uniform bool iEnableSunDisk;
 uniform float iSunDiskThreshold;
 uniform vec3 iSunDiskColor;
-uniform int iSunDiskDotPower;
+uniform int iSunDisk1DotPower;
+uniform float iSunDisk1Strength;
+uniform int iSunDisk2DotPower;
+uniform float iSunDisk2Strength;
 
 
 
@@ -36,8 +39,9 @@ vec3 sun_disk(
 		vec3 sun_ray = normalize(_sun_pos - _camera_pos);
 		float sun_dot = dot(_view_ray, sun_ray);
 		if (100 * sun_dot > iSunDiskThreshold){
-			return iSunDiskColor
-					* pow(max(0, sun_dot), iSunDiskDotPower);
+			return iSunDiskColor *
+				(pow(max(0, sun_dot), iSunDisk1DotPower) * iSunDisk1Strength +
+				pow(max(0, sun_dot), iSunDisk2DotPower) * iSunDisk2Strength);
 		}
 	}
 	return vec3(0.0);

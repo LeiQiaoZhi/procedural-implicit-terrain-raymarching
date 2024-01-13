@@ -23,9 +23,12 @@ namespace UI {
 				std::make_shared<SliderF>("Phi", "iSunPhi", 0.0f, 2 * 3.14f, 0.0f),
 				std::make_shared<SliderF>("Radius", "iSunRadius", 0.0f, 1000000.0f, 40000.0f),
 				std::make_shared<BoolProperty>("Enable Sun Disk", "iEnableSunDisk", true),
-				std::make_shared<SliderF>("Dot Product Threshold", "iSunDiskThreshold", 95.0f, 100.0f, 95.0f),
+				std::make_shared<SliderF>("Dot Product Threshold", "iSunDiskThreshold", 70.0f, 100.0f, 95.0f),
 				std::make_shared<ColorProperty>("Sun Disk Color", "iSunDiskColor", "#ffffff"),
-				std::make_shared<SliderI>("Dot Power", "iSunDiskDotPower", 1, 1000, 1),
+				std::make_shared<SliderI>("Dot Power 1", "iSunDisk1DotPower", 1, 1000, 1),
+				std::make_shared<SliderF>("Strength 1", "iSunDisk1Strength", 0, 4, 1),
+				std::make_shared<SliderI>("Dot Power 2", "iSunDisk2DotPower", 1, 1000, 1),
+				std::make_shared<SliderF>("Strength 2", "iSunDisk2Strength", 0, 4, 1),
 			};
 		}
 		nlohmann::json to_json() const override;
