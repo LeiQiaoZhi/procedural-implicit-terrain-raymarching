@@ -30,7 +30,10 @@ uniform vec2  iCloudNormalFilterRange;
 // lighting
 uniform float iCloudAmbient;
 uniform float iCloudDiffuse;
+uniform int iCloudShadowSteps;
+uniform float iCloudShadowStepSize;
 
+uniform float iCloudObjBlendStrength;
 
 
 vec4 cloud_fbm_d(
@@ -53,8 +56,8 @@ vec4 cloud_fbm_d(
 		iCloudVerticalShrink,
 		iCloudNormalFilterRange
 	).yzw;
-	height *= iMaxHeight;
-	gradient *= iMaxHeight / iCloudHorizontalScale;
+	height *= iCloudMaxHeight;
+	gradient *= iCloudMaxHeight / iCloudHorizontalScale;
 	return vec4(height, normalize(gradient));
 }
 
@@ -69,6 +72,10 @@ vec4 cloud_density_d(
 	vec4 fbm_d = iCloudFbmStrength * cloud_fbm_d(_p);
 	d += fbm_d.x;
 	vec3 gradient = fbm_d.yzw;
+
+	// this approximation is better somehow
+	gradient = vec3(0, sign(_p.y - center_y), 0);
+
 	d = min(-d, 0.25);
 	return vec4(d, gradient);
 }
@@ -118,17 +125,31 @@ vec3 inigo_raymarch_clouds(
 		if (density > 0.001){
 			_cum_density += density * dt;
 			vec3 color = vec3(iCloudBaseColor);
-			// TODO: diffuse lighting
+
+			// lighting
 			vec3 normal = density_d.yzw;
 			vec3 sun_ray = normalize(_sun_pos - p);
-			float diffuse = iCloudAmbient + iCloudDiffuse * dot(normal, sun_ray);
-			color *= diffuse;
+			// TODO: shadow
+			float shadow = 0.0; // 1.0 if in full shadow (black)
+			for (int j = 1; j <= iCloudShadowSteps; j++){
+				float shadow_t = float(j) * iCloudShadowStepSize;
+				vec3 shadow_p = p + sun_ray * shadow_t;
+				vec4 shadow_density_d = cloud_density_d(shadow_p);
+				if (shadow_density_d.x > 0.001){
+					shadow = 1.0;
+				}
+			}
+
+			// ambient and diffuse
+			color *= iCloudAmbient + iCloudDiffuse * dot(normal, sun_ray);
+			color = mix(color, vec3(1.0, 0, 0), shadow);
 
 			// front to back blending
-			float alpha = clamp(0.001 * iCloudSampleAlpha * density * dt, 0.0, 1.0);
+			float alpha = clamp(0.001 * iCloudSampleAlpha * density * dt, 0.0, iCloudMaxCumAlpha);
 			color *= alpha;
 			cum_color += vec4(color, alpha) * (iCloudMaxCumAlpha-cum_color.a);
-		}else{
+		}
+		else {
 			dt = iCloudStepDensityScale * abs(density) + iCloudMinStepSize;
 		}
 		t += dt;
@@ -149,7 +170,11 @@ void inigo_render_clouds_i(
 	in vec3 _sun_pos,
 	inout vec3 _color
 ){
-	if (_obj > 0 && (_camera_pos.y < iCloudBoxLowerY || _view_ray.y < 0))
+	// skip if 1. below clouds and looking down 
+	// 2. below clouds and has intersection with objs
+	// 3. above clouds and looking up
+	if ((_camera_pos.y < iCloudBoxLowerY && (_view_ray.y < 0.0 || _obj > 0)) ||
+		(_camera_pos.y > iCloudBoxUpperY && _view_ray.y > 0.0))
 		return;
 	if (!iEnableClouds)
 		return;
@@ -159,8 +184,9 @@ void inigo_render_clouds_i(
 		iCloudStrength 
 		* inigo_raymarch_clouds(_camera_pos, _view_ray, _sun_pos, cloud_density);
 
+	// _color = cloud_color; return;
 	// blending with original color
-	_color = 
-		exp(-cloud_density) * _color 
-		+ (1-exp(-cloud_density)) * cloud_color;
+	
+	float cloud_factor = 1 - exp(-cloud_density * iCloudObjBlendStrength);
+	_color = mix(_color, cloud_color, cloud_factor);
 }

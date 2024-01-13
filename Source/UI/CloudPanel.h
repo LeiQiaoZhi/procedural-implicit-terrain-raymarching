@@ -32,7 +32,7 @@ namespace UI {
 				std::make_shared<SliderF>("Step Density Scale", "iCloudStepDensityScale", 0, 2 , 1)
 			}),
 			std::make_shared<GroupProperty>("Front to Back Blending", std::vector<std::shared_ptr<Property>>{
-				std::make_shared<SliderF>("Sample Alpha", "iCloudSampleAlpha", 0, 1 , 0.1),
+				std::make_shared<SliderF>("Sample Alpha", "iCloudSampleAlpha", 0, 10 , 0.1),
 				std::make_shared<SliderF>("Max Cum Alpha", "iCloudMaxCumAlpha", 0, 100 , 1),
 				std::make_shared<SliderF>("Base Color", "iCloudBaseColor", 0, 10 , 1),
 			}),
@@ -49,7 +49,10 @@ namespace UI {
 			std::make_shared<GroupProperty>("Lighting", std::vector<std::shared_ptr<Property>>{
 				std::make_shared<SliderF>("Ambient", "iCloudAmbient", 0.0f, 10.0f, 0.4f),
 				std::make_shared<SliderF>("Diffuse", "iCloudDiffuse", 0.0f, 10.0f, 0.6f),
+				std::make_shared<SliderI>("Shadow Steps", "iCloudShadowSteps", 0, 100, 1),
+				std::make_shared<SliderF>("Shadow Step Size", "iCloudShadowStepSize", 0.0f, 1000.0f, 100.0f),
 			}),
+			std::make_shared<SliderF>("Blend", "iCloudObjBlendStrength", 0.0f, 100.0f, 1.0f),
 			};
 		}
 	protected:
