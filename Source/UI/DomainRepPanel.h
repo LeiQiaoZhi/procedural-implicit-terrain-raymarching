@@ -10,6 +10,7 @@
 #include "Properties/ColorProperty.h"
 #include "Properties/BoolProperty.h"
 #include "Properties/GroupProperty.h"
+#include "Properties/LabelProperty.h"
 
 namespace UI {
 
@@ -27,7 +28,6 @@ namespace UI {
 				std::make_shared<SliderI>("Steps", "iTreeSteps",0, 200, 64),
 				std::make_shared<SliderF>("Steepness Threshold", "iTreeSteepnessThreshold",0.0f, 1.0f, 0.5f),
 				std::make_shared<Float2>("Size Randomness", "iTreeSizeRandomness", std::array<float, 2>{0,0}),
-				std::make_shared<ColorProperty>("Color", "iTreeColor", "#4CB22D"),
 				std::make_shared<SliderF>("Normal Epsilon", "iTreeNormalEpsilon",1.0f, 100.0f, 10.0f),
 				std::make_shared<SliderF>("Terrain Normal Proportion", "iTreeNormalTerrainProportion",0.0f, 10.0f, 2.0f),
 				std::make_shared<GroupProperty>("Shadow", std::vector<std::shared_ptr<Property>>{
@@ -44,6 +44,22 @@ namespace UI {
 					std::make_shared<SliderF>("Horizontal Shirnk", "iTreeHorizontalShrink", 1.0f, 4.0f, 1.9f),
 					std::make_shared<SliderF>("Vertical Shrink", "iTreeVerticalShrink", 0.01f, 0.99f, 0.5f),
 					std::make_shared<SliderF>("Starting Vertical Shrink", "iTreeVerticalShrinkStart", 0.01f, 2.0f, 0.5f),
+				}),
+				std::make_shared<GroupProperty>("Species", std::vector<std::shared_ptr<Property>>{
+					std::make_shared<SliderF>("S2 Lower Threshold", "iTreeS2LowerThreshold",-2.0f, 2.0f, 0.0f),
+					std::make_shared<SliderF>("S2 Radius Factor", "iTreeS2RadiusFactor",0.0f, 2.0f, 0.5f),
+					std::make_shared<SliderF>("S2 Height Factor", "iTreeS2HeightFactor",0.0f, 1.0f, 0.5f),
+					std::make_shared<LabelProperty>("Colors"),
+					std::make_shared<ColorProperty>("S1 Color", "iTreeColor", "#4CB22D"),
+					std::make_shared<ColorProperty>("S2 Color", "iTreeColorS2", "#4CB22D"),
+					std::make_shared<ColorProperty>("S1 Old Color", "iTreeOldColor", "#4CB22D"),
+					std::make_shared<ColorProperty>("S2 Old Color", "iTreeOldColorS2", "#4CB22D"),
+					std::make_shared<LabelProperty>("FBM"),
+					std::make_shared<SliderF>("Horizontal Scale", "iTreeSpeciesHorizontalScale", 0.1f, 1000.0f, 30.0f),
+					std::make_shared<SliderI>("Layers", "iTreeSpeciesNumLayers", 1, 40, 12),
+					std::make_shared<SliderF>("Horizontal Shirnk", "iTreeSpeciesHorizontalShrink", 1.0f, 4.0f, 1.9f),
+					std::make_shared<SliderF>("Vertical Shrink", "iTreeSpeciesVerticalShrink", 0.01f, 0.99f, 0.5f),
+					std::make_shared<SliderF>("Starting Vertical Shrink", "iTreeSpeciesVerticalShrinkStart", 0.01f, 2.0f, 0.5f),
 				}),
 			};
 		}

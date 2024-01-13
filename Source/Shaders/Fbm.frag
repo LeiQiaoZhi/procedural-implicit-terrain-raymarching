@@ -11,13 +11,14 @@ const mat3 ROT_3I = mat3( 0.00, -0.80, -0.60,
                        0.80,  0.36, -0.48,
                        0.60, -0.48,  0.64 );
 
+
 vec3 fbm_d(
 	in vec2 _pos, 
 	in int _num_layers,
 	float _shrink_h = 1.9, // shrink factor horizontally (x,z)
 	float _shrink_v_start = 0.5, // starting value for vertical (y) noise
 	float _shrink_v = 0.5, // shrink factor vertically (y) (height)
-	in vec2 _filter_range = vec2(0,1) // filter range [0,1) -- no filtering
+	in vec2 _filter_range = vec2(1,1) // filter range [1,1) -- no filtering
 )
 {
 	float v = _shrink_v_start;
@@ -50,7 +51,7 @@ vec4 fbm_3D_d(
 	in float _shrink_h = 1.9, // shrink factor horizontally (x,z)
 	in float _shrink_v_start = 0.5, // starting value for vertical (y) noise
 	in float _shrink_v = 0.5, // shrink factor vertically (y) (height)
-	in vec2 _filter_range = vec2(0,1) // filter range [0,1) -- no filtering
+	in vec2 _filter_range = vec2(1,1) // filter range [1,1) -- no filtering
 )
 {
 	float v = _shrink_v_start;

@@ -54,13 +54,15 @@ void main()
 
 	int obj = 0; // 0: sky, 1: terrain, 2: trees 
 	float distance_to_obj = -1;
+	int tree_species = 0;
+	float tree_age;
 	if (distance_to_terrain > 0){
 		obj = 1;
 		distance_to_obj = distance_to_terrain;
 	}
 	if (tree_start_distance > 0 && iTreeEnabled){
 		float distance_to_tree = 
-			raymarch_trees(camera_pos, tree_start_distance, distance_to_terrain, ray);	
+			raymarch_trees(camera_pos, tree_start_distance, distance_to_terrain, ray, tree_species, tree_age);	
 		if (distance_to_tree > 0){
 			obj = 2;
 			distance_to_obj = distance_to_tree;
@@ -88,7 +90,11 @@ void main()
 			+ (1 - grass_factor) * iDirtColor;
 
 		if (obj == TREE_OBJ){
-			material_color = iTreeColor;
+			// color variation among tree species
+			material_color = (tree_species == TREE_SPECIES_1) ? iTreeColor : iTreeColorS2;
+			material_color = mix(material_color, 
+				(tree_species == TREE_SPECIES_1) ? iTreeOldColor : iTreeOldColorS2, 
+				tree_age);
 		}
 
 		// diffuse lighting
