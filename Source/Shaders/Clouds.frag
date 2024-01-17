@@ -4,12 +4,10 @@
 uniform bool  iEnableClouds;
 uniform float iCloudStrength;
 uniform float iCloudBaseColor; 
+uniform float iCloudDensity; 
 // cloud box
 uniform float iCloudBoxLowerY;
 uniform float iCloudBoxUpperY;
-// fbm
-uniform float iCloudFbmStrength;
-// TODO: its own fbm parameters
 // raymarch
 uniform int   iCloudRaymarchSteps;
 uniform float iCloudMinStepSize;
@@ -17,14 +15,13 @@ uniform float iCloudMaxRaymarchDist;
 uniform float iCloudStepDistScale; // dynamic step size
 uniform float iCloudStepDensityScale;
 uniform float iCloudSampleAlpha; // front to back blending
-uniform float iCloudMaxCumAlpha; 
+uniform float iCloudMaxCumAlpha = 1.0; 
 // fbm
 uniform float iCloudHorizontalScale;
 uniform float iCloudMaxHeight;
 uniform int   iCloudNumLayers;
 uniform float iCloudHorizontalShrink;
 uniform float iCloudVerticalShrink;
-uniform float iCloudVerticalShrinkStart;
 uniform vec2  iCloudFilterRange;
 uniform vec2  iCloudNormalFilterRange;
 // lighting
@@ -43,7 +40,7 @@ vec4 cloud_fbm_d(
 		pos / iCloudHorizontalScale, 
 		iCloudNumLayers,
 		iCloudHorizontalShrink,
-		iCloudVerticalShrinkStart,
+		0.5,
 		iCloudVerticalShrink,
 		iCloudFilterRange
 	).x;
@@ -52,7 +49,7 @@ vec4 cloud_fbm_d(
 		pos / iCloudHorizontalScale, 
 		iCloudNumLayers,
 		iCloudHorizontalShrink,
-		iCloudVerticalShrinkStart,
+		0.5,
 		iCloudVerticalShrink,
 		iCloudNormalFilterRange
 	).yzw;
@@ -69,19 +66,19 @@ vec4 cloud_density_d(
 	float half_height = (iCloudBoxUpperY - iCloudBoxLowerY) * 0.1;
 	float center_y = (iCloudBoxLowerY + iCloudBoxUpperY) * 0.5;
 	float d = abs(_p.y - center_y) - half_height;
-	vec4 fbm_d = iCloudFbmStrength * cloud_fbm_d(_p);
+	vec4 fbm_d = cloud_fbm_d(_p);
 	d += fbm_d.x;
-	vec3 gradient = fbm_d.yzw;
 
+	// vec3 gradient = fbm_d.yzw;
 	// this approximation is better somehow
-	gradient = vec3(0, sign(_p.y - center_y), 0);
+	vec3 gradient = vec3(0, sign(_p.y - center_y), 0);
 
-	d = min(-d, 0.25);
+	d = min(-d + iCloudDensity, 0.25);
 	return vec4(d, gradient);
 }
 
 
-vec3 inigo_raymarch_clouds(
+vec4 inigo_raymarch_clouds(
 	in  vec3  _camera_pos,
 	in  vec3  _ray_dir,
 	in  vec3  _sun_pos,
@@ -90,7 +87,7 @@ vec3 inigo_raymarch_clouds(
 	// 0. skip if ray doesn't intersect bounding box
 	if ((_camera_pos.y < iCloudBoxLowerY && _ray_dir.y < 0.0) ||
 		(_camera_pos.y > iCloudBoxUpperY && _ray_dir.y > 0.0)){
-		return vec3(0.0);
+		return vec4(0.0);
 	}
 
 	// 1. find start and end in bounding cloud box
@@ -153,12 +150,12 @@ vec3 inigo_raymarch_clouds(
 			dt = iCloudStepDensityScale * abs(density) + iCloudMinStepSize;
 		}
 		t += dt;
-		if (t > ray_dist || cum_color.a > iCloudMaxCumAlpha){
+		if (t > ray_dist || cum_color.a > 0.995 * iCloudMaxCumAlpha){
 			break;
 		}
 	}
 	_cum_density /= t;
-	return cum_color.rgb / (t);
+	return clamp(cum_color, 0.0, 1.0);
 }
 
 
@@ -180,13 +177,17 @@ void inigo_render_clouds_i(
 		return;
 
 	float cloud_density;
-	vec3 cloud_color = 
-		iCloudStrength 
-		* inigo_raymarch_clouds(_camera_pos, _view_ray, _sun_pos, cloud_density);
+	vec4 cloud_color = 
+		inigo_raymarch_clouds(_camera_pos, _view_ray, _sun_pos, cloud_density);
 
-	// _color = cloud_color; return;
+	//_color = cloud_color; return;
 	// blending with original color
+	if (cloud_density < 0.001)
+		return;
 	
-	float cloud_factor = 1 - exp(-cloud_density * iCloudObjBlendStrength);
-	_color = mix(_color, cloud_color, cloud_factor);
+	// float cloud_factor = 1 - exp(-cloud_density * iCloudObjBlendStrength);
+	// cloud_factor = clamp(iCloudObjBlendStrength, 0.0, 1.0);
+	// _color = mix(_color, cloud_color, cloud_factor);
+	_color = (iCloudMaxCumAlpha - cloud_color.w)/iCloudMaxCumAlpha * _color 
+		+ cloud_color.xyz * iCloudStrength;
 }
