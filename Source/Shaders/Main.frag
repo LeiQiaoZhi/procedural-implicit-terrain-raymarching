@@ -169,6 +169,9 @@ void main()
 			+ rayleigh;
 	}
 
+	// higher 2D clouds
+	two_d_clouds_i(obj, ray, camera_pos, color);
+	// lower 3D clouds
 	inigo_render_clouds_i(obj, camera_pos, ray, sun_pos, color);
 
 	FragColor = vec4(color, 1.0);

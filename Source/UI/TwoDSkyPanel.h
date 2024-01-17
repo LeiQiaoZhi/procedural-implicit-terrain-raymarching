@@ -17,6 +17,7 @@ namespace UI {
 			: UIPanel("2D Sky", _shader) {
 			properties_ = {
 				std::make_shared<BoolProperty>("Used 2D Sky", "iSkyUse2D", false),
+				std::make_shared<BoolProperty>("Used 2D Clouds", "iUse2DClouds", false),
 				std::make_shared<ColorProperty>("Color Top", "iSkyColorTop", "#387EFF"),
 				std::make_shared<ColorProperty>("Color Bottom", "iSkyColorBot", "#AAFFF0"),
 				std::make_shared<SliderF>("Height", "iCloudHeight", 0, 50000, 10000),
