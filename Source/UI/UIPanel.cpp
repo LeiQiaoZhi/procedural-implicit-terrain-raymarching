@@ -90,7 +90,9 @@ void UI::UIPanel::show_properties()
 {
 	// show properties and handle effects
 	for (auto& prop : properties_) {
+		ImGui::PushID(prop->get_name().c_str());
 		if (prop->gui())
 			prop->take_effect(shader_);
+		ImGui::PopID();
 	}
 }

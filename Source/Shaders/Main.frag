@@ -41,12 +41,14 @@ void main()
 	}
 
 	// naive way to prevent clipping through terrain
-	float current_height = terrain_fbm_d(iCameraPos.xz).x;
+	float current_height = terrain_fbm_d(iCameraPos.xz).x + 1.1 * iTreeHeight + iTreeOffset + 0.5 * iTreeSizeRandomness.y;
 	vec3 camera_pos = iCameraPos;
-	camera_pos.y = max(current_height + 1, iCameraPos.y);
+	camera_pos.y = max(current_height + 1.0, iCameraPos.y);
 	vec3 ray = get_view_ray(NDC);
 
 	vec3 sun_pos = get_sun_pos(camera_pos);
+	vec3 sun_dir = normalize(sun_pos - camera_pos);
+	if (sun_dir.y < -0.18) return; // sun below horizon
 
 	// raymarching
 	float tree_start_distance;
@@ -167,7 +169,6 @@ void main()
 			+ rayleigh;
 	}
 
-	// clouds
 	inigo_render_clouds_i(obj, camera_pos, ray, sun_pos, color);
 
 	FragColor = vec4(color, 1.0);

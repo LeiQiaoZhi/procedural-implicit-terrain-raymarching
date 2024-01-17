@@ -53,7 +53,11 @@ namespace UI {
 				std::make_shared<SliderI>("Shadow Steps", "iCloudShadowSteps", 0, 100, 1),
 				std::make_shared<SliderF>("Shadow Step Size", "iCloudShadowStepSize", 0.0f, 1000.0f, 100.0f),
 			}),
-			std::make_shared<SliderF>("Blend", "iCloudObjBlendStrength", 0.0f, 100.0f, 1.0f),
+			std::make_shared<GroupProperty>("Sun Blend", std::vector<std::shared_ptr<Property>>{
+				std::make_shared<SliderF>("Strength", "iCloudSunBlendStrength", 0.0f, 2.0f, 0.4f),
+				std::make_shared<SliderF>("Density Factor", "iCloudSunBlendDensityFactor", 0.0f, 1.0f, 0.6f),
+				std::make_shared<SliderI>("Dot Power", "iCloudSunBlendDotPower", 0, 100, 12),
+			}),
 			};
 		}
 	protected:

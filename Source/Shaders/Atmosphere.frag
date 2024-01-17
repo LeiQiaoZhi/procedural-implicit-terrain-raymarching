@@ -91,8 +91,6 @@ vec3 rayleigh(
 		vec3 scatter_point = _start + t * ray;
 
 		vec3 to_sun = _sun_pos - scatter_point;
-		if (to_sun.y < 0.01)  // sun is below the horizon
-			continue;
 
 		// only use the segment of the sun ray that is inside the atmosphere
 		vec3 sun_end = scatter_point + to_sun * (iAtmosphereMaxHeight - scatter_point.y) / to_sun.y;

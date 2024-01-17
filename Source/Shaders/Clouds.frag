@@ -1,10 +1,15 @@
 #include "Fbm.frag"
+#include "Sun.frag"
 
 // overall
 uniform bool  iEnableClouds;
 uniform float iCloudStrength;
 uniform float iCloudBaseColor; 
 uniform float iCloudDensity; 
+// sun blend
+uniform float iCloudSunBlendStrength; 
+uniform float iCloudSunBlendDensityFactor; 
+uniform int iCloudSunBlendDotPower; 
 // cloud box
 uniform float iCloudBoxLowerY;
 uniform float iCloudBoxUpperY;
@@ -154,7 +159,13 @@ vec4 inigo_raymarch_clouds(
 			break;
 		}
 	}
+
 	_cum_density /= t;
+	// blend with sun
+	cum_color.rgb += iCloudSunBlendStrength * iSunDiskColor 
+		* (1.0 - iCloudSunBlendDensityFactor * cum_color.a)
+		* pow(clamp(dot(_ray_dir, normalize(_sun_pos-_camera_pos)),0.0,1.0), iCloudSunBlendDotPower);
+
 	return clamp(cum_color, 0.0, 1.0);
 }
 
@@ -182,12 +193,13 @@ void inigo_render_clouds_i(
 
 	//_color = cloud_color; return;
 	// blending with original color
-	if (cloud_density < 0.001)
-		return;
+	//if (cloud_density < 0.001)
+	//	return;
 	
 	// float cloud_factor = 1 - exp(-cloud_density * iCloudObjBlendStrength);
 	// cloud_factor = clamp(iCloudObjBlendStrength, 0.0, 1.0);
 	// _color = mix(_color, cloud_color, cloud_factor);
 	_color = (iCloudMaxCumAlpha - cloud_color.w)/iCloudMaxCumAlpha * _color 
 		+ cloud_color.xyz * iCloudStrength;
+		//+ vec3(1 - iCloudSunBlendDensityFactor * cloud_color.a) * iCloudStrength;
 }
