@@ -34,8 +34,11 @@ uniform float iCloudAmbient;
 uniform float iCloudDiffuse;
 uniform int iCloudShadowSteps;
 uniform float iCloudShadowStepSize;
+uniform float iCloudShadowStrength;
+uniform float iCloudShadowDensityLower;
+uniform float iCloudShadowDensityHigher;
+uniform vec3 iCloudShadowColor;
 
-uniform float iCloudObjBlendStrength;
 
 
 vec4 cloud_fbm_d(
@@ -136,15 +139,14 @@ vec4 inigo_raymarch_clouds(
 			for (int j = 1; j <= iCloudShadowSteps; j++){
 				float shadow_t = float(j) * iCloudShadowStepSize;
 				vec3 shadow_p = p + sun_ray * shadow_t;
-				vec4 shadow_density_d = cloud_density_d(shadow_p);
-				if (shadow_density_d.x > 0.001){
-					shadow = 1.0;
-				}
+				float shadow_density = cloud_density_d(shadow_p).x;
+				shadow += iCloudShadowStrength * 
+					smoothstep(iCloudShadowDensityLower, iCloudShadowDensityHigher, shadow_density);
 			}
 
 			// ambient and diffuse
 			color *= iCloudAmbient + iCloudDiffuse * dot(normal, sun_ray);
-			color = mix(color, vec3(1.0, 0, 0), shadow);
+			color = mix(color, iCloudShadowColor, shadow);
 
 			// front to back blending
 			float alpha = clamp(0.001 * iCloudSampleAlpha * density * dt, 0.0, iCloudMaxCumAlpha);
@@ -191,15 +193,10 @@ void inigo_render_clouds_i(
 	vec4 cloud_color = 
 		inigo_raymarch_clouds(_camera_pos, _view_ray, _sun_pos, cloud_density);
 
-	//_color = cloud_color; return;
-	// blending with original color
-	//if (cloud_density < 0.001)
-	//	return;
-	
+	// Blending //
 	// float cloud_factor = 1 - exp(-cloud_density * iCloudObjBlendStrength);
 	// cloud_factor = clamp(iCloudObjBlendStrength, 0.0, 1.0);
 	// _color = mix(_color, cloud_color, cloud_factor);
 	_color = (iCloudMaxCumAlpha - cloud_color.w)/iCloudMaxCumAlpha * _color 
 		+ cloud_color.xyz * iCloudStrength;
-		//+ vec3(1 - iCloudSunBlendDensityFactor * cloud_color.a) * iCloudStrength;
 }
