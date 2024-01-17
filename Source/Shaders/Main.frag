@@ -4,6 +4,7 @@
 #include "Atmosphere.frag"
 #include "Clouds.frag"
 #include "Raymarching.frag"
+#include "Rocks.frag"
 #include "Sun.frag"
 #include "TwoDSky.frag"
 
@@ -85,9 +86,29 @@ void main()
 		}
 
 		// material
+		// rock
+		vec3 material_color = mix(
+			iRockColor1, 
+			iRockColor2, 
+			0.5 * noise_d(0.1 * vec2(
+				pos.x * iRockStripeHorizontalScale,
+				pos.y * iRockStripeVerticalScale 
+			)).x + 0.5 // [0,1]
+		);
+		//float xz_noise = tree_species_fbm(iRockXZNoiseScale * pos.xz);
+		float xz_noise = noise_d(0.01 * iRockXZNoiseScale * pos.xz).x;
+		material_color *= iRockXZNoiseBase + iRockXZNoiseStrength * xz_noise;
+
+		material_color = mix(
+			material_color, 
+			iRockHideStripeColor,
+			smoothstep(iRockHideStripeNormalLower, iRockHideStripeNormalUpper, normal.y)
+		);
+
+		// grass
 		float grass_factor =  smoothstep_d(normal.y, iGrassThreshold, iDirtThreshold).x;
-		vec3 material_color = grass_factor * iGrassColor
-			+ (1 - grass_factor) * iDirtColor;
+		material_color = grass_factor * iGrassColor
+			+ (1 - grass_factor) * material_color;
 
 		if (obj == TREE_OBJ){
 			// color variation among tree species
@@ -123,9 +144,8 @@ void main()
 			FragColor = vec4(color, 1.0); return;
 		}
 	}
-
-	inigo_render_clouds_i(obj, camera_pos, ray, sun_pos, color);
 	
+	// atmosphere
 	if (distance_to_obj < 0){
 		distance_to_obj = 100000;
 	}
@@ -146,6 +166,9 @@ void main()
 			color * exp(-view_ray_od * iRayleighFogFallOff * iRayleighFogStrength) 
 			+ rayleigh;
 	}
+
+	// clouds
+	inigo_render_clouds_i(obj, camera_pos, ray, sun_pos, color);
 
 	FragColor = vec4(color, 1.0);
 	return;
