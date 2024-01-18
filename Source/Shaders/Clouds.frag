@@ -77,9 +77,9 @@ vec4 cloud_density_d(
 	vec4 fbm_d = cloud_fbm_d(_p);
 	d += fbm_d.x;
 
-	// vec3 gradient = fbm_d.yzw;
-	// this approximation is better somehow
 	vec3 gradient = vec3(0, sign(_p.y - center_y), 0);
+	gradient -= fbm_d.yzw;
+	gradient = normalize(gradient);
 
 	d = min(-d + iCloudDensity, 0.25);
 	return vec4(d, gradient);
