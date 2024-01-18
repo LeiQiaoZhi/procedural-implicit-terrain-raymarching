@@ -19,6 +19,7 @@ namespace UI {
 			std::make_shared<SliderF>("Horizontal Scale", "iHorizontalScale", 0.1f, 10000.0f, 3000.0f),
 			std::make_shared<SliderF>("Max Height", "iMaxHeight", 0.0f, 10000.0f, 1200.0f),
 			std::make_shared<SliderI>("Layers", "iNumLayers", 1, 40, 12),
+			std::make_shared<SliderI>("Normal Layers", "iNormalNumLayers", 1, 40, 12),
 			std::make_shared<RangeSliderI>("Band Pass (Layers to Filter Out)", "iFilterRange", 1, 20, 1, 1),
 			std::make_shared<SliderF>("Horizontal Shirnk", "iHorizontalShrink", 1.0f, 4.0f, 1.9f),
 			std::make_shared<SliderF>("Vertical Shrink", "iVerticalShrink", 0.1f, 0.99f, 0.5f),
@@ -38,6 +39,14 @@ namespace UI {
 				std::make_shared<ColorProperty>("Hide Stripe Color", "iRockHideStripeColor", "#BD724F"),
 				std::make_shared<SliderF>("Hide Stripe Normal Lower", "iRockHideStripeNormalLower", 0.0f, 1.0f, 0.95f),
 				std::make_shared<SliderF>("Hide Stripe Normal Upper", "iRockHideStripeNormalUpper", 0.0f, 1.0f, 0.95f),
+			}),
+			std::make_shared<GroupProperty>("Lighting", std::vector<std::shared_ptr<Property>>{
+				std::make_shared<SliderF>("Fresnel F0", "iFresnelNormalIncidence", 0.0f, 1.0f, 0.1f),
+				std::make_shared<SliderI>("Fresnel Dot Power", "iFresnelDotPower", 0, 100, 10),
+				std::make_shared<SliderI>("Specular Dot Power", "iSpecularDotPower", 0, 100, 10),
+				std::make_shared<SliderF>("Ambient Strength", "iAmbientStrength", 0.0f, 2.0f, 0.1f),
+				std::make_shared<SliderF>("Diffuse Strength", "iDiffuseStrength", 0.0f, 2.0f, 0.1f),
+				std::make_shared<SliderF>("Specular Strength", "iSpecularStrength", 0.0f, 2.0f, 0.1f),
 			}),
 			};
 
