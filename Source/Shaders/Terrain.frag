@@ -4,6 +4,7 @@
 uniform float iHorizontalScale;
 uniform float iMaxHeight;
 uniform int iNumLayers;
+uniform int iNormalNumLayers;
 uniform vec2 iFilterRange;
 uniform float iHorizontalShrink;
 uniform float iVerticalShrink;
@@ -40,6 +41,17 @@ vec4 terrain_fbm_d(in vec2 pos){
 	);
 	result *= iMaxHeight;
 	float height = result.x;
+
+	// TODO: Optimize
+	result = fbm_d(
+		pos / iHorizontalScale, 
+		iNormalNumLayers,
+		iHorizontalShrink,
+		iVerticalShrinkStart,
+		iVerticalShrink,
+		iFilterRange
+	);
+	result *= iMaxHeight;
 	result.yz /= iHorizontalScale;
 	vec3 normal = normalize(vec3(-result.y, 1.0, -result.z));
 	return vec4(height, normal);
