@@ -76,7 +76,8 @@ float tree_species_fbm(in vec2 pos){
 float tree_sdf(
     in vec3 _pos,
 	out int species_,
-	out float age_
+	out float age_,
+	out float height_ // [0,1] relative to max height from ground to top
 ){
 	vec3 cell_pos = floor(_pos / iTreeDomainSize); 
     float min_d = 1e10;
@@ -96,7 +97,7 @@ float tree_sdf(
             vec2 randomOffset =  hash2(cell_pos.xz + signs * vec2(i,j)) - 0.5; // range [-0.5, 0.5]
             center += iTreeRandomness * vec3(randomOffset.x, 0.0, randomOffset.y) * iTreeDomainSize;
             vec4 heightd = terrain_fbm_d(center.xz);
-            center.y = heightd.x;
+            center.y = heightd.x + iTreeOffset;
 
             vec3 normal = heightd.yzw;
             if (normal.y < iTreeSteepnessThreshold) continue; // don't place trees on steep slopes
@@ -116,7 +117,7 @@ float tree_sdf(
             vec3 r = vec3(horizontal_size, vertical_size, horizontal_size);
 
             // local position
-            vec3 w = _pos - center - vec3(0.0, iTreeOffset, 0.0);
+            vec3 w = _pos - center;
 
             // sdf of ellipsoid
             float wr = length(w/r);
@@ -124,6 +125,7 @@ float tree_sdf(
 			if (d < min_d) {
 				min_d = d;
 				age_ = hash(cell_pos.xz + vec2(i,j) + vec2(20.01,10.29));
+				height_ = w.y / (vertical_size + iTreeOffset);
 			}
         }
 	}
@@ -138,8 +140,8 @@ float tree_sdf(
 // overload with no outs
 float tree_sdf(in vec3 pos){
 	int species;
-	float age;
-	return tree_sdf(pos, species, age);
+	float age, height;
+	return tree_sdf(pos, species, age, height);
 }
 
 vec3 treeNormal(in vec3 pos){
