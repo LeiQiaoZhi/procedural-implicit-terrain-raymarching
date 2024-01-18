@@ -17,7 +17,7 @@ void UI::LightPanel::from_json(const nlohmann::json& _json)
 	theta_ = _json.value("theta", theta_);
 	phi_ = _json.value("phi", phi_);
 	radius_ = _json.value("radius", radius_);
-	update_sun_pos();
+	//update_sun_pos();
 }
 
 void UI::LightPanel::gui()

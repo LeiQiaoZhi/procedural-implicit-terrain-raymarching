@@ -19,7 +19,7 @@ namespace UI {
 				std::make_shared<SliderF3V>("Sun Center", "iSunCenter", 
 					std::array<float, 3>{0.0f, 0.0f, 0.0f},
 					-100000, 100000),
-				std::make_shared<SliderF>("Theta", "iSunTheta", 0.0f, 3.14f, 0.0f),
+				std::make_shared<SliderF>("Theta", "iSunTheta", 0.0f, 3.14f/2.0f, 0.0f),
 				std::make_shared<SliderF>("Phi", "iSunPhi", 0.0f, 2 * 3.14f, 0.0f),
 				std::make_shared<SliderF>("Radius", "iSunRadius", 0.0f, 1000000.0f, 40000.0f),
 				std::make_shared<BoolProperty>("Enable Sun Disk", "iEnableSunDisk", true),
