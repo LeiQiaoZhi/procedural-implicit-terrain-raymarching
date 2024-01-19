@@ -18,6 +18,7 @@
 #include "CallbackManager.h"
 #include "Window.h"
 #include "Utils.h"
+#include "FPSCounter.h"
 
 int main()
 {
@@ -76,8 +77,11 @@ int main()
 	camera_controller.set_callbacks(callback_manager);
 	window_obj.set_callbacks(callback_manager);
 
+	FPSCounter fps_counter(window, imgui_app.get_performance_panel());
+
 	// render loop
 	while (!glfwWindowShouldClose(window)) {
+		fps_counter.count_fps();
 		// background color
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear back color buffer to the clear color

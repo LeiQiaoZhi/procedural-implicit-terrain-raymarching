@@ -11,6 +11,7 @@
 #include "Camera/CameraController.h"
 #include "ShaderClass.h"
 #include "CallbackManager.h"
+#include "PerformancePanel.h"
 
 namespace UI {
 	using PanelsList = std::vector<std::shared_ptr<UIPanel>>;
@@ -40,6 +41,7 @@ namespace UI {
 		// getters
 		WindowInfos get_window_infos() const { return window_infos_; }
 		PanelsList get_panels() const { return panels_; }
+		std::shared_ptr<PerformancePanel> get_performance_panel() const { return performance_panel_; }
 
 		// setters
 		void toggle_hide_ui() { hide_ui_ = !hide_ui_; }
@@ -52,5 +54,7 @@ namespace UI {
 		nlohmann::json window_transforms_to_set_;
 		bool init_window_transforms_ = false;
 		bool hide_ui_ = false;
+
+		std::shared_ptr<PerformancePanel> performance_panel_;
 	};
 }

@@ -53,15 +53,21 @@ void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_cont
 	panels_.push_back(
 		std::move(std::make_shared<MenuBarPanel>(_shader, this))
 	);
-	panels_.push_back(
-		std::move(std::make_shared<DebugPanel>(_shader))
+
+	performance_panel_ = std::make_shared<PerformancePanel>(_shader);
+
+	panels_.push_back(std::make_shared<TabsPanel>("Short 3", _shader,
+		PanelsList{
+			std::make_shared<DebugPanel>(_shader),
+			performance_panel_
+		})
 	);
 
 	panels_.push_back(std::move(std::make_shared<TabsPanel>("Short 1", _shader,
-			PanelsList{
-				std::make_shared<CameraPanel>(_shader, _camera_controller),
-				std::make_shared<RaymarchPanel>(_shader)
-			}))
+		PanelsList{
+			std::make_shared<CameraPanel>(_shader, _camera_controller),
+			std::make_shared<RaymarchPanel>(_shader)
+		}))
 	);
 
 	panels_.push_back(std::move(std::make_shared<TabsPanel>("Short 2", _shader,
