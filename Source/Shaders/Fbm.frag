@@ -12,7 +12,8 @@ const mat3 ROT_3I = mat3( 0.00, -0.80, -0.60,
                        0.60, -0.48,  0.64 );
 
 
-vec3 fbm_d(
+
+float fbm(
 	in vec2 _pos, 
 	in int _num_layers,
 	float _shrink_h = 1.9, // shrink factor horizontally (x,z)
@@ -21,6 +22,25 @@ vec3 fbm_d(
 	in vec2 _filter_range = vec2(1,1) // filter range [1,1) -- no filtering
 )
 {
+	float v = _shrink_v_start;
+	float height = 0.0; // cumulative height
+
+	for(int i = 0; i < _num_layers; i++)
+	{
+		float noise = v * noise(_pos);
+		if (i < _filter_range.x || i >= _filter_range.y) {
+			height += noise;
+		}   
+		v *= _shrink_v;
+		_pos = _shrink_h * ROT * _pos;
+	}
+
+	return height;
+}
+
+
+
+
 vec3 fbm_d(
 	in vec2 _pos, 
 	in int _num_layers,

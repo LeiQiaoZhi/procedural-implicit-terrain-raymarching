@@ -29,7 +29,7 @@ bool debug_noises(
 		vec2 noise_pos = _ndc * scale
 			+ 10 * vec2(-_camera_pos.x, _camera_pos.z);
 		_color = vec3(
-			(terrain_fbm_d(noise_pos).x 
+			(terrain_fbm(noise_pos) 
 			/ _max_height + 1) * 0.5
 		);
 		return true;

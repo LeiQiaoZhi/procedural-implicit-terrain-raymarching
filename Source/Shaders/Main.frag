@@ -29,7 +29,7 @@ void main()
 	}
 
 	// naive way to prevent clipping through terrain
-	float current_height = terrain_fbm_d(iCameraPos.xz).x + 1.1 * iTreeHeight + iTreeOffset + 0.5 * iTreeSizeRandomness.y;
+	float current_height = terrain_fbm(iCameraPos.xz) + 1.1 * iTreeHeight + iTreeOffset + 0.5 * iTreeSizeRandomness.y;
 	vec3 camera_pos = iCameraPos;
 	camera_pos.y = max(current_height + 1.0, iCameraPos.y);
 	vec3 ray = get_view_ray(NDC);

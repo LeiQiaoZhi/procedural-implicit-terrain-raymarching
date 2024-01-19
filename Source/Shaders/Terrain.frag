@@ -67,7 +67,7 @@ float terrainShadow(in vec3 pos, in vec3 pointToSun){
 	for (float t = 1; t < iTerrainShadowSteps * shadowStepSize; t += shadowStepSize) 
 	{
 		vec3 shadowPos = pos + t * pointToSun;
-		float d = shadowPos.y - terrain_fbm_d(shadowPos.xz).x;
+		float d = shadowPos.y - terrain_fbm(shadowPos.xz);
 		minR = min(minR, 2 * d / t);
 
 		if (minR < 0.001){
