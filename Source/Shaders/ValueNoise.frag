@@ -6,13 +6,7 @@ vec2 smoothstep_d(
     in float _a = 0.0,
     in float _b = 1.0
 ){
-    float t = (_x - _a) / (_b - _a);
-    if (_x < _a){
-        return vec2(0, 0);
-    }
-    if (_x > _b){
-        return vec2(1, 0);
-    }
+    float t = clamp((_x - _a) / (_b - _a), 0.0, 1.0);
     return vec2(
         t*t*t*(t*(t*6.0-15.0)+10.0),
         30.0*t*t*(t*(t-2.0)+1.0)
@@ -21,6 +15,36 @@ vec2 smoothstep_d(
          t * t * (3.0 - 2.0 * t),
          6.0 * t * (1.0 - t) / (_b - _a)
     );
+}
+
+vec4 smoothstep_d(
+    in vec2 _x,
+    in float _a = 0.0,
+    in float _b = 1.0
+){
+    vec2 t = clamp((_x - _a) / (_b - _a), 0.0, 1.0);
+    return vec4(
+        t*t*t*(t*(t*6.0-15.0)+10.0),
+        30.0*t*t*(t*(t-2.0)+1.0)
+    );
+}
+
+float my_smoothstep(
+    in float _x,
+    in float _a = 0.0,
+    in float _b = 1.0
+){
+    float t = clamp((_x - _a) / (_b - _a), 0.0, 1.0);
+    return t*t*t*(t*(t*6.0-15.0)+10.0);
+}
+
+vec2 my_smoothstep(
+    in vec2 _x,
+    in float _a = 0.0,
+    in float _b = 1.0
+){
+    vec2 t = clamp((_x - _a) / (_b - _a), 0.0, 1.0);
+    return t*t*t*(t*(t*6.0-15.0)+10.0);
 }
 
 // range [0, 1]
@@ -51,18 +75,41 @@ float hash1( float n )
     return fract( n*17.0*fract( n*0.3183099 ) );
 }
 
+
+float noise(in vec2 _p){
+    vec2 ij = floor(_p);
+    vec2 xz = fract(_p);
+
+    vec2 sxz = my_smoothstep(xz);
+    float sx = sxz.x;
+    float sz = sxz.y;
+
+    float a = hash1(ij);
+    float b = hash1(ij + vec2(1, 0));
+    float c = hash1(ij + vec2(0, 1));
+    float d = hash1(ij + vec2(1, 1));
+
+    float ba = b - a;
+    float ca = c - a;
+    float abcd = a + d - c - b;
+
+    float height = a + ba * sx + ca * sz + abcd * sx * sz;
+
+    return 2 * height - 1;
+}
+
+
 // return (Noise(p), dN/dx, dN/dz)
 // Noise(p) between -1 and 1
 vec3 noise_d(in vec2 _p){
     vec2 ij = floor(_p);
     vec2 xz = fract(_p);
 
-    vec2 s1 = smoothstep_d(xz.x);
-    float sx = s1.x;
-    float dsx = s1.y;
-    vec2 s2 = smoothstep_d(xz.y);
-    float sz = s2.x;
-    float dsz = s2.y;
+    vec4 sxyd = smoothstep_d(xz);
+    float sx = sxyd.x;
+    float sz = sxyd.y;
+    float dsx = sxyd.z;
+	float dsz = sxyd.w;
 
     float a = hash1(ij);
     float b = hash1(ij + vec2(1, 0));
