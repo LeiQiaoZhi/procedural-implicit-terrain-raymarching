@@ -21,17 +21,31 @@ vec3 fbm_d(
 	in vec2 _filter_range = vec2(1,1) // filter range [1,1) -- no filtering
 )
 {
+vec3 fbm_d(
+	in vec2 _pos, 
+	in int _num_layers,
+	float _shrink_h = 1.9, // shrink factor horizontally (x,z)
+	float _shrink_v_start = 0.5, // starting value for vertical (y) noise
+	float _shrink_v = 0.5, // shrink factor vertically (y) (height)
+	in vec2 _filter_range = vec2(1,1), // filter range [1,1) -- no filtering
+	in int _normal_layers = -1 // number of layers to calc normal, -1 means = _num_layers
+)
+{
+	_normal_layers = max(_normal_layers, _num_layers);
+
 	float v = _shrink_v_start;
 	float height = 0.0; // cumulative height
 	vec2 dxz = vec2(0.0); // (dx, dz), cumulative slopes
 	mat2 chain = mat2(1.0, 0.0, // matrix for chain rule
 				   0.0, 1.0);
 
-	for(int i = 0; i < _num_layers; i++)
+	for(int i = 0; i < _normal_layers; i++)
 	{
 		vec3 noise = v * noise_d(_pos);
 		if (i < _filter_range.x || i >= _filter_range.y) {
-			height += noise.x;
+			if (i < _num_layers) {
+				height += noise.x;
+			}
 			dxz += chain * noise.yz;
 		}   
 		v *= _shrink_v;
