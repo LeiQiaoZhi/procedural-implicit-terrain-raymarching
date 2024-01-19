@@ -47,6 +47,12 @@ namespace UI {
 			}
 		}
 
+		void add_glsl_to_json(nlohmann::json& _json) const override {
+			std::stringstream ss;
+			ss << "vec3(" << colors_[0] << ", " << colors_[1] << ", " << colors_[2] << ")";
+			_json[uniform_name_.data()] = ss.str();
+		}
+
 	private:
 		float colors_[3];
 	};;

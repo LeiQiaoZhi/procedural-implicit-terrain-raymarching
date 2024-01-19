@@ -20,6 +20,14 @@ void UI::TabsPanel::from_json(const nlohmann::json& _json)
 	}
 }
 
+void UI::TabsPanel::add_glsl_to_json(nlohmann::json& _json) const
+{
+	for (auto& panel : panels_list_)
+	{
+		panel->add_glsl_to_json(_json);
+	}
+}
+
 void UI::TabsPanel::save_load_buttons()
 {
 	// don't show, leave it for individual panels

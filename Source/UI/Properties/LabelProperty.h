@@ -34,6 +34,9 @@ namespace UI {
 		void from_json(const nlohmann::json& _json) override {
 		}
 
+		void add_glsl_to_json(nlohmann::json& _json) const override {
+		}
+
 	private:
 		std::string_view label_;
 	};;

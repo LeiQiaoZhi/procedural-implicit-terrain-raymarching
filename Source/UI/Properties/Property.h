@@ -20,6 +20,7 @@ namespace UI {
 		virtual void take_effect(const Shader& _shader) = 0;
 		virtual nlohmann::json to_json() const = 0;
 		virtual void from_json(const nlohmann::json& _json) = 0;
+		virtual void add_glsl_to_json(nlohmann::json& _json) const = 0;
 
 		// getters
 		std::string get_name() const { return std::string(name_); }

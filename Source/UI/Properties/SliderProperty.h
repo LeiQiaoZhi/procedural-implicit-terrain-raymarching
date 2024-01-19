@@ -33,6 +33,11 @@ namespace UI {
 			value_ = _json.value("value", value_);
 		}
 
+		void add_glsl_to_json(nlohmann::json& _json) const override {
+			std::string value_str = std::to_string(value_);
+			_json[uniform_name_.data()] = value_str;
+		}
+
 		float get_value() const { return value_; }
 		void set_value(float _value) { value_ = _value; }
 	private:

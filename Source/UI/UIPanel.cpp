@@ -45,6 +45,14 @@ void UI::UIPanel::from_json(const nlohmann::json& _json)
 	}
 }
 
+void UI::UIPanel::add_glsl_to_json(nlohmann::json& _json) const
+{
+	for (auto& prop : properties_)
+	{
+		prop->add_glsl_to_json(_json);
+	}
+}
+
 void UI::UIPanel::save_load_buttons()
 {
 	// save and load buttons

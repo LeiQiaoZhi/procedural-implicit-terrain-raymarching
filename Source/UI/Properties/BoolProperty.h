@@ -38,6 +38,10 @@ namespace UI {
 			value_ = _json.value("value", false);
 		}
 
+		void add_glsl_to_json(nlohmann::json& _json) const override {
+			_json[uniform_name_.data()] = value_ ? "true" : "false";
+		}
+
 	private:
 		bool value_;
 	};;

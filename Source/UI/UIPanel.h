@@ -32,6 +32,7 @@ namespace UI {
 		virtual WindowInfo show();
 		virtual nlohmann::json to_json() const;
 		virtual void from_json(const nlohmann::json& _json);
+		virtual void add_glsl_to_json(nlohmann::json& _json) const;
 
 		virtual void gui() = 0;
 
@@ -47,7 +48,7 @@ namespace UI {
 
 		// fields
 	protected:
-		const Shader& shader_;
+		Shader& shader_;
 		std::string panel_name_;
 		float scale_;
 		bool init_ = true;

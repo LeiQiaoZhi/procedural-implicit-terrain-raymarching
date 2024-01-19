@@ -17,6 +17,7 @@ namespace UI {
 
 		nlohmann::json to_json() const override;
 		void from_json(const nlohmann::json& _json) override;
+		void add_glsl_to_json(nlohmann::json& _json) const override;
 
 		void save_load_buttons() override;
 

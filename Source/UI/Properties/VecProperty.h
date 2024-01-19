@@ -44,6 +44,19 @@ namespace UI {
 			values_ = _json["values"].get<std::array<T, size>>();
 		}
 
+		void add_glsl_to_json(nlohmann::json& _json) const override {
+			std::stringstream ss;
+			ss << "vec" << size << "(";
+			for (int i = 0; i < size; ++i) {
+				ss << values_[i];
+				if (i != size - 1) {
+					ss << ", ";
+				}
+			}
+			ss << ")";
+			_json[uniform_name_.data()] = ss.str();
+		}
+
 	private:
 		std::array<T, size> values_;
 	};;

@@ -34,6 +34,12 @@ namespace UI {
 			value_max_ = _json.value("value_max", max_);
 		}
 
+		void add_glsl_to_json(nlohmann::json& _json) const override {
+			std::stringstream ss;
+			ss << "vec2(" << value_min_ << ", " << value_max_ << ")";
+			_json[uniform_name_.data()] = ss.str();
+		}
+
 		float get_value() const { return value_; }
 		void set_value(float _value) { value_ = _value; }
 	private:

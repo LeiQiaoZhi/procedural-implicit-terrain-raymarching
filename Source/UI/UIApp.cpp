@@ -58,8 +58,8 @@ void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_cont
 
 	panels_.push_back(std::make_shared<TabsPanel>("Short 3", _shader,
 		PanelsList{
+			performance_panel_,
 			std::make_shared<DebugPanel>(_shader),
-			performance_panel_
 		})
 	);
 
@@ -169,4 +169,13 @@ void UI::UIApp::from_json(const nlohmann::json& _json)
 		if (_json.contains(key_name))
 			panel->from_json(_json[key_name]);
 	}
+}
+
+nlohmann::json UI::UIApp::get_glsl_json() const
+{
+	nlohmann::json json;
+	for (auto& panel : panels_) {
+		panel->add_glsl_to_json(json);
+	}
+	return json;
 }

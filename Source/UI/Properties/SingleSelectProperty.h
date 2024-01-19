@@ -42,6 +42,11 @@ namespace UI {
 			selected_ = _json.value("value", 0);
 		}
 
+		void add_glsl_to_json(nlohmann::json& _json) const override {
+            std::string selected_str = std::to_string(selected_);
+            _json[uniform_name_.data()] = selected_str;
+		}
+
 		// getters
 		int get_selected() const { return selected_; }
 		std::string get_selected_str() const { return item_strs_[selected_]; }

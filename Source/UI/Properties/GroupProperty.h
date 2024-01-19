@@ -51,6 +51,12 @@ namespace UI {
 			}
 		}
 
+		void add_glsl_to_json(nlohmann::json& _json) const override {
+			for (auto& property : properties_) {
+				property->add_glsl_to_json(_json);
+			}
+		}
+
 	private:
 		std::vector<std::shared_ptr<Property>> properties_;
 	};

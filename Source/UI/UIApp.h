@@ -37,6 +37,7 @@ namespace UI {
 		// json
 		nlohmann::json to_json() const;
 		void from_json(const nlohmann::json& _json);
+		nlohmann::json get_glsl_json() const;
 
 		// getters
 		WindowInfos get_window_infos() const { return window_infos_; }
