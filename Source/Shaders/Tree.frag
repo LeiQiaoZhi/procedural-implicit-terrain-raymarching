@@ -80,22 +80,24 @@ float tree_sdf(
 	out float height_ // [0,1] relative to max height from ground to top
 ){
 	vec3 cell_pos = floor(_pos / iTreeDomainSize); 
+	vec3 real_center = (cell_pos + 0.5) * iTreeDomainSize; // center of domain in world space
     float min_d = 1e10;
 
-    // check every neighbouring domain
-    vec2 signs = vec2(1.0, 1.0);
 	// species
 	float species_fbm = tree_species_fbm(_pos.xz);
 	species_ = (species_fbm > iTreeS2LowerThreshold) ? TREE_SPECIES_2 : TREE_SPECIES_1;
+	int species_is_2 = species_ - 1;
 
     // check neighbouring domains
     for (int i = -1; i <= 1; i++){
 		for(int j = -1; j <= 1; j++){
+			vec2 ij = vec2(i,j);
 			// positional variation
-	        vec3 center = (cell_pos + 0.5) * iTreeDomainSize; // center of domain in world space
-            center.xz += signs * vec2(i,j) * iTreeDomainSize;
-            vec2 randomOffset =  hash2(cell_pos.xz + signs * vec2(i,j)) - 0.5; // range [-0.5, 0.5]
+			vec3 center = real_center;
+            center.xz += ij * iTreeDomainSize;
+            vec2 randomOffset =  hash2(cell_pos.xz + ij) - 0.5; // range [-0.5, 0.5]
             center += iTreeRandomness * vec3(randomOffset.x, 0.0, randomOffset.y) * iTreeDomainSize;
+
             vec4 heightd = terrain_fbm_d(center.xz);
             center.y = heightd.x + iTreeOffset;
 
@@ -104,15 +106,15 @@ float tree_sdf(
 
 			// size variation
             vec2 random_size_offset =  iTreeSizeRandomness 
-				* (hash2(cell_pos.xz + signs * vec2(i,j) + vec2(20.01,10.29)) - 0.5); 
+				* (hash2(cell_pos.xz +  ij + vec2(20.01,10.29)) - 0.5); 
 
-			float horizontal_size = iTreeRadius + random_size_offset.x;
-			if (species_ == TREE_SPECIES_2) 
-				horizontal_size *= iTreeS2RadiusFactor;
+			float horizontal_size = (iTreeRadius + random_size_offset.x) * 
+				pow(iTreeS2RadiusFactor, species_is_2);
+			//horizontal_size *= iTreeS2RadiusFactor;
 
-			float vertical_size = iTreeHeight - abs(random_size_offset.y); 
-			if (species_ == TREE_SPECIES_2)
-				vertical_size *= iTreeS2HeightFactor;
+			float vertical_size = (iTreeHeight - abs(random_size_offset.y)) * 
+				pow(iTreeS2HeightFactor, species_is_2);
+			//vertical_size *= iTreeS2HeightFactor;
 
             vec3 r = vec3(horizontal_size, vertical_size, horizontal_size);
 
@@ -153,19 +155,19 @@ vec3 treeNormal(in vec3 pos){
 }
 
 
-float treeShadow(in vec3 pos, in vec3 pointToSun){
+float treeShadow(in vec3 _pos, in vec3 _point_to_sun){
 	// shadow ray
 	float accumulative = 0;
-	float rayDistance = 0;
+	float ray_distance = 0;
 	float threshold = iTreeShadowThreshold;
 	for (float i = 0; i < iTreeShadowSteps; i++) 
 	{
-		vec3 shadowPos = pos + rayDistance * pointToSun;
+		vec3 shadowPos = _pos + ray_distance * _point_to_sun;
 		float d = tree_sdf(shadowPos);
 		if (d < threshold){
-			accumulative += (d - threshold) * rayDistance;
+			accumulative += (d - threshold) * ray_distance;
 		}
-		rayDistance += 3;
+		ray_distance += max(3, d);
 	}
 
 	float shadow = smoothstep(iTreeShadowLower, 0, accumulative);
