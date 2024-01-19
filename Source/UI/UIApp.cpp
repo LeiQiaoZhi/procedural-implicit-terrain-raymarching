@@ -47,7 +47,7 @@ UI::UIApp::~UIApp()
 	ImGui::DestroyContext();
 }
 
-void UI::UIApp::add_panels(const Shader& _shader, CameraController& _camera_controller)
+void UI::UIApp::add_panels(Shader& _shader, CameraController& _camera_controller)
 {
 	panels_.clear();
 	panels_.push_back(

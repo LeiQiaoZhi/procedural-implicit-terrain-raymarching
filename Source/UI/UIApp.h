@@ -21,7 +21,7 @@ namespace UI {
 		UIApp(GLFWwindow* _window, const char* _version);
 		~UIApp();
 
-		void add_panels(const Shader& _shader, CameraController& _camera_controller);
+		void add_panels(Shader& _shader, CameraController& _camera_controller);
 
 		// called once
 		void set_callbacks(CallbackManager& _callback_manager);

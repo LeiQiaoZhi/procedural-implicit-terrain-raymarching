@@ -84,8 +84,8 @@ namespace
 				if (_glsl_json.contains(varName)) {
 					// Replace "uniform" with "const" and append the value from _glsl_json
 					std::string value = _glsl_json[varName];
-					result += "const " + type + " " + varName + " = " 
-						+ value + ";\n";
+					//result += "const " + type + " " + varName + " = " + value + ";\n";
+					result += "#define " + varName + " (" + value + ")\n";
 				}
 				else {
 					// If the varName is not in _glsl_json, keep the line as is

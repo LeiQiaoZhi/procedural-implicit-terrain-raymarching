@@ -48,7 +48,7 @@ namespace UI {
 
 		// fields
 	protected:
-		Shader& shader_;
+		const Shader& shader_;
 		std::string panel_name_;
 		float scale_;
 		bool init_ = true;

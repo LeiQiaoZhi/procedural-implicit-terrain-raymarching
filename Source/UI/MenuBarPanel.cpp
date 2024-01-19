@@ -24,6 +24,10 @@ UI::WindowInfo UI::MenuBarPanel::show()
 			if (!path.empty())
 				parent_app->from_json(JsonUtils::json_from_file(path));
 		}
+		if (ImGui::MenuItem("Substitute Uniforms")) {
+			auto json = parent_app->get_glsl_json();
+			shader_modifiable_.substitute_uniforms(json);
+		}
 
 		if (ImGui::BeginMenu("Layouts")) {
 
