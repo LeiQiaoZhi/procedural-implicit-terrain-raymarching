@@ -11,12 +11,14 @@ uniform vec2 iTreeSizeRandomness;
 uniform float iTreeSteepnessThreshold;
 // normal
 uniform float iTreeNormalEpsilon;
-// rendering
+// raymarching
 uniform int iTreeSteps;
 uniform int iTreeShadowSteps;
 uniform float iTreeShadowThreshold;
 uniform float iTreeShadowLower;
 uniform float iTreeNormalTerrainProportion;
+uniform float iTreeShadowStepSize;
+uniform float iTreeShadowMaxDistance;
 // fbm
 uniform float iTreeFbmStrength;
 uniform float iTreeHorizontalScale;
@@ -110,11 +112,9 @@ float tree_sdf(
 
 			float horizontal_size = (iTreeRadius + random_size_offset.x) * 
 				pow(iTreeS2RadiusFactor, species_is_2);
-			//horizontal_size *= iTreeS2RadiusFactor;
 
 			float vertical_size = (iTreeHeight - abs(random_size_offset.y)) * 
 				pow(iTreeS2HeightFactor, species_is_2);
-			//vertical_size *= iTreeS2HeightFactor;
 
             vec3 r = vec3(horizontal_size, vertical_size, horizontal_size);
 
@@ -167,7 +167,8 @@ float treeShadow(in vec3 _pos, in vec3 _point_to_sun){
 		if (d < threshold){
 			accumulative += (d - threshold) * ray_distance;
 		}
-		ray_distance += max(3, d);
+		ray_distance += max(iTreeShadowStepSize, d);
+		if (ray_distance > iTreeShadowMaxDistance || accumulative < iTreeShadowLower) break;
 	}
 
 	float shadow = smoothstep(iTreeShadowLower, 0, accumulative);
