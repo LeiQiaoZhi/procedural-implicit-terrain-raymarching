@@ -1,8 +1,11 @@
 #include "Tree.frag"
 
 // raymarching parameters
+uniform int iMaxDistance;
 uniform int iMaxSteps;
 uniform float iStepSize;
+uniform float iStepSizeDistanceRatio;
+uniform float iStepSizeAboveTreeRatio;
 
 // camera parameters
 uniform vec3 iCameraPos;
@@ -17,8 +20,8 @@ uniform float iFocalLength;
 float raymarchTerrain(
 	in vec3 pos,
 	in vec3	ray,
-	in int maxSteps,
-	in float stepSize,
+	in float _max_distance,
+	in float _start_step_size,
 	out float tTree // distance to intersection with tree
 ){
 	// TODO: use max terrain height and max tree height to determine max distance
@@ -31,7 +34,9 @@ float raymarchTerrain(
 	float lastY;
 	float treeMaxHeight = 1.0 * iTreeHeight + iTreeOffset + 0.5 * iTreeSizeRandomness.y; 
 
-	for (float t = clipNear; t < maxSteps * stepSize; t += stepSize) 
+	float t = clipNear;
+	float step_size = _start_step_size;
+	for (int i = 0; i < iMaxSteps; i++)
 	{
 		pos = origin + t * ray;
 
@@ -42,17 +47,17 @@ float raymarchTerrain(
 		if (tTree < 0 && pos.y < treeHeight)
 		{
 			// interpolation
-			tTree = t - stepSize * 
+			tTree = t - step_size * 
 				(treeHeight - pos.y) /
 				(lastY - lastHeight - treeMaxHeight + treeHeight - pos.y); 	
-			// tTree = t - 1 * stepSize;
+			// tTree = t - 1 * step_size;
 		}
 
 		// check for terrain intersection
 		if (pos.y < height) 
 		{
 			// interpolation
-			t -= stepSize * 
+			t -= step_size * 
 				(height - pos.y) / (lastY - lastHeight + height - pos.y);
 
 			return t;
@@ -60,6 +65,14 @@ float raymarchTerrain(
 
 		lastHeight = height;
 		lastY = pos.y;
+
+		step_size = _start_step_size + t * iStepSizeDistanceRatio * 0.1
+			+ (max(pos.y - treeHeight,0)) * 0.01 * iStepSizeAboveTreeRatio;
+		t += step_size;
+
+		// early termination
+		if (pos.y > iMaxHeight + treeMaxHeight && lastY < pos.y) break;
+		if (t > _max_distance) break;
 
 	}
 	return -1;
