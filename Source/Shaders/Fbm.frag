@@ -51,7 +51,7 @@ vec3 fbm_d(
 	in int _normal_layers = -1 // number of layers to calc normal, -1 means = _num_layers
 )
 {
-	_normal_layers = max(_normal_layers, _num_layers);
+	if (_normal_layers < 0)	_normal_layers = _num_layers;
 
 	float v = _shrink_v_start;
 	float height = 0.0; // cumulative height
@@ -59,14 +59,14 @@ vec3 fbm_d(
 	mat2 chain = mat2(1.0, 0.0, // matrix for chain rule
 				   0.0, 1.0);
 
-	for(int i = 0; i < _normal_layers; i++)
+	for(int i = 0; i < max(_num_layers, _normal_layers); i++)
 	{
 		vec3 noise = v * noise_d(_pos);
 		if (i < _filter_range.x || i >= _filter_range.y) {
-			if (i < _num_layers) {
+			if (i < _num_layers) 
 				height += noise.x;
-			}
-			dxz += chain * noise.yz;
+			if (i < _normal_layers) 
+				dxz += chain * noise.yz;
 		}   
 		v *= _shrink_v;
 		_pos = _shrink_h * ROT * _pos;
@@ -85,21 +85,26 @@ vec4 fbm_3D_d(
 	in float _shrink_h = 1.9, // shrink factor horizontally (x,z)
 	in float _shrink_v_start = 0.5, // starting value for vertical (y) noise
 	in float _shrink_v = 0.5, // shrink factor vertically (y) (height)
-	in vec2 _filter_range = vec2(1,1) // filter range [1,1) -- no filtering
+	in vec2 _filter_range = vec2(1,1), // filter range [1,1) -- no filtering
+	in int _normal_layers = -1 // number of layers to calc normal, -1 means = _num_layers
 )
 {
+	if (_normal_layers < 0)	_normal_layers = _num_layers;
+
 	float v = _shrink_v_start;
 	float height = 0.0; // cumulative height
 	vec3 gradient = vec3(0.0); // cumulative gradient
 	mat3 chain = mat3(1.0,0.0,0.0,
                    0.0,1.0,0.0,
                    0.0,0.0,1.0); // cumulative matrix for chain rule
-	for(int i = 0; i < _num_layers; i++)
+	for(int i = 0; i < max(_num_layers, _normal_layers); i++)
 	{
 		vec4 noise_d = v * noise_3D_d(_pos);
 		if (i < _filter_range.x || i >= _filter_range.y) {
-			height += noise_d.x;
-			gradient += chain * noise_d.yzw;
+			if (i < _num_layers)
+				height += noise_d.x;
+			if (i < _normal_layers)
+				gradient += chain * noise_d.yzw;
 		}   
 		v *= _shrink_v;
 		_pos = _shrink_h * ROT_3 * _pos;
