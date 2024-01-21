@@ -11,6 +11,25 @@ uniform float iVerticalShrink;
 uniform float iVerticalShrinkStart;
 // shadow
 uniform int iTerrainShadowSteps;
+// biome
+uniform float iBiomeHorizontalScale;
+uniform float iBiomeMaxHeight;
+uniform int iBiomeNumLayers;
+uniform float iBiomeHorizontalShrink;
+uniform float iBiomeVerticalShrink;
+
+
+float biome(in vec2 pos){
+	float result = fbm(
+		pos / iBiomeHorizontalScale, 
+		iBiomeNumLayers,
+		iBiomeHorizontalShrink,
+		0.5,
+		iBiomeVerticalShrink
+	);
+	return result * iBiomeMaxHeight;
+}
+
 
 
 vec4 terrain_3D_fbm_d(in vec3 pos){
@@ -29,23 +48,23 @@ vec4 terrain_3D_fbm_d(in vec3 pos){
 }
 
 
-float terrain_fbm(in vec2 pos){
+float terrain_fbm(in vec2 _pos){
 	float result = fbm(
-		pos / iHorizontalScale, 
+		_pos / iHorizontalScale, 
 		iNumLayers,
 		iHorizontalShrink,
 		iVerticalShrinkStart,
 		iVerticalShrink,
 		iFilterRange
 	);
-	return result * iMaxHeight;
+	return biome(_pos) * result * iMaxHeight;
 }
 
 
 // return (height, normal)
-vec4 terrain_fbm_d(in vec2 pos){
+vec4 terrain_fbm_d(in vec2 _pos){
 	vec3 result = fbm_d(
-		pos / iHorizontalScale, 
+		_pos / iHorizontalScale, 
 		iNumLayers,
 		iHorizontalShrink,
 		iVerticalShrinkStart,
@@ -53,7 +72,7 @@ vec4 terrain_fbm_d(in vec2 pos){
 		iFilterRange,
 		iNormalNumLayers
 	);
-	result *= iMaxHeight;
+	result *= iMaxHeight * biome(_pos);
 	result.yz /= iHorizontalScale;
 	vec3 normal = normalize(vec3(-result.y, 1.0, -result.z));
 	return vec4(result.x, normal);
