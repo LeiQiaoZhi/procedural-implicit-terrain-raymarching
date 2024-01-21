@@ -30,14 +30,22 @@ vec3 get_sun_pos(
 
 
 
+// use for approximation -- since the sun is so far away
+vec3 get_sun_dir(
+	in vec3 _camera_pos
+) {
+	return normalize(get_sun_pos(_camera_pos) - _camera_pos);
+}
+
+
+
 vec3 sun_disk(
-	in vec3 _sun_pos,
+	in vec3 _sun_dir,
 	in vec3 _camera_pos,
 	in vec3 _view_ray
 ){
 	if (iEnableSunDisk){
-		vec3 sun_ray = normalize(_sun_pos - _camera_pos);
-		float sun_dot = dot(_view_ray, sun_ray);
+		float sun_dot = dot(_view_ray, _sun_dir);
 		if (100 * sun_dot > iSunDiskThreshold){
 			return iSunDiskColor *
 				(pow(max(0, sun_dot), iSunDisk1DotPower) * iSunDisk1Strength +
