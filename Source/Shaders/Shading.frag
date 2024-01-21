@@ -28,6 +28,8 @@ uniform float iTreeOcculusionUpper;
 // deprecated -- atmosphere simulates fog
 uniform float iFogStrength;
 uniform vec3 iFogColor;
+// optimization
+uniform float iShadeShadowThreshold;
 
 
 vec3 shade_terrain(
@@ -51,7 +53,7 @@ vec3 shade_terrain(
 		)).x + 0.5 // [0,1]
 	);
 	// noise texture
-	float xz_noise = noise_d(0.01 * iRockXZNoiseScale * _pos.xz).x;
+	float xz_noise = noise(0.01 * iRockXZNoiseScale * _pos.xz);
 	material_color *= iRockXZNoiseBase + iRockXZNoiseStrength * pow(xz_noise,2);
 	// hide stripes in flat areas
 	material_color = mix(
@@ -128,24 +130,26 @@ vec3 shade(
 	vec3 pos = _camera_pos + _distance_to_obj * _view_ray;
 	vec4 heightd = terrain_fbm_d(pos.xz);
 	vec3 normal = normalize(heightd.yzw);
+	if (_obj == TERRAIN_OBJ) pos.y = heightd.x;
 
-	if (_obj == TERRAIN_OBJ){
-		pos.y = heightd.x;
-		color = shade_terrain(pos, _point_to_sun, _view_ray, normal);
-	}
-	else if (_obj == TREE_OBJ)
-		color = shade_tree(pos, _point_to_sun, _view_ray, normal, _tree_species, _tree_age, _rel_tree_height);
-		
 	// shadow 
-	float shadow_terrain = terrainShadow(pos + vec3(0, 0.1, 0), _point_to_sun);
-	color *= shadow_terrain;
+	float shadow = terrainShadow(pos + vec3(0, 0.1, 0), _point_to_sun);
 
 	if (iTreeEnabled){
-		float shadow_tree = treeShadow(pos + vec3(0, 0, 0), _point_to_sun);
-		color *= shadow_tree;
+		shadow *= treeShadow(pos + vec3(0, 0, 0), _point_to_sun);
 	}
 
-	// fog
+	if (shadow >= iShadeShadowThreshold){
+		if (_obj == TERRAIN_OBJ){
+			color = shade_terrain(pos, _point_to_sun, _view_ray, normal);
+		}
+		else if (_obj == TREE_OBJ){
+			color = shade_tree(pos, _point_to_sun, _view_ray, normal, _tree_species, _tree_age, _rel_tree_height);
+		}
+		color *= shadow;
+	}
+
+	// fog -- not in use
 	float distance_decay = exp(-0.0002 * iFogStrength * _distance_to_obj);
 	color = mix(iFogColor, color, distance_decay);
 
