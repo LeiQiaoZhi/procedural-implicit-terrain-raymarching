@@ -35,6 +35,8 @@ namespace UI {
 		std::make_shared<SliderI>("Shadow Steps", "iTreeShadowSteps",0, 50, 16),
 		std::make_shared<SliderF>("Shadow Threshold", "iTreeShadowThreshold",0.0f, 50.0f, 0.5f),
 		std::make_shared<SliderF>("Shadow Lower", "iTreeShadowLower",-10000.0f, 0.0f, -100.0f),
+		std::make_shared<SliderF>("Step Size", "iTreeShadowStepSize",0.0f, 20.0f, 3.0f),
+		std::make_shared<SliderF>("Max Distance", "iTreeShadowMaxDistance",0.0f, 200.0f, 30.0f),
 	}),
 	std::make_shared<GroupProperty>("FBM", std::vector<std::shared_ptr<Property>>{
 		std::make_shared<SliderF>("FBM strength", "iTreeFbmStrength",0.0f, 10.0f, 2.0f),

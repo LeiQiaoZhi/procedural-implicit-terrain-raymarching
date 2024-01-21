@@ -41,11 +41,10 @@ namespace UI {
 				std::make_shared<SliderF>("Horizontal Scale", "iCloudHorizontalScale", 0.1f, 20000.0f, 3000.0f),
 				std::make_shared<SliderF>("Max Height", "iCloudMaxHeight", 0.0f, 20000.0f, 1200.0f),
 				std::make_shared<SliderI>("Layers", "iCloudNumLayers", 1, 40, 12),
+				std::make_shared<SliderI>("Normal Layers", "iCloudNormalNumLayers", 1, 40, 4),
 				std::make_shared<RangeSliderI>("Band Pass (Layers to Filter Out)", "iCloudFilterRange", 1, 20, 1, 1),
-				std::make_shared<RangeSliderI>("Normal Band Pass", "iCloudNormalFilterRange", 1, 20, 1, 1),
 				std::make_shared<SliderF>("Horizontal Shirnk", "iCloudHorizontalShrink", 1.0f, 4.0f, 1.9f),
 				std::make_shared<SliderF>("Vertical Shrink", "iCloudVerticalShrink", 0.1f, 0.99f, 0.5f),
-				//std::make_shared<SliderF>("Starting Vertical Shrink", "iCloudVerticalShrinkStart", 0.1f, 20.0f, 0.5f),
 			}),
 			std::make_shared<GroupProperty>("Lighting", std::vector<std::shared_ptr<Property>>{
 				std::make_shared<SliderF>("Ambient", "iCloudAmbient", 0.0f, 10.0f, 0.4f),
