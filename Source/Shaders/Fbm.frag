@@ -19,7 +19,8 @@ float fbm(
 	float _shrink_h = 1.9, // shrink factor horizontally (x,z)
 	float _shrink_v_start = 0.5, // starting value for vertical (y) noise
 	float _shrink_v = 0.5, // shrink factor vertically (y) (height)
-	in vec2 _filter_range = vec2(1,1) // filter range [1,1) -- no filtering
+	in vec2 _filter_range = vec2(1,1), // filter range [1,1) -- no filtering
+	in bool _range01 = false // true: range [0,1]; false: [-1,1] for noises
 )
 {
 	float v = _shrink_v_start;
@@ -27,7 +28,7 @@ float fbm(
 
 	for(int i = 0; i < _num_layers; i++)
 	{
-		float noise = v * noise(_pos);
+		float noise = v * noise(_pos  + vec2(100,290) * i, _range01);
 		if (i < _filter_range.x || i >= _filter_range.y) {
 			height += noise;
 		}   
@@ -48,7 +49,8 @@ vec3 fbm_d(
 	float _shrink_v_start = 0.5, // starting value for vertical (y) noise
 	float _shrink_v = 0.5, // shrink factor vertically (y) (height)
 	in vec2 _filter_range = vec2(1,1), // filter range [1,1) -- no filtering
-	in int _normal_layers = -1 // number of layers to calc normal, -1 means = _num_layers
+	in int _normal_layers = -1, // number of layers to calc normal, -1 means = _num_layers
+	in bool _range01 = false // true: range [0,1]; false: [-1,1] for noises
 )
 {
 	if (_normal_layers < 0)	_normal_layers = _num_layers;
@@ -61,7 +63,7 @@ vec3 fbm_d(
 
 	for(int i = 0; i < max(_num_layers, _normal_layers); i++)
 	{
-		vec3 noise = v * noise_d(_pos);
+		vec3 noise = v * noise_d(_pos + vec2(100,290) * i, _range01);
 		if (i < _filter_range.x || i >= _filter_range.y) {
 			if (i < _num_layers) 
 				height += noise.x;
@@ -86,7 +88,8 @@ vec4 fbm_3D_d(
 	in float _shrink_v_start = 0.5, // starting value for vertical (y) noise
 	in float _shrink_v = 0.5, // shrink factor vertically (y) (height)
 	in vec2 _filter_range = vec2(1,1), // filter range [1,1) -- no filtering
-	in int _normal_layers = -1 // number of layers to calc normal, -1 means = _num_layers
+	in int _normal_layers = -1, // number of layers to calc normal, -1 means = _num_layers
+	in bool _range01 = false // true: range [0,1]; false: [-1,1] for noises
 )
 {
 	if (_normal_layers < 0)	_normal_layers = _num_layers;
@@ -99,7 +102,7 @@ vec4 fbm_3D_d(
                    0.0,0.0,1.0); // cumulative matrix for chain rule
 	for(int i = 0; i < max(_num_layers, _normal_layers); i++)
 	{
-		vec4 noise_d = v * noise_3D_d(_pos);
+		vec4 noise_d = v * noise_3D_d(_pos, _range01);
 		if (i < _filter_range.x || i >= _filter_range.y) {
 			if (i < _num_layers)
 				height += noise_d.x;
