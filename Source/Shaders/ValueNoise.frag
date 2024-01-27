@@ -1,82 +1,12 @@
 #include "Constants.frag"
+#include "Hash.frag"
+#include "Smoothstep.frag"
 
-// return (f(x), f'(x))
-vec2 smoothstep_d(
-    in float _x,
-    in float _a = 0.0,
-    in float _b = 1.0
+
+float noise(
+    in vec2 _p,
+	in bool _range01 = false
 ){
-    float t = clamp((_x - _a) / (_b - _a), 0.0, 1.0);
-    return vec2(
-        t*t*t*(t*(t*6.0-15.0)+10.0),
-        30.0*t*t*(t*(t-2.0)+1.0)
-    );
-    return vec2(
-         t * t * (3.0 - 2.0 * t),
-         6.0 * t * (1.0 - t) / (_b - _a)
-    );
-}
-
-vec4 smoothstep_d(
-    in vec2 _x,
-    in float _a = 0.0,
-    in float _b = 1.0
-){
-    vec2 t = clamp((_x - _a) / (_b - _a), 0.0, 1.0);
-    return vec4(
-        t*t*t*(t*(t*6.0-15.0)+10.0),
-        30.0*t*t*(t*(t-2.0)+1.0)
-    );
-}
-
-float my_smoothstep(
-    in float _x,
-    in float _a = 0.0,
-    in float _b = 1.0
-){
-    float t = clamp((_x - _a) / (_b - _a), 0.0, 1.0);
-    return t*t*t*(t*(t*6.0-15.0)+10.0);
-}
-
-vec2 my_smoothstep(
-    in vec2 _x,
-    in float _a = 0.0,
-    in float _b = 1.0
-){
-    vec2 t = clamp((_x - _a) / (_b - _a), 0.0, 1.0);
-    return t*t*t*(t*(t*6.0-15.0)+10.0);
-}
-
-// range [0, 1]
-float hash(in vec2 _p) {
-    float h = dot(_p, vec2(127.1, 311.7));
-    return fract(sin(h) * 43758.5453);
-}
-
-float hash(in float _p)
-{
-    return fract(_p*17.0*fract(_p*0.3183099));
-}
-
-// range [0, 1]
-vec2 hash2(in vec2 _p){
-    _p = vec2(dot(_p, vec2(127.1, 311.7)), dot(_p, vec2(269.5, 183.3)));
-    return fract(sin(_p) * 43758.5453123);
-}
-
-float hash1( vec2 p )
-{
-    p  = 50.0*fract( p*0.3183099 );
-    return fract( p.x*p.y*(p.x+p.y) );
-}
-
-float hash1( float n )
-{
-    return fract( n*17.0*fract( n*0.3183099 ) );
-}
-
-
-float noise(in vec2 _p){
     vec2 ij = floor(_p);
     vec2 xz = fract(_p);
 
@@ -84,10 +14,11 @@ float noise(in vec2 _p){
     float sx = sxz.x;
     float sz = sxz.y;
 
-    float a = hash1(ij);
-    float b = hash1(ij + vec2(1, 0));
-    float c = hash1(ij + vec2(0, 1));
-    float d = hash1(ij + vec2(1, 1));
+    float id = ij.x + ij.y * 157.0;
+    float a = hash1(id);
+    float b = hash1(id + 1.0);
+    float c = hash1(id + 157.0);
+    float d = hash1(id + 158.0);
 
     float ba = b - a;
     float ca = c - a;
@@ -95,13 +26,18 @@ float noise(in vec2 _p){
 
     float height = a + ba * sx + ca * sz + abcd * sx * sz;
 
+    if (_range01) 
+		return height;
     return 2 * height - 1;
 }
 
 
 // return (Noise(p), dN/dx, dN/dz)
 // Noise(p) between -1 and 1
-vec3 noise_d(in vec2 _p){
+vec3 noise_d(
+    in vec2 _p,
+	in bool _range01 = false
+){
     vec2 ij = floor(_p);
     vec2 xz = fract(_p);
 
@@ -111,10 +47,11 @@ vec3 noise_d(in vec2 _p){
     float dsx = sxyd.z;
 	float dsz = sxyd.w;
 
-    float a = hash1(ij);
-    float b = hash1(ij + vec2(1, 0));
-    float c = hash1(ij + vec2(0, 1));
-    float d = hash1(ij + vec2(1, 1));
+    float id = ij.x + ij.y * 157.0;
+    float a = hash1(id);
+    float b = hash1(id + 1.0);
+    float c = hash1(id + 157.0);
+    float d = hash1(id + 158.0);
 
     float ba = b - a;
     float ca = c - a;
@@ -124,13 +61,18 @@ vec3 noise_d(in vec2 _p){
     float dx = ba * dsx + abcd * dsx * sz;
     float dy = ca * dsz + abcd * sx * dsz;
 
+    if (_range01)
+        return vec3(height, dx, dy);
     return vec3(2 * height - 1, 2 * dx, 2 * dy);
 }
 
 
 // return (Noise(p), dx, dz)
 // Noise(p) between -1 and 1
-float noise_3D(in vec3 _p){
+float noise_3D(
+    in vec3 _p,
+	in bool _range01 = false
+){
     vec3 ijk = floor(_p);
     vec3 xyz = fract(_p);
 
@@ -161,12 +103,17 @@ float noise_3D(in vec3 _p){
         + (a - b - e + f) * sx * sz 
         + (-a + b + c - d + e - f - g + h) * sx * sy * sz;
 
+    if (_range01)
+		return height;
     return 2 * height - 1;
 }
 
 
 
-vec4 noise_3D_d(in vec3 _p){
+vec4 noise_3D_d(
+    in vec3 _p,
+	in bool _range01 = false
+){
     vec3 ijk = floor(_p);
     vec3 xyz = fract(_p);
 
@@ -221,5 +168,7 @@ vec4 noise_3D_d(in vec3 _p){
 		+ abef * sx * dsz
 		+ abcdefgh * sx * sy * dsz;
 
+    if (_range01)
+		return vec4(height, dx, dy, dz);
     return vec4(2 * height - 1, 2 * dx, 2 * dy, 2 * dz);
 }
