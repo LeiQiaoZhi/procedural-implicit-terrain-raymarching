@@ -39,8 +39,8 @@ namespace UI {
 		std::make_shared<SliderF>("Max Distance", "iTreeShadowMaxDistance",0.0f, 200.0f, 30.0f),
 	}),
 	std::make_shared<GroupProperty>("FBM", std::vector<std::shared_ptr<Property>>{
-		std::make_shared<SliderF>("FBM strength", "iTreeFbmStrength",0.0f, 10.0f, 2.0f),
-		std::make_shared<SliderF>("Horizontal Scale", "iTreeHorizontalScale", 0.1f, 100.0f, 30.0f),
+		std::make_shared<SliderF>("FBM strength", "iTreeFbmStrength",0.0f, 100.0f, 2.0f),
+		std::make_shared<SliderF>("Horizontal Scale", "iTreeHorizontalScale", 0.1f, 1.0f, 0.30f),
 		std::make_shared<SliderF>("Max Height", "iTreeMaxHeight", 0.0f, 100.0f, 1200.0f),
 		std::make_shared<SliderI>("Layers", "iTreeNumLayers", 1, 40, 12),
 		std::make_shared<RangeSliderI>("Band Pass (Layers to Filter Out)", "iFilterRange", 1, 20, 1, 1),
