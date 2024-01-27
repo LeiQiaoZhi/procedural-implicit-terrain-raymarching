@@ -17,7 +17,7 @@ namespace UI {
 			: UIPanel("Sky", _shader) {
 			properties_ = {
 				std::make_shared<SliderF>("Rayleigh Strength", "iRayleighStrength", 0, 10, 0),
-				std::make_shared<SliderF>("Density Fall Off", "iAtmosphereDensityFallOff", 0.01, 1, 0.01),
+				std::make_shared<SliderF>("Density Fall Off", "iAtmosphereDensityFallOff", 0.001, 1, 0.01,0.001),
 				std::make_shared<SliderF>("Atmos Height", "iAtmosphereMaxHeight", 0, 1000000, 1),
 				std::make_shared<Float3>("Scattering Coefficients", "iScatteringCoefficient", std::array<float, 3>{0,0,0}),
 				std::make_shared<Float3>("Fog Falloff", "iRayleighFogFallOff", std::array<float, 3>{0,0,0}),
