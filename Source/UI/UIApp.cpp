@@ -10,6 +10,7 @@
 #include "DebugPanel.h"
 #include "CloudPanel.h"
 #include "TwoDSkyPanel.h"
+#include "WaterPanel.h"
 #include "MenuBarPanel.h"
 #include "TabsPanel.h"
 #include "JsonUtils.h"
@@ -59,7 +60,7 @@ void UI::UIApp::add_panels(Shader& _shader, CameraController& _camera_controller
 	panels_.push_back(std::make_shared<TabsPanel>("Short 3", _shader,
 		PanelsList{
 			performance_panel_,
-			std::make_shared<DebugPanel>(_shader),
+			std::make_shared<DebugPanel>(_shader, _camera_controller),
 		})
 	);
 
@@ -82,7 +83,8 @@ void UI::UIApp::add_panels(Shader& _shader, CameraController& _camera_controller
 			std::make_shared<TerrainPanel>(_shader),
 			std::make_shared<DomainRepPanel>(_shader),
 			std::make_shared<SkyPanel>(_shader),
-			std::make_shared<CloudPanel>(_shader)
+			std::make_shared<CloudPanel>(_shader),
+			std::make_shared<WaterPanel>(_shader)
 		}))
 	);
 
