@@ -25,7 +25,8 @@ namespace UI {
 
 		// float
 		bool gui() override {
-			return ImGui::Combo(name_.data(), &selected_, items_.data(), items_.size());
+			value_changed_ = ImGui::Combo(name_.data(), &selected_, items_.data(), items_.size());
+			return value_changed_;
 		}
 
 		void take_effect(const Shader& _shader) override {
@@ -49,9 +50,11 @@ namespace UI {
 
 		// getters
 		int get_selected() const { return selected_; }
+		bool get_value_changed() const { return value_changed_; }
 		std::string get_selected_str() const { return item_strs_[selected_]; }
 
 	private:
+		bool value_changed_;
 		int selected_;
 		std::vector<std::string> item_strs_;
 		std::vector<const char*> items_;
