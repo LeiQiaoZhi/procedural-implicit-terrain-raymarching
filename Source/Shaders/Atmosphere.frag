@@ -37,7 +37,7 @@ float atmosphere_density(
 	in float _y
 ){
 	_y += iAtmosphereMaxHeight; // move the ground level to 0
-	return exp(-_y * 0.001 * iAtmosphereDensityFallOff) 
+	return exp(-_y * 0.0001 * iAtmosphereDensityFallOff) 
 			* (iAtmosphereMaxHeight - 0.5 * _y) 
 			/ iAtmosphereMaxHeight;
 }
