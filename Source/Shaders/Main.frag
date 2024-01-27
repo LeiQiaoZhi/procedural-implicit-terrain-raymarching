@@ -21,7 +21,8 @@ void main()
 	vec3 color = vec3(0.0);
 
 	// set up coordinate system
-	vec2 NDC = (gl_FragCoord.xy / min(iResolution.x, iResolution.y)) * 2.0 - 1.0; // [-1,1]
+	//vec2 NDC = (gl_FragCoord.xy / min(iResolution.x, iResolution.y)) * 2.0 - 1.0; // [-1,1]
+	vec2 NDC = (2 * gl_FragCoord.xy - iResolution) / min(iResolution.x, iResolution.y);
 
 	// DEBUG noise
 	if (debug_noises(NDC, iCameraPos, iMaxHeight, color)){
@@ -38,6 +39,11 @@ void main()
 	//vec3 point_to_sun = normalize(sun_pos - camera_pos);
 	vec3 point_to_sun = get_sun_dir(camera_pos);
 	if (point_to_sun.y < -0.12) return; // sun below horizon
+
+	// spherical
+	if (debug_sphere(camera_pos, ray, color)){
+		FragColor = vec4(color, 1.0); return;
+	}
 
 	// raymarching
 	float tree_start_distance;
@@ -81,22 +87,24 @@ void main()
 	if (distance_to_obj < 0){
 		distance_to_obj = 100000;
 	}
+	// too close, don't bother
+	if (distance_to_obj > 100){
+		vec3 start = camera_pos;
+		vec3 end = camera_pos + ray * distance_to_obj;
+		bool in_atmosphere = ray_inside_atmosphere_i(start, end);
 
-	vec3 start = camera_pos;
-	vec3 end = camera_pos + ray * distance_to_obj;
-	bool in_atmosphere = ray_inside_atmosphere_i(start, end);
+		if (debug_depth_and_od(start, end, in_atmosphere, color)){
+			FragColor = vec4(color, 1.0); return;
+		}
 
-	if (debug_depth_and_od(start, end, in_atmosphere, color)){
-		FragColor = vec4(color, 1.0); return;
-	}
-
-	if (in_atmosphere){
-		vec3 rayleigh = iRayleighStrength * rayleigh(start, end, iRayleighSteps, point_to_sun);
-		float view_ray_od = optical_depth(start, end, iOpticalDepthSteps);
-		// blending with object color
-		color = 
-			color * exp(-view_ray_od * iRayleighFogFallOff * iRayleighFogStrength) 
-			+ rayleigh;
+		if (in_atmosphere){
+			vec3 rayleigh = iRayleighStrength * rayleigh(start, end, iRayleighSteps, point_to_sun);
+			float view_ray_od = optical_depth(start, end, iOpticalDepthSteps);
+			// blending with object color
+			color = 
+				color * exp(-view_ray_od * iRayleighFogFallOff * iRayleighFogStrength) 
+				+ rayleigh;
+		}
 	}
 
 	// higher 2D clouds
