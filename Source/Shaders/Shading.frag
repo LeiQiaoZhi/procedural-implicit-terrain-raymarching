@@ -1,14 +1,12 @@
 #include "Tree.frag"
 #include "Sun.frag"
+#include "Rocks.frag"
+#include "Water.frag"
+#include "TerrainMaterial.frag"
 
 #define TERRAIN_OBJ 1
 #define TREE_OBJ 2
 
-// material parameters
-uniform vec3 iGrassColor = vec3(0.2, 0.4, 0.1);
-uniform float iGrassThreshold;
-uniform vec3 iDirtColor = vec3(0.8, 0.4, 0.3);
-uniform float iDirtThreshold;
 // terrain lighting
 uniform float iFresnelNormalIncidence;
 uniform int iFresnelDotPower;
@@ -31,6 +29,8 @@ uniform vec3 iFogColor;
 // optimization
 uniform float iShadeShadowThreshold;
 
+uniform int iWaterLevel;
+
 
 vec3 shade_terrain(
 	in vec3 _pos,	
@@ -41,7 +41,6 @@ vec3 shade_terrain(
 {
 	vec3 color = vec3(0.0);
 
-	// material
 	// rock
 	// 2 stripes
 	vec3 material_color = mix(
@@ -61,13 +60,42 @@ vec3 shade_terrain(
 		iRockHideStripeColor,
 		smoothstep(iRockHideStripeNormalLower, iRockHideStripeNormalUpper, _normal.y)
 	);
-	// bumps
 
+	float grass_min_height = iGrassMinHeight + grass_edge_fbm(_pos.xz) * iGrassEdgeFbmStrength;
+	if (_pos.y < grass_min_height + iSandUpperFadeLength){
+		material_color = iSandColor;
+		if (_pos.y > grass_min_height){
+			// fade on both ends
+			material_color = mix(
+				material_color, 
+				iDirtColor,
+				smoothstep(grass_min_height, grass_min_height + iSandUpperFadeLength, _pos.y)
+			);
+		}
+	}
 
 	// grass
-	float grass_factor = smoothstep_d(_normal.y, iGrassThreshold, iDirtThreshold).x;
-	material_color = grass_factor * iGrassColor
-		+ (1 - grass_factor) * material_color;
+	if (_pos.y < iGrassMaxHeight && _pos.y > grass_min_height){
+		// color variety
+		float grass_color_fbm = grass_color_fbm(_pos.xz);
+		vec3 grass_color = mix(iGrassColor, iGrassColor2, grass_color_fbm);
+		float grass_factor = smoothstep_d(_normal.y, iGrassThreshold, iDirtThreshold).x;
+		// fade on both ends
+		if (_pos.y < grass_min_height + iGrassLowerFadeLength){
+			grass_factor *= smoothstep(
+				grass_min_height, grass_min_height + iGrassLowerFadeLength, _pos.y);
+		}
+		if (_pos.y > iGrassMaxHeight - iGrassUpperFadeLength){
+			grass_factor *= 1 - smoothstep(
+				iGrassMaxHeight - iGrassUpperFadeLength, iGrassMaxHeight, _pos.y);
+		}
+		// mix on grass normal
+		material_color = mix(
+			material_color, 
+			grass_color,
+			clamp(grass_factor, 0, 1)
+		);
+	}
 
 	// lighting
 	float diffuse = clamp(dot(_normal, _point_to_sun),0,1) * iDiffuseStrength;
