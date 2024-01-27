@@ -119,7 +119,7 @@ vec3 shade_tree(
 vec3 shade(
 	in int _obj,
 	in vec3 _camera_pos,
-	in float _distance_to_obj,
+	inout float _distance_to_obj_,
 	in vec3 _point_to_sun,
 	in vec3 _view_ray,
 	in int _tree_species,
@@ -127,7 +127,7 @@ vec3 shade(
 	in float _rel_tree_height
 ){
 	vec3 color = vec3(0.0);
-	vec3 pos = _camera_pos + _distance_to_obj * _view_ray;
+	vec3 pos = _camera_pos + _distance_to_obj_ * _view_ray;
 	vec4 heightd = terrain_fbm_d(pos.xz);
 	vec3 normal = normalize(heightd.yzw);
 	if (_obj == TERRAIN_OBJ) pos.y = heightd.x;
@@ -149,8 +149,40 @@ vec3 shade(
 		color *= shadow;
 	}
 
+	if (pos.y < iWaterLevel){
+		// calculate position of intersection with water surface
+		float distance_to_water = (iWaterLevel - _camera_pos.y) / _view_ray.y;
+		vec3 water_pos = _camera_pos + distance_to_water * _view_ray;
+		float depth = water_pos.y - terrain_fbm(water_pos.xz);
+		float water_length = _distance_to_obj_ - distance_to_water;
+		float water_transmittance = exp(-iWaterTransmittanceDecay * water_length * 0.001);
+		// deep vs shallow water color
+		vec3 water_color = mix(iWaterDeepColor, iWaterShallowColor, water_transmittance);
+		// transparency
+		color = mix(water_color, color, 
+			max(iWaterInitialTransparency * water_transmittance - iWaterTransparencyDecrease, 0));
+		// update for atmosphere calculation
+		_distance_to_obj_ = max(distance_to_water,0);
+
+		// lighting
+		vec3 water_normal = water_normal_map(pos);
+		float diffuse = clamp(dot(water_normal, _point_to_sun),0,1) * iWaterDiffuseStrength;
+		color *= (iWaterAmbientStrength + diffuse);
+
+		float fresnel = iWaterFresnelNormalIncidence + 
+			(1 - iWaterFresnelNormalIncidence) * pow(1+dot(water_normal, _view_ray), iWaterFresnelDotPower);
+		vec3 reflect_ray = reflect(_view_ray, water_normal);
+		float specular = pow(clamp(dot(reflect_ray, _point_to_sun),0,1), iWaterSpecularDotPower) * fresnel; 
+		color += iSunDiskColor * iWaterSpecularStrength * specular;
+		if (iWaterShadowOn){
+			shadow = terrainShadow(water_pos + vec3(0, 0.1, 0), _point_to_sun);
+			color *= shadow;
+		}
+
+	}
+
 	// fog -- not in use
-	float distance_decay = exp(-0.0002 * iFogStrength * _distance_to_obj);
+	float distance_decay = exp(-0.0002 * iFogStrength * _distance_to_obj_);
 	color = mix(iFogColor, color, distance_decay);
 
 	// post processing
