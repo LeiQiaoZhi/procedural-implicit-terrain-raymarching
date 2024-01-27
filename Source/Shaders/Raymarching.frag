@@ -1,4 +1,5 @@
 #include "Tree.frag"
+#include "Debug.frag"
 
 // raymarching parameters
 uniform int iMaxDistance;
@@ -13,6 +14,76 @@ uniform vec3 iCameraFwd;
 uniform vec3 iCameraRight; 
 uniform vec3 iCameraUp; 
 uniform float iFocalLength;
+
+
+float sphere_sdf(
+	in vec3 _pos,
+	in float _radius
+){
+	return length(_pos) - _radius;
+}
+
+
+float planet_sdf(
+	in vec3 _pos,
+	in float _radius
+){
+	vec3 pos = normalize(_pos) * _radius;
+	vec3 normal = normalize(pos);
+	vec2 xuv = pos.zy + sign(pos.x) * vec2(10000, 29000);
+	vec2 yuv = pos.xz + sign(pos.y) * vec2(10000, 29000) * 2;
+	vec2 zuv = pos.xy + sign(pos.z) * vec2(10000, 29000) * 3;
+	float xheight = terrain_fbm_d(xuv).x;
+	float yheight = terrain_fbm_d(yuv).x;
+	float zheight = terrain_fbm_d(zuv).x;
+	vec3 heights = vec3(xheight, yheight, zheight);
+	heights = (heights / (iMaxHeight + iGlobalMaxHeight) + 1) * 0.5;
+	vec3 weights = pow(abs(normal), vec3(iDebugTriplanarMappingSharpness));
+	weights = weights / (weights.x + weights.y + weights.z);
+	float height = dot(heights, weights) * (iMaxHeight + iGlobalMaxHeight);
+	return length(_pos) - _radius - height;
+}
+
+
+float raymarch_sphere(
+	in vec3 pos,
+	in vec3	ray
+){
+	vec3 origin = pos;
+	float clipNear = 0.1;
+	float lastHeight;
+	float lastY;
+
+	float t = clipNear;
+	float step_size = iStepSize;
+	for (int i = 0; i < iMaxSteps; i++)
+	{
+		pos = origin + t * ray;
+
+		float dist_to_outer = sphere_sdf(pos, iDebugSphereRadius + iMaxHeight + iGlobalMaxHeight);
+		if (dist_to_outer < 0){
+			float height = planet_sdf(pos, iDebugSphereRadius);
+
+			// check for terrain intersection
+			if (height < 0)
+			{
+				// interpolation
+				t -= step_size * height / (height - lastHeight);
+			
+				return t;
+			}
+
+			lastHeight = height;
+		}
+		step_size = max(iStepSize, dist_to_outer);
+
+		t += step_size;
+
+		if (t > iMaxDistance) break;
+
+	}
+	return -1;
+}
 
 
 // TODO: Fix naming convention
