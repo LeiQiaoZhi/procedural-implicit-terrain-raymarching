@@ -2,16 +2,16 @@
     "Long 1 Panel": {
         "Clouds Tab": {
             "Box Lower Y": {
-                "value": 3223.43994140625
+                "value": 1062.27001953125
             },
             "Box Upper Y": {
-                "value": 13040.2900390625
+                "value": 12527.4697265625
             },
             "Density": {
-                "value": 622.7100219726563
+                "value": 36.630001068115234
             },
             "Enabled": {
-                "value": false
+                "value": true
             },
             "FBM": {
                 "Band Pass (Layers to Filter Out)": {
@@ -19,7 +19,7 @@
                     "value_min": 1
                 },
                 "Horizontal Scale": {
-                    "value": 20000.0
+                    "value": 12234.4697265625
                 },
                 "Horizontal Shirnk": {
                     "value": 1.899999976158142
@@ -28,13 +28,13 @@
                     "value": 7
                 },
                 "Max Height": {
-                    "value": 3003.659912109375
+                    "value": 7765.56982421875
                 },
                 "Normal Layers": {
                     "value": 4
                 },
                 "Vertical Shrink": {
-                    "value": 0.6899999976158142
+                    "value": 0.6000000238418579
                 }
             },
             "Front to Back Blending": {
@@ -42,7 +42,7 @@
                     "value": 0.8100000023841858
                 },
                 "Sample Alpha": {
-                    "value": 0.5899999737739563
+                    "value": 0.33000001311302185
                 }
             },
             "Lighting": {
@@ -77,7 +77,7 @@
             },
             "Raymarch": {
                 "Max Ray Distance": {
-                    "value": 75091.578125
+                    "value": 100000.0
                 },
                 "Min Stepsize": {
                     "value": 67.02999877929688
@@ -90,10 +90,10 @@
                 }
             },
             "Steps": {
-                "value": 95
+                "value": 352
             },
             "Strength": {
-                "value": 1.0199999809265137
+                "value": 0.949999988079071
             },
             "Sun Blend": {
                 "Density Factor": {
@@ -105,14 +105,6 @@
                 "Strength": {
                     "value": 0.11999999731779099
                 }
-            }
-        },
-        "Planet Tab": {
-            "Radius": {
-                "value": 10000.0
-            },
-            "Triplanar Sharpness": {
-                "value": 1
             }
         },
         "Sky Tab": {
@@ -130,7 +122,7 @@
                 ]
             },
             "Fog Strength": {
-                "value": 4.409999847412109
+                "value": 6.96999979019165
             },
             "OD Steps": {
                 "value": 20
@@ -155,10 +147,10 @@
                     "value": true
                 },
                 "Global Max Height": {
-                    "value": 5128
+                    "value": 1099
                 },
                 "Horizontal Scale": {
-                    "value": 4762.0
+                    "value": 3296.800048828125
                 },
                 "Horizontal Shirnk": {
                     "value": 1.899999976158142
@@ -178,7 +170,7 @@
                     "value": true
                 },
                 "Horizontal Scale": {
-                    "value": 10622.7998046875
+                    "value": 4029.39990234375
                 },
                 "Horizontal Shirnk": {
                     "value": 1.9199999570846558
@@ -187,10 +179,10 @@
                     "value": 4
                 },
                 "Max Height": {
-                    "value": 10.0
+                    "value": 1.059999942779541
                 },
                 "Vertical Shrink": {
-                    "value": 0.10000000149011612
+                    "value": 0.25999999046325684
                 }
             },
             "FBM": {
@@ -199,7 +191,7 @@
                     "value_min": 1
                 },
                 "Horizontal Scale": {
-                    "value": 476.2900085449219
+                    "value": 732.6900024414063
                 },
                 "Horizontal Shirnk": {
                     "value": 1.690000057220459
@@ -208,10 +200,10 @@
                     "value": 12
                 },
                 "Max Height": {
-                    "value": 2197.800048828125
+                    "value": 1318.6800537109375
                 },
                 "Normal Layers": {
-                    "value": 16
+                    "value": 14
                 },
                 "Starting Vertical Shrink": {
                     "value": 0.5
@@ -222,7 +214,7 @@
             },
             "Grass Color FBM": {
                 "Horizontal Scale": {
-                    "value": 326.0400085449219
+                    "value": 252.77999877929688
                 },
                 "Horizontal Shirnk": {
                     "value": 1.899999976158142
@@ -290,13 +282,13 @@
                     ]
                 },
                 "Grass Lower Fade Length": {
-                    "value": 125
+                    "value": 33
                 },
                 "Grass Max Height": {
                     "value": 2967
                 },
                 "Grass Min Height": {
-                    "value": -40
+                    "value": -92
                 },
                 "Grass Threshold": {
                     "value": 0.6200000047683716
@@ -312,7 +304,7 @@
                     ]
                 },
                 "Sand Upper Fade Length": {
-                    "value": 51
+                    "value": 95
                 }
             },
             "Rock Texture": {
@@ -537,9 +529,9 @@
         "Water Tab": {
             "Deep Color": {
                 "colors": [
-                    0.09443484246730804,
-                    0.2394205927848816,
-                    0.6421568393707275
+                    0.19492502510547638,
+                    0.34575003385543823,
+                    0.7647058963775635
                 ]
             },
             "Initial Transparency": {
@@ -550,7 +542,7 @@
                     "value": 0.10000000149011612
                 },
                 "Diffuse Strength": {
-                    "value": 0.9700000286102295
+                    "value": 0.9800000190734863
                 },
                 "Fresnel Dot Power": {
                     "value": 5
@@ -587,19 +579,19 @@
             },
             "Shallow Color": {
                 "colors": [
-                    0.08564015477895737,
-                    0.7941176295280457,
-                    0.730238676071167
+                    0.18291041254997253,
+                    0.8480392098426819,
+                    0.7880687713623047
                 ]
             },
             "Transmittance Decay": {
-                "value": 10.0
+                "value": 9.3100004196167
             },
             "Transparency Decrease": {
-                "value": 0.20000000298023224
+                "value": 0.17000000178813934
             },
             "Water Level": {
-                "value": 37
+                "value": -37
             }
         }
     },
@@ -608,31 +600,31 @@
         "Camera Tab": {
             "camara_transform": {
                 "forward": [
-                    0.0,
-                    0.0,
-                    1.0
+                    -0.8011103272438049,
+                    -0.13811618089675903,
+                    0.5823625326156616
                 ],
                 "position": [
-                    52.683780670166016,
-                    1755.1141357421875,
-                    134.72686767578125
+                    31508.716796875,
+                    1426.3541259765625,
+                    16912.994140625
                 ],
                 "right": [
-                    -1.0,
-                    0.0,
-                    0.0
+                    -0.5879979133605957,
+                    -1.4156104555240745e-07,
+                    -0.808862566947937
                 ],
                 "up": [
-                    -0.0,
-                    1.0,
-                    -0.0
+                    -0.1117132306098938,
+                    0.9904167056083679,
+                    0.08120910823345184
                 ]
             },
             "camera_settings": {
                 "invert_x": false,
                 "invert_y": false,
                 "invert_zoom": false,
-                "keyboard_speed": 10.909000396728516,
+                "keyboard_speed": 21.7189998626709,
                 "move_speed": 692.3389892578125,
                 "rotate_speed": 2.4059998989105225,
                 "zoom_speed": 0.26100000739097595
@@ -640,25 +632,25 @@
         },
         "Raymarch Tab": {
             "Max Distance": {
-                "value": 55136
+                "value": 100000
             },
             "Max Steps": {
                 "value": 325
             },
             "Shadow Step Size": {
-                "value": 53.619998931884766
+                "value": 5.400000095367432
             },
             "Shadow Steps": {
-                "value": 32
+                "value": 27
             },
             "Step Size": {
-                "value": 264.94000244140625
+                "value": 0.10000000149011612
             },
             "Step Size Above Tree Ratio": {
                 "value": 10.0
             },
             "Step Size Distance Ratio": {
-                "value": 0.03999999910593033
+                "value": 0.10000000149011612
             }
         }
     },
@@ -724,7 +716,7 @@
                 "value": true
             },
             "Phi": {
-                "value": 2.299999952316284
+                "value": 1.7400000095367432
             },
             "Radius": {
                 "value": 1000000.0
@@ -750,7 +742,7 @@
                 ]
             },
             "Theta": {
-                "value": 0.7599999904632568
+                "value": 0.4399999976158142
             },
             "phi": 0.0,
             "radius": 40000.0,
@@ -760,7 +752,7 @@
     "Short 3 Panel": {
         "Debug Tab": {
             "Render Target": {
-                "value": 7
+                "value": 0
             }
         },
         "Performance Tab": null
