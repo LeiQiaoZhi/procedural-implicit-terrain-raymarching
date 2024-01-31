@@ -7,11 +7,11 @@
 #include "Rocks.frag"
 #include "TwoDSky.frag"
 #include "Shading.frag"
+#include "Motion.frag"
 
 out vec4 FragColor;
 
 // global parameters
-uniform float iTime;
 uniform vec2 iResolution;
 
 

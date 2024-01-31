@@ -1,5 +1,6 @@
 #include "Fbm.frag"
 #include "Sun.frag"
+#include "Motion.frag"
 
 // overall
 uniform bool  iEnableClouds;
@@ -22,6 +23,7 @@ uniform float iCloudStepDensityScale;
 uniform float iCloudSampleAlpha; // front to back blending
 uniform float iCloudMaxCumAlpha = 1.0; 
 // fbm
+uniform vec2 iCloudOffsetDirection;
 uniform float iCloudHorizontalScale;
 uniform float iCloudMaxHeight;
 uniform int   iCloudNumLayers;
@@ -40,12 +42,16 @@ uniform float iCloudShadowDensityHigher;
 uniform vec3 iCloudShadowColor;
 
 
+vec3 cloud_motion_offset(){
+	return vec3(iCloudOffsetDirection.x, 0, iCloudOffsetDirection.y) * iTime * iMotionSpeed;
+}
+
 
 vec4 cloud_fbm_d(
 	in vec3 pos
 ){
 	vec4 result = fbm_3D_d(
-		pos / iCloudHorizontalScale, 
+		pos / iCloudHorizontalScale + cloud_motion_offset(),
 		iCloudNumLayers,
 		iCloudHorizontalShrink,
 		0.5,

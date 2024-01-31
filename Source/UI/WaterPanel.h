@@ -34,6 +34,7 @@ namespace UI {
 			std::make_shared<SliderF>("Specular Strength", "iWaterSpecularStrength", 0.0f, 10.0f, 0.1f),
 		}),
 		std::make_shared<GroupProperty>("Normal Map", std::vector<std::shared_ptr<Property>>{
+			std::make_shared<SliderF2>("Offset", "iWaterOffsetDirection", std::array<float, 2>{0.1f, 0.1f}, -1, 1),
 			std::make_shared<SliderF>("Horizontal Scale", "iWaterHorizontalScale", 0.1f, 1000.0f, 30.0f),
 			std::make_shared<SliderF>("Max Height", "iWaterMaxHeight", 0.0f, 100.0f, 1.0f),
 			std::make_shared<SliderI>("Layers", "iWaterNumLayers", 1, 40, 12),

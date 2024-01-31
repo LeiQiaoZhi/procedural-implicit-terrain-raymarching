@@ -11,6 +11,7 @@
 #include "UI/Properties/LabelProperty.h"
 #include "UI/Properties/GroupProperty.h"
 #include "UI/Properties/RangeSliderProperty.h"
+#include "UI/Properties/VecSliderProperty.h"
 
 namespace UI {
 
@@ -38,6 +39,7 @@ namespace UI {
 				std::make_shared<SliderF>("Base Color", "iCloudBaseColor", 0, 10 , 1),
 			}),
 			std::make_shared<GroupProperty>("FBM", std::vector<std::shared_ptr<Property>>{
+				std::make_shared<SliderF2>("Offset", "iCloudOffsetDirection", std::array<float, 2>{0.1f, 0.1f}, -1, 1),
 				std::make_shared<SliderF>("Horizontal Scale", "iCloudHorizontalScale", 0.1f, 20000.0f, 3000.0f),
 				std::make_shared<SliderF>("Max Height", "iCloudMaxHeight", 0.0f, 20000.0f, 1200.0f),
 				std::make_shared<SliderI>("Layers", "iCloudNumLayers", 1, 40, 12),

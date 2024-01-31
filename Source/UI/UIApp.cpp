@@ -12,6 +12,7 @@
 #include "TwoDSkyPanel.h"
 #include "WaterPanel.h"
 #include "PlanetPanel.h"
+#include "MotionPanel.h"
 #include "MenuBarPanel.h"
 #include "TabsPanel.h"
 #include "JsonUtils.h"
@@ -68,7 +69,8 @@ void UI::UIApp::add_panels(Shader& _shader, CameraController& _camera_controller
 	panels_.push_back(std::move(std::make_shared<TabsPanel>("Short 1", _shader,
 		PanelsList{
 			std::make_shared<CameraPanel>(_shader, _camera_controller),
-			std::make_shared<RaymarchPanel>(_shader)
+			std::make_shared<RaymarchPanel>(_shader),
+			std::make_shared<MotionPanel>(_shader),
 		}))
 	);
 

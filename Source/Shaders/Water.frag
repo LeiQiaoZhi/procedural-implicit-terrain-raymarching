@@ -1,4 +1,5 @@
 #include "Fbm.frag"
+#include "Motion.frag"
 
 // color variety
 uniform vec3 iWaterShallowColor;
@@ -20,14 +21,20 @@ uniform float iWaterMaxHeight;
 uniform int iWaterNumLayers;
 uniform float iWaterHorizontalShrink;
 uniform float iWaterVerticalShrink;
+// motion
+uniform vec2 iWaterOffsetDirection;
 
+
+vec2 water_motion_offset(){
+	return iWaterOffsetDirection * iTime * iMotionSpeed;
+}
 
 
 vec3 water_normal_map(
 	in vec3 _pos
 ) {
 	vec3 result = fbm_d(
-		_pos.xz / iWaterHorizontalScale,
+		_pos.xz / iWaterHorizontalScale + water_motion_offset(),
 		iWaterNumLayers,
 		iWaterHorizontalShrink,
 		0.5,
