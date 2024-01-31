@@ -41,7 +41,7 @@ void main()
 	if (point_to_sun.y < -0.12) return; // sun below horizon
 
 	// spherical
-	if (debug_sphere(camera_pos, ray, color)){
+	if (debug_sphere(NDC, camera_pos, ray, point_to_sun, color)){
 		FragColor = vec4(color, 1.0); return;
 	}
 

@@ -7,6 +7,7 @@ uniform int iDebugRenderTarget;
 #define NOISE3D_RENDER_TARGET 4
 #define NOISE1D_RENDER_TARGET 5
 #define SPHERE_RENDER_TARGET 6
+#define CIRCLE_RENDER_TARGET 7
 
 // Noise 3D
 uniform float iDebugNoise3DZ = 0;
@@ -16,39 +17,45 @@ uniform bool iDebugMarkNotInAtmosphere = false;
 // Noise 1D
 uniform float iDebugLineHeight = 0.003;
 uniform float iDebugNoise1DZ = 0;
-// Sphere
-uniform float iDebugSphereRadius = 100;
-uniform float iDebugTriplanarMappingSharpness = 1;
 
 #include "Atmosphere.frag"
 #include "Terrain.frag"
 #include "Shading.frag"
 #include "Raymarching.frag"
+#include "Planet.frag"
 
 
 bool debug_sphere(
-	in vec3 _camear_pos,
+	in vec2 _ndc,
+	in vec3 _camera_pos,
 	in vec3 _ray,
-	inout vec3 _color_
+	in vec3 _sun_dir,
+	out vec3 color_
 ){
 	if (iDebugRenderTarget == SPHERE_RENDER_TARGET){
-		_color_ = vec3(0);
-		float dist = raymarch_sphere(_camear_pos, _ray);
+		color_ = vec3(0);
+		float dist = raymarch_sphere(_camera_pos, _ray);
 		if (dist > 0){
-			// triplanar mapping
-			vec3 pos = _camear_pos + dist * _ray; 
-			vec3 normal = normalize(pos);
-			vec2 xuv = pos.zy + sign(pos.x) * vec2(10000, 29000);
-			vec2 yuv = pos.xz + sign(pos.y) * vec2(10000, 29000) * 2;
-			vec2 zuv = pos.xy + sign(pos.z) * vec2(10000, 29000) * 3;
-			float xheight = terrain_fbm_d(xuv).x;
-			float yheight = terrain_fbm_d(yuv).x;
-			float zheight = terrain_fbm_d(zuv).x;
-			vec3 heights = vec3(xheight, yheight, zheight);
-			heights = (heights / (iMaxHeight + iGlobalMaxHeight) + 1) * 0.5;
-			vec3 weights = pow(abs(normal), vec3(iDebugTriplanarMappingSharpness));
-			weights = weights / (weights.x + weights.y + weights.z);
-			_color_ = vec3(dot(heights, weights));
+			vec3 pos = _camera_pos + _ray * dist;
+			vec4 heightd = triplanar_mapping(pos);
+
+			// TODO: get normal and do lighting
+			color_ = vec3(heightd.x);
+		}
+		return true;
+	}
+	else if (iDebugRenderTarget == CIRCLE_RENDER_TARGET){
+		color_ = vec3(0);
+		float scale = 1 * pow(1.002,(_camera_pos.y+3000));
+		vec2 pos = _ndc * scale
+			+ 10 * vec2(-_camera_pos.x, _camera_pos.z);
+		if (abs(planet_circle_sdf(pos, iDebugSphereRadius)) < 0.007 * scale){
+			vec3 heightd = biplanar_mapping(pos);
+			vec2 normal = heightd.yz;
+
+			float diffuse = max(dot(vec3(normal.x, 0, normal.y), _sun_dir), 0);
+			color_ = vec3(diffuse);
+			//color_ = vec3(normal, 1);
 		}
 		return true;
 	}
