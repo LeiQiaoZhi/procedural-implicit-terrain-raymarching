@@ -11,6 +11,7 @@
 #include "CloudPanel.h"
 #include "TwoDSkyPanel.h"
 #include "WaterPanel.h"
+#include "PlanetPanel.h"
 #include "MenuBarPanel.h"
 #include "TabsPanel.h"
 #include "JsonUtils.h"
@@ -84,7 +85,8 @@ void UI::UIApp::add_panels(Shader& _shader, CameraController& _camera_controller
 			std::make_shared<DomainRepPanel>(_shader),
 			std::make_shared<SkyPanel>(_shader),
 			std::make_shared<CloudPanel>(_shader),
-			std::make_shared<WaterPanel>(_shader)
+			std::make_shared<WaterPanel>(_shader),
+			std::make_shared<PlanetPanel>(_shader)
 		}))
 	);
 

@@ -21,7 +21,8 @@ namespace UI {
 					"OpticalDepth",
 					"Noise3D",
 					"Noise1D",
-					"Sphere"
+					"Sphere",
+					"Circle"
 			});
 			properties_ = { 
 				render_target_property_
