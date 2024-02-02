@@ -24,8 +24,10 @@ namespace UI {
 				std::make_shared<SliderF>("Scale", "iCloudScale", 1000, 50000, 10000),
 				std::make_shared<SliderF>("Lower Threshold", "iCloudLowerThreshold", -5, 5, 0),
 				std::make_shared<SliderF>("Upper Threshold", "iCloudUpperThreshold", -5, 5, 1),
-				std::make_shared<SliderF>("Fog Strength", "iSkyFogStrength", 0, 10, 0.2),
-				std::make_shared<ColorProperty>("Fog Color", "iSkyFogColor", "#F9FDDA"),
+				std::make_shared<SliderF>("Sky Fog Strength", "iSkyFogStrength", 0, 10, 0.2),
+				std::make_shared<ColorProperty>("Sky Fog Color", "iSkyFogColor", "#F9FDDA"),
+				std::make_shared<SliderF>("Fog Strength", "iFogStrength", 0.0f, 10.0f, 0.0f),
+				std::make_shared<ColorProperty>("Fog Color", "iFogColor", "#8C8E91"),
 			};
 		}
 	protected:
