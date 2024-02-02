@@ -33,6 +33,12 @@
                 "Normal Layers": {
                     "value": 4
                 },
+                "Offset": {
+                    "values": [
+                        0.4300000071525574,
+                        0.10000000149011612
+                    ]
+                },
                 "Vertical Shrink": {
                     "value": 0.6000000238418579
                 }
@@ -105,6 +111,14 @@
                 "Strength": {
                     "value": 0.11999999731779099
                 }
+            }
+        },
+        "Planet Tab": {
+            "Radius": {
+                "value": 10000.0
+            },
+            "Triplanar Sharpness": {
+                "value": 1
             }
         },
         "Sky Tab": {
@@ -573,6 +587,12 @@
                 "Max Height": {
                     "value": 13.1899995803833
                 },
+                "Offset": {
+                    "values": [
+                        0.10000000149011612,
+                        0.10000000149011612
+                    ]
+                },
                 "Vertical Shrink": {
                     "value": 0.4000000059604645
                 }
@@ -630,6 +650,11 @@
                 "zoom_speed": 0.26100000739097595
             }
         },
+        "Motion Tab": {
+            "Speed": {
+                "value": 0.10000000149011612
+            }
+        },
         "Raymarch Tab": {
             "Max Distance": {
                 "value": 100000
@@ -678,7 +703,7 @@
                 ]
             },
             "Fog Strength": {
-                "value": 0.3100000023841858
+                "value": 0.0
             },
             "Height": {
                 "value": 24623.119140625
@@ -688,6 +713,16 @@
             },
             "Scale": {
                 "value": 21287.9609375
+            },
+            "Sky Fog Color": {
+                "colors": [
+                    0.9764705896377563,
+                    0.9921568632125854,
+                    0.8549019694328308
+                ]
+            },
+            "Sky Fog Strength": {
+                "value": 0.20000000298023224
             },
             "Upper Threshold": {
                 "value": 1.1200000047683716
