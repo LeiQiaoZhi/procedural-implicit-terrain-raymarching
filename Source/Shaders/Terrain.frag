@@ -3,28 +3,28 @@
 // fbm
 uniform float iHorizontalScale;
 uniform float iMaxHeight;
-uniform int iNumLayers;
-uniform int iNormalNumLayers;
-uniform vec2 iFilterRange;
+uniform int   iNumLayers;
+uniform int   iNormalNumLayers;
+uniform vec2  iFilterRange;
 uniform float iHorizontalShrink;
 uniform float iVerticalShrink;
 uniform float iVerticalShrinkStart;
 // shadow
-uniform int iTerrainShadowSteps;
+uniform int   iTerrainShadowSteps;
 uniform float iTerrainShadowStepSize;
 // biome
-uniform bool iEnableBiome;
-uniform int iGlobalMaxHeight;
+uniform bool  iEnableBiome;
+uniform int   iGlobalMaxHeight;
 uniform float iBiomeHorizontalScale;
 uniform float iBiomeMaxHeight;
-uniform int iBiomeNumLayers;
+uniform int   iBiomeNumLayers;
 uniform float iBiomeHorizontalShrink;
 uniform float iBiomeVerticalShrink;
 // distortion
-uniform bool iEnableDistortion;
+uniform bool  iEnableDistortion;
 uniform float iDistortionHorizontalScale;
 uniform float iDistortionMaxHeight;
-uniform int iDistortionNumLayers;
+uniform int   iDistortionNumLayers;
 uniform float iDistortionHorizontalShrink;
 uniform float iDistortionVerticalShrink;
 

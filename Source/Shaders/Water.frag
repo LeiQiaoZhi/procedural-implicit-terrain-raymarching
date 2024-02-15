@@ -2,23 +2,23 @@
 #include "Motion.frag"
 
 // color variety
-uniform vec3 iWaterShallowColor;
-uniform vec3 iWaterDeepColor;
+uniform vec3  iWaterShallowColor;
+uniform vec3  iWaterDeepColor;
 uniform float iWaterTransmittanceDecay;
 uniform float iWaterInitialTransparency;
 uniform float iWaterTransparencyDecrease;
 // lighting
-uniform bool iWaterShadowOn;
+uniform bool  iWaterShadowOn;
 uniform float iWaterFresnelNormalIncidence;
-uniform int iWaterFresnelDotPower;
-uniform int iWaterSpecularDotPower;
+uniform int   iWaterFresnelDotPower;
+uniform int   iWaterSpecularDotPower;
 uniform float iWaterAmbientStrength;
 uniform float iWaterDiffuseStrength;
 uniform float iWaterSpecularStrength;
 // fbm -- normal map
 uniform float iWaterHorizontalScale;
 uniform float iWaterMaxHeight;
-uniform int iWaterNumLayers;
+uniform int   iWaterNumLayers;
 uniform float iWaterHorizontalShrink;
 uniform float iWaterVerticalShrink;
 // motion
