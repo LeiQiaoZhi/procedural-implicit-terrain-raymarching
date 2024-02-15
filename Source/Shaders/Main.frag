@@ -38,17 +38,17 @@ void main()
 	//vec3 sun_pos = get_sun_pos(camera_pos);
 	//vec3 point_to_sun = normalize(sun_pos - camera_pos);
 	vec3 point_to_sun = get_sun_dir(camera_pos);
-	if (point_to_sun.y < -0.12) return; // sun below horizon
-
 	// spherical
-	if (debug_sphere(NDC, camera_pos, ray, point_to_sun, color)){
+	if (debug_sphere(NDC, iCameraPos, ray, point_to_sun, color)){
 		FragColor = vec4(color, 1.0); return;
 	}
+	if (point_to_sun.y < -0.12) return; // sun below horizon
+
 
 	// raymarching
 	float tree_start_distance;
 	float distance_to_terrain = 
-		raymarchTerrain(camera_pos, ray, iMaxDistance, iStepSize, tree_start_distance);
+		raymarch_terrain(camera_pos, ray, iMaxDistance, iStepSize, tree_start_distance);
 
 	int obj = 0; // 0: sky, 1: terrain, 2: trees 
 	float distance_to_obj = -1;

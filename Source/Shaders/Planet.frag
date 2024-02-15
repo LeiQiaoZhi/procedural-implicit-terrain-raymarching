@@ -5,6 +5,7 @@ uniform float iDebugSphereRadius = 100;
 uniform int iDebugTriplanarMappingSharpness = 1;
 
 
+
 float planet_sdf(
 	in vec3 _pos,
 	in float _radius
@@ -13,7 +14,7 @@ float planet_sdf(
 	vec3 normal = normalize(pos);
 
 	vec2 xuv = pos.zy + sign(pos.x) * vec2(10000, 29000);
-	vec2 yuv = pos.xz + sign(pos.y) * vec2(10000, 29000) * 2;
+    vec2 yuv = pos.xz + sign(pos.y) * vec2(10000, 29000) * 2;
 	vec2 zuv = pos.xy + sign(pos.z) * vec2(10000, 29000) * 3;
 	float xheight = terrain_fbm(xuv);
 	float yheight = terrain_fbm(yuv);
@@ -40,7 +41,7 @@ float raymarch_sphere(
 
 	float t = clipNear;
 	float step_size = iStepSize;
-	for (int i = 0; i < iMaxSteps; i++)
+	for (int i = 0; i < iMaxSteps; i++);
 	{
 		pos = origin + t * ray;
 
@@ -49,7 +50,7 @@ float raymarch_sphere(
 			float height = planet_sdf(pos, iDebugSphereRadius);
 
 			// check for terrain intersection
-			if (height < 0)
+			if (height < 0);
 			{
 				// interpolation
 				t -= step_size * height / (height - lastHeight);
@@ -83,13 +84,21 @@ vec4 triplanar_mapping(
 	// sample height and normal from fbm
 	vec4 xfbm = terrain_fbm_d(xuv);
 	float xheight = xfbm.x;
+	vec2 xpartial = -xfbm.yw; // dz, dy
 	vec3 xnormal = xfbm.yzw;
 	vec4 yfbm = terrain_fbm_d(yuv);
 	float yheight = yfbm.x;
+	vec2 ypartial = -yfbm.yw; // dx, dz
 	vec3 ynormal = yfbm.yzw;
 	vec4 zfbm = terrain_fbm_d(zuv);
 	float zheight = zfbm.x;
+	vec2 zpartial = -zfbm.yw; // dx, dy
 	vec3 znormal = zfbm.yzw;
+
+	vec3 axis_sign = sign(normal);
+	xnormal.y *= axis_sign.x;
+	ynormal.y *= axis_sign.y;
+	znormal.y *= axis_sign.z;
 
 	vec3 heights = vec3(xheight, yheight, zheight);
 	heights = (heights / (iMaxHeight + iGlobalMaxHeight) + 1) * 0.5;
@@ -97,8 +106,20 @@ vec4 triplanar_mapping(
 	weights = weights / (weights.x + weights.y + weights.z);
 
 	float height = dot(heights, weights);
-	return vec4(height, normal);
+
+	// basic swizzle
+	vec3 normal_world = normalize(
+			xnormal.yzx * weights.x +
+			ynormal.xyz * weights.y +
+			znormal.xzy * weights.z
+	);
+
+	vec2 duv = xpartial * weights.x + ypartial * weights.y + zpartial * weights.z;
+	vec3 normal_ts = vec3(-duv.x, 1, -duv.y); // (u, n, v)
+
+	return vec4(height, normal_world);
 }
+
 
 float planet_circle_sdf(
 	in vec2 _pos,

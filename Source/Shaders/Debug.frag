@@ -38,10 +38,18 @@ bool debug_sphere(
 		if (dist > 0){
 			vec3 pos = _camera_pos + _ray * dist;
 			vec4 heightd = triplanar_mapping(pos);
+			vec3 normal = heightd.yzw;
 
 			// TODO: get normal and do lighting
-			color_ = vec3(heightd.x);
+			// color_ = vec3(heightd.x);
+			// color_ = vec3(normal);
+
+			float diffuse = max(dot(normal, _sun_dir), 0) + 0.1;
+			color_ = vec3(diffuse);
+		} else{
+			color_ += sun_disk(_sun_dir, _camera_pos, _ray);
 		}
+
 		return true;
 	}
 	else if (iDebugRenderTarget == CIRCLE_RENDER_TARGET){
@@ -50,7 +58,7 @@ bool debug_sphere(
 		vec2 pos = _ndc * scale
 			+ 10 * vec2(-_camera_pos.x, _camera_pos.z);
 		if (abs(planet_circle_sdf(pos, iDebugSphereRadius)) < 0.007 * scale){
-			vec3 heightd = biplanar_mapping(pos);
+			vec3 heightd = biplanar_mapping(normalize(pos) * iDebugSphereRadius);
 			vec2 normal = heightd.yz;
 
 			float diffuse = max(dot(vec3(normal.x, 0, normal.y), _sun_dir), 0);
