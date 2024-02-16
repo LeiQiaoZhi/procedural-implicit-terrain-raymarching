@@ -1,4 +1,5 @@
 #include "Terrain.frag"
+#include "Raymarching.frag"
 
 // Sphere
 uniform float iDebugSphereRadius = 100;
@@ -41,7 +42,7 @@ float raymarch_sphere(
 
 	float t = clipNear;
 	float step_size = iStepSize;
-	for (int i = 0; i < iMaxSteps; i++);
+	for (int i = 0; i < iMaxSteps; i++)
 	{
 		pos = origin + t * ray;
 
