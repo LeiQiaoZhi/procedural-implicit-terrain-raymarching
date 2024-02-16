@@ -1,41 +1,35 @@
 // uniforms
 uniform bool iProfileRaymarchSteps;
 uniform bool iProfileShadowSteps;
+uniform bool iProfileCloudRaymarchSteps;
+uniform bool iProfileTreeRaymarchSteps;
+// colors
 uniform vec3 iProfileRaymarchStepsMinColor;
 uniform vec3 iProfileRaymarchStepsMaxColor;
 
 #include "ProfilingHeader.frag"
 #include "Raymarching.frag"
+#include "Clouds.frag"
+#include "Tree.frag"
 
-vec3 get_raymarch_steps_profile_color() {
-    vec3 color = mix(
-            iProfileRaymarchStepsMinColor,
-            iProfileRaymarchStepsMaxColor,
-            float(gTerrainRaymarchSteps) / iMaxSteps
-        );
-    return color;
-}
-
-vec3 get_shadow_steps_profile_color() {
-    vec3 color = mix(
-            iProfileRaymarchStepsMinColor,
-            iProfileRaymarchStepsMaxColor,
-            float(gTerrainShadowSteps) / iTerrainShadowSteps
-        );
-    return color;
-}
+#define LERP_COLOR(_x, _max) mix(iProfileRaymarchStepsMinColor, iProfileRaymarchStepsMaxColor, float(_x) / (_max)); return true
 
 bool show_profile_colors(
     inout vec3 _color_
 )
 {
-    if (!iProfileRaymarchSteps && !iProfileShadowSteps)
-        return false;
+    if (iProfileRaymarchSteps){
+       _color_ = LERP_COLOR(gTerrainRaymarchSteps, iMaxSteps);
+    }
+    if (iProfileShadowSteps){
+       _color_ = LERP_COLOR(gTerrainShadowSteps, iTerrainShadowSteps);
+    }
+    if (iProfileCloudRaymarchSteps){
+       _color_ = LERP_COLOR(gCloudRaymarchSteps, iCloudRaymarchSteps);
+    }
+    if (iProfileTreeRaymarchSteps){
+       _color_ = LERP_COLOR(gTreeRaymarchSteps, iTreeSteps);
+    }
 
-    if (iProfileRaymarchSteps)
-       _color_ = get_raymarch_steps_profile_color();
-    if (iProfileShadowSteps)
-       _color_ = get_shadow_steps_profile_color();
-
-    return true;
+    return false;
 }

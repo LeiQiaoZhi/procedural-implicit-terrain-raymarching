@@ -103,6 +103,7 @@ float raymarch_trees(
 	float distance_to_tree = _start_distance;
 	// detailed raymarching of trees SDF
 	for (int i = 0; i < iTreeSteps; i++){
+        PROFILE_TREE_RAYMARCH_STEPS();
 		vec3 pos = _camera_pos + distance_to_tree * _view_ray;
 		float d = tree_sdf(pos, tree_species_, tree_age_, rel_tree_height_);
 		// occulusion by terrain

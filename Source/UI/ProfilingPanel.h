@@ -20,8 +20,10 @@ namespace UI {
 		ProfilingPanel(const Shader& _shader)
 			: UIPanel("Profiling", _shader) {
 			properties_ = {
-			std::make_shared<BoolProperty>("Raymarch Steps", "iProfileRaymarchSteps", true),
-			std::make_shared<BoolProperty>("Terrain Shadow Steps", "iProfileShadowSteps", true),
+			std::make_shared<BoolProperty>("Terrain Raymarch Steps", "iProfileRaymarchSteps", false),
+			std::make_shared<BoolProperty>("Terrain Shadow Steps", "iProfileShadowSteps", false),
+			std::make_shared<BoolProperty>("Clouds Raymarch Steps", "iProfileCloudRaymarchSteps", false),
+			std::make_shared<BoolProperty>("Tree Raymarch Steps", "iProfileTreeRaymarchSteps", false),
 			std::make_shared<ColorProperty>("Min Color", "iProfileRaymarchStepsMinColor", "#00ff00"),
 			std::make_shared<ColorProperty>("Max Color", "iProfileRaymarchStepsMaxColor", "#ff0000"),
 			};

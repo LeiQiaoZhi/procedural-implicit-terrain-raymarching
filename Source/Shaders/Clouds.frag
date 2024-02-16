@@ -1,6 +1,7 @@
 #include "Fbm.frag"
 #include "Sun.frag"
 #include "Motion.frag"
+#include "ProfilingHeader.frag"
 
 // overall
 uniform bool  iEnableClouds;
@@ -8,9 +9,9 @@ uniform float iCloudStrength;
 uniform float iCloudBaseColor; 
 uniform float iCloudDensity; 
 // sun blend
-uniform float iCloudSunBlendStrength; 
-uniform float iCloudSunBlendDensityFactor; 
-uniform int iCloudSunBlendDotPower; 
+uniform float iCloudSunBlendStrength;
+uniform float iCloudSunBlendDensityFactor;
+uniform int   iCloudSunBlendDotPower;
 // cloud box
 uniform float iCloudBoxLowerY;
 uniform float iCloudBoxUpperY;
@@ -23,7 +24,7 @@ uniform float iCloudStepDensityScale;
 uniform float iCloudSampleAlpha; // front to back blending
 uniform float iCloudMaxCumAlpha = 1.0; 
 // fbm
-uniform vec2 iCloudOffsetDirection;
+uniform vec2  iCloudOffsetDirection;
 uniform float iCloudHorizontalScale;
 uniform float iCloudMaxHeight;
 uniform int   iCloudNumLayers;
@@ -34,12 +35,12 @@ uniform int   iCloudNormalNumLayers;
 // lighting
 uniform float iCloudAmbient;
 uniform float iCloudDiffuse;
-uniform int iCloudShadowSteps;
+uniform int   iCloudShadowSteps;
 uniform float iCloudShadowStepSize;
 uniform float iCloudShadowStrength;
 uniform float iCloudShadowDensityLower;
 uniform float iCloudShadowDensityHigher;
-uniform vec3 iCloudShadowColor;
+uniform vec3  iCloudShadowColor;
 
 
 vec3 cloud_motion_offset(){
@@ -120,6 +121,7 @@ vec4 inigo_raymarch_clouds(
 	_cum_density = 0.0;
 	float t = 0;
 	for (int i = 0; i < iCloudRaymarchSteps; i++){
+        PROFILE_CLOUD_RAYMARCH_STEPS();
 		vec3 p = start + _ray_dir * t;
 		float dt = max(iCloudMinStepSize, iCloudStepDistScale * t); // dynamic step size
 
