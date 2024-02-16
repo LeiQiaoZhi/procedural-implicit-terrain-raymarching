@@ -22,7 +22,7 @@ namespace UI {
 					"Noise3D",
 					"Noise1D",
 					"Sphere",
-					"Circle"
+					"Circle",
 			});
 			properties_ = { 
 				render_target_property_

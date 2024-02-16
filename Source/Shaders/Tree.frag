@@ -7,13 +7,13 @@ uniform float iTreeRadius;
 uniform float iTreeHeight;
 uniform float iTreeOffset;
 uniform float iTreeRandomness;
-uniform vec2 iTreeSizeRandomness;
+uniform vec2  iTreeSizeRandomness;
 uniform float iTreeSteepnessThreshold;
 // normal
 uniform float iTreeNormalEpsilon;
 // raymarching
-uniform int iTreeSteps;
-uniform int iTreeShadowSteps;
+uniform int   iTreeSteps;
+uniform int   iTreeShadowSteps;
 uniform float iTreeShadowThreshold;
 uniform float iTreeShadowLower;
 uniform float iTreeNormalTerrainProportion;
@@ -23,8 +23,8 @@ uniform float iTreeShadowMaxDistance;
 uniform float iTreeFbmStrength;
 uniform float iTreeHorizontalScale;
 uniform float iTreeMaxHeight;
-uniform int iTreeNumLayers;
-uniform vec2 iTreeFilterRange;
+uniform int   iTreeNumLayers;
+uniform vec2  iTreeFilterRange;
 uniform float iTreeHorizontalShrink;
 uniform float iTreeVerticalShrink;
 uniform float iTreeVerticalShrinkStart;
@@ -34,13 +34,13 @@ uniform float iTreeVerticalShrinkStart;
 uniform float iTreeS2LowerThreshold; // if fbm > threshold, then species 2
 uniform float iTreeS2RadiusFactor;
 uniform float iTreeS2HeightFactor;
-uniform vec3 iTreeColor;
-uniform vec3 iTreeColorS2;
-uniform vec3 iTreeOldColor;
-uniform vec3 iTreeOldColorS2;
+uniform vec3  iTreeColor;
+uniform vec3  iTreeColorS2;
+uniform vec3  iTreeOldColor;
+uniform vec3  iTreeOldColorS2;
 // species fbm
 uniform float iTreeSpeciesHorizontalScale;
-uniform int iTreeSpeciesNumLayers;
+uniform int   iTreeSpeciesNumLayers;
 uniform float iTreeSpeciesHorizontalShrink;
 uniform float iTreeSpeciesVerticalShrink;
 uniform float iTreeSpeciesVerticalShrinkStart;
@@ -155,7 +155,7 @@ vec3 treeNormal(in vec3 pos){
 }
 
 
-float treeShadow(in vec3 _pos, in vec3 _point_to_sun){
+float tree_shadow(in vec3 _pos, in vec3 _point_to_sun){
 	// shadow ray
 	float accumulative = 0;
 	float ray_distance = 0;

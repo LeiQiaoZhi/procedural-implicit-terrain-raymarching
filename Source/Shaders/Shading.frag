@@ -9,15 +9,15 @@
 
 // terrain lighting
 uniform float iFresnelNormalIncidence;
-uniform int iFresnelDotPower;
-uniform int iSpecularDotPower;
+uniform int   iFresnelDotPower;
+uniform int   iSpecularDotPower;
 uniform float iAmbientStrength;
 uniform float iDiffuseStrength;
 uniform float iSpecularStrength;
 // tree lighting
 uniform float iTreeFresnelNormalIncidence;
-uniform int iTreeFresnelDotPower;
-uniform int iTreeSpecularDotPower;
+uniform int   iTreeFresnelDotPower;
+uniform int   iTreeSpecularDotPower;
 uniform float iTreeAmbientStrength;
 uniform float iTreeDiffuseStrength;
 uniform float iTreeSpecularStrength;
@@ -25,10 +25,11 @@ uniform float iTreeOcculusionLower;
 uniform float iTreeOcculusionUpper;
 // deprecated -- atmosphere simulates fog
 uniform float iFogStrength;
-uniform vec3 iFogColor;
+uniform vec3  iFogColor;
 // optimization
 uniform float iShadeShadowThreshold;
 
+// TODO: extract water
 uniform int iWaterLevel;
 
 
@@ -161,10 +162,10 @@ vec3 shade(
 	if (_obj == TERRAIN_OBJ) pos.y = heightd.x;
 
 	// shadow 
-	float shadow = terrainShadow(pos + vec3(0, 0.1, 0), _point_to_sun);
+	float shadow = terrain_shadow(pos + vec3(0, 0.1, 0), _point_to_sun);
 
 	if (iTreeEnabled){
-		shadow *= treeShadow(pos + vec3(0, 0, 0), _point_to_sun);
+		shadow *= tree_shadow(pos + vec3(0, 0, 0), _point_to_sun);
 	}
 
 	if (shadow >= iShadeShadowThreshold){
@@ -203,7 +204,7 @@ vec3 shade(
 		float specular = pow(clamp(dot(reflect_ray, _point_to_sun),0,1), iWaterSpecularDotPower) * fresnel; 
 		color += iSunDiskColor * iWaterSpecularStrength * specular;
 		if (iWaterShadowOn){
-			shadow = terrainShadow(water_pos + vec3(0, 0.1, 0), _point_to_sun);
+			shadow = terrain_shadow(water_pos + vec3(0, 0.1, 0), _point_to_sun);
 			color *= shadow;
 		}
 
