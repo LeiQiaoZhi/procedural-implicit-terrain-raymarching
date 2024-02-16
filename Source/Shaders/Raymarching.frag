@@ -1,6 +1,3 @@
-#include "Tree.frag"
-#include "Debug.frag"
-
 // raymarching parameters
 uniform int   iMaxDistance;
 uniform int   iMaxSteps;
@@ -15,6 +12,10 @@ uniform vec3  iCameraRight;
 uniform vec3  iCameraUp;
 uniform float iFocalLength;
 
+#include "Tree.frag"
+#include "Debug.frag"
+#include "ProfilingHeader.frag"
+
 
 float sphere_sdf(
     in vec3  _pos,
@@ -24,13 +25,12 @@ float sphere_sdf(
 }
 
 
-// TODO: Fix naming convention
 // returns the distance to the terrain 
 float raymarch_terrain(
-	in vec3 _pos,
-	in vec3	_ray,
-	in float _max_distance,
-	in float _start_step_size,
+    in  vec3  _pos,
+    in  vec3  _ray,
+    in  float _max_distance,
+    in  float _start_step_size,
 	out float distance_to_tree_ // distance to intersection with tree
 ){
 	// TODO: use max terrain height and max tree height to determine max distance
@@ -47,6 +47,8 @@ float raymarch_terrain(
 	float step_size = _start_step_size;
 	for (int i = 0; i < iMaxSteps; i++)
 	{
+        PROFILE_TERRAIN_RAYMARCH_STEPS();
+
 		_pos = origin + t * _ray;
 
 		float height = terrain_fbm(_pos.xz);

@@ -8,6 +8,7 @@
 #include "TwoDSky.frag"
 #include "Shading.frag"
 #include "Motion.frag"
+#include "Profiling.frag"
 
 out vec4 FragColor;
 
@@ -111,6 +112,11 @@ void main()
 	two_d_clouds_i(obj, ray, camera_pos, color);
 	// lower 3D clouds
 	inigo_render_clouds_i(obj, camera_pos, ray, point_to_sun, color);
+
+    // debug profiling
+    if (show_profile_colors(color)) {
+        FragColor = vec4(color, 1.0); return;
+    }
 
 	FragColor = vec4(color, 1.0);
 	return;

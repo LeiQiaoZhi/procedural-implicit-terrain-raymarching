@@ -1,5 +1,5 @@
 #include "Fbm.frag"
-
+#include "ProfilingHeader.frag"
 // fbm
 uniform float iHorizontalScale;
 uniform float iMaxHeight;
@@ -27,6 +27,7 @@ uniform float iDistortionMaxHeight;
 uniform int   iDistortionNumLayers;
 uniform float iDistortionHorizontalShrink;
 uniform float iDistortionVerticalShrink;
+
 
 
 vec2 domain_distortion(in vec2 _pos){
@@ -130,12 +131,13 @@ vec4 terrain_fbm_d(in vec2 _pos){
 }
 
 
-float terrainShadow(in vec3 pos, in vec3 pointToSun){
+float terrain_shadow(in vec3 pos, in vec3 pointToSun){
 	// shadow ray
 	float shadowStepSize = iTerrainShadowStepSize;
 	float minR = 1;
 	for (float t = 1; t < iTerrainShadowSteps * shadowStepSize; t += shadowStepSize) 
 	{
+        PROFILE_TERRAIN_SHADOW_STEPS();
 		vec3 shadowPos = pos + t * pointToSun;
 		float d = shadowPos.y - terrain_fbm(shadowPos.xz);
 		minR = min(minR, 2 * d / t);
