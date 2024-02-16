@@ -9,7 +9,7 @@ namespace
 	std::string get_file_contents(const char* _filename)
 	{
 		std::filesystem::path absolute_path = std::filesystem::current_path() / _filename;
-		std::cout << "Reading shader file from " << absolute_path << std::endl;
+		//std::cout << "Reading shader file from " << absolute_path << std::endl;
 		std::ifstream in(absolute_path, std::ios::binary);
 
 		if (!in) {
@@ -40,8 +40,8 @@ namespace
 		{
 			glGetShaderInfoLog(_shader, 512, NULL, infoLog);
 			std::string error_message(infoLog);
-			std::cerr << Constants::RED 
-				<<"ERROR::SHADER::COMPILATION_FAILED\n" << error_message 
+			std::cerr << Constants::RED
+				<< "ERROR::SHADER::COMPILATION_FAILED\n" << error_message
 				<< Constants::RESET << std::endl;
 
 			// print the line causing the error
@@ -67,10 +67,10 @@ namespace
 				}
 				for (int i = 0; i < lines.size(); i++)
 				{
-					std::cout 
-						<< (i==neighbor_lines? Constants::RED : Constants::YELLOW)
-						<< line_number - neighbor_lines + i << ": " 
-						<< lines[i] 
+					std::cout
+						<< (i == neighbor_lines ? Constants::RED : Constants::YELLOW)
+						<< line_number - neighbor_lines + i << ": "
+						<< lines[i]
 						<< Constants::RESET
 						<< std::endl;
 				}
@@ -78,8 +78,11 @@ namespace
 			}
 
 		}
-		else
-			std::cout << "Shader compiled successfully." << std::endl;
+		else {
+			std::cout << Constants::GREEN
+				<< "Shader compiled successfully."
+				<< Constants::RESET << std::endl;
+		}
 	}
 
 	void process_includes(std::string& file_content)
@@ -94,6 +97,7 @@ namespace
 			const std::string match_path = include_match[1].str();
 			if (processed_includes.find(match_path) == processed_includes.end())
 			{
+				std::cout << "Processing shader include " << match_path << std::endl;
 				const std::string include_file_path = SHADER_PATH + std::string("/") + match_path;
 				const std::string include_file_contents = get_file_contents(include_file_path.c_str());
 				file_content.replace(include_match.position(), include_match.length(), include_file_contents);
