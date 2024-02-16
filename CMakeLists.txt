@@ -20,7 +20,9 @@ file(GLOB_RECURSE PROP_HEADERS "Source/UI/Properties/*.h")
 file(GLOB_RECURSE IMGUI "${CMAKE_SOURCE_DIR}/imgui/*")
 file(GLOB_RECURSE GLAD "Source/glad.c")
 file(GLOB_RECURSE GIT ".gitignore" "README.*")
-file(GLOB_RECURSE SHADERS "Source/*.frag" "Source/*.vert")
+file(GLOB_RECURSE ALL_SHADERS "Source/*.frag" "Source/*.vert")
+file(GLOB SHADERS "Source/Shaders/*.frag" "Source/Shaders/*.vert")
+file(GLOB_RECURSE OTHER_SHADERS "Source/Shaders/Others/*.frag" "Source/Shaders/Others/*.vert")
 
 # Set up filters for organizing the source files in the Visual Studio solution
 source_group("Source Files" FILES ${CPP_SOURCES})
@@ -31,13 +33,14 @@ source_group("Source Files\\UI" FILES ${UI_CPP})
 source_group("Header Files\\UI" FILES ${UI_HEADERS})
 source_group("Header Files\\UI\\Properties" FILES ${PROP_HEADERS})
 source_group("Shader Files" FILES ${SHADERS})
+source_group("Shader Files\\Others" FILES ${OTHER_SHADERS})
 source_group("External\\Imgui" FILES ${IMGUI})
 source_group("External\\Glad" FILES ${GLAD})
 source_group("External\\Git" FILES ${GIT})
 
-add_executable(TerrainApp ${ALL_CPP} ${ALL_HEADERS} ${IMGUI} ${GLAD} ${GIT} ${SHADERS})
+add_executable(TerrainApp ${ALL_CPP} ${ALL_HEADERS} ${IMGUI} ${GLAD} ${GIT} ${ALL_SHADERS})
 # don't compile shaders and gitignore files
-set_source_files_properties(${GIT} ${SHADERS} PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties(${GIT} ${ALL_SHADERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 ### Set up the include directories and link libraries ###
 
