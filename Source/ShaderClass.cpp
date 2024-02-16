@@ -1,4 +1,5 @@
 #include "ShaderClass.h"
+#include "Constants.h"
 #include <regex>
 #include <set>
 
@@ -29,7 +30,7 @@ namespace
 		throw(errno);
 	}
 
-	void check_shader_compilation(GLint _shader)
+	void check_shader_compilation(GLint _shader, const std::string& _shader_code)
 	{
 		GLint success;
 		GLchar infoLog[512];
@@ -38,7 +39,44 @@ namespace
 		if (!success)
 		{
 			glGetShaderInfoLog(_shader, 512, NULL, infoLog);
-			std::cerr << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
+			std::string error_message(infoLog);
+			std::cerr << Constants::RED 
+				<<"ERROR::SHADER::COMPILATION_FAILED\n" << error_message 
+				<< Constants::RESET << std::endl;
+
+			// print the line causing the error
+			// 1. get the line number from the error message
+			std::regex line_number_regex("\\((\\d+)\\)");
+			std::smatch line_number_match;
+			std::regex_search(error_message, line_number_match, line_number_regex);
+			if (line_number_match.size() > 1)
+			{
+				int line_number = std::stoi(line_number_match[1].str()) - 1;
+				std::cout << "Error in line " << line_number << " of the shader file." << std::endl;
+
+				// 2. get the line from the shader code
+				std::istringstream stream(_shader_code);
+				std::vector<std::string> lines;
+				std::string line;
+				int neighbor_lines = 3;
+				for (int i = 1; i <= line_number + neighbor_lines; i++)
+				{
+					std::getline(stream, line);
+					if (i >= line_number - neighbor_lines)
+						lines.push_back(line);
+				}
+				for (int i = 0; i < lines.size(); i++)
+				{
+					std::cout 
+						<< (i==neighbor_lines? Constants::RED : Constants::YELLOW)
+						<< line_number - neighbor_lines + i << ": " 
+						<< lines[i] 
+						<< Constants::RESET
+						<< std::endl;
+				}
+				std::cout << std::endl;
+			}
+
 		}
 		else
 			std::cout << "Shader compiled successfully." << std::endl;
@@ -100,6 +138,14 @@ namespace
 
 		_frag_source = std::move(result);
 	}
+
+	void write_to_file(const std::string& _file_name, const std::string& _content)
+	{
+		std::ofstream file(_file_name);
+		file << _content;
+		file.close();
+		std::cout << "File written to " << _file_name << std::endl;
+	}
 }
 
 Shader::Shader(const char* _vertex_file, const std::vector<const char*>& _frag_files)
@@ -112,7 +158,7 @@ Shader::Shader(const char* _vertex_file, const std::vector<const char*>& _frag_f
 	GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex_shader, 1, &vertex_source, NULL);
 	glCompileShader(vertex_shader);
-	check_shader_compilation(vertex_shader);
+	check_shader_compilation(vertex_shader, vertex_code);
 
 	// Shader program
 	program_ID = glCreateProgram();
@@ -130,11 +176,13 @@ Shader::Shader(const char* _vertex_file, const std::vector<const char*>& _frag_f
 	process_includes(combined_frag_code);
 	frag_code_ = combined_frag_code;
 	const char* frag_source = combined_frag_code.c_str();
+	write_to_file("combined_frag.glsl", combined_frag_code);
+	//std::cout << combined_frag_code << std::endl;
 
 	GLuint frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(frag_shader, 1, &frag_source, NULL);
 	glCompileShader(frag_shader);
-	check_shader_compilation(frag_shader);
+	check_shader_compilation(frag_shader, frag_code_);
 
 	glAttachShader(program_ID, frag_shader);
 	glDeleteShader(frag_shader);
@@ -164,7 +212,7 @@ void Shader::substitute_uniforms(nlohmann::json& _glsl_json)
 	GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex_shader, 1, &vertex_source, NULL);
 	glCompileShader(vertex_shader);
-	check_shader_compilation(vertex_shader);
+	check_shader_compilation(vertex_shader, vertex_code_);
 
 	// Shader program
 	program_ID = glCreateProgram();
@@ -176,7 +224,7 @@ void Shader::substitute_uniforms(nlohmann::json& _glsl_json)
 	GLuint frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(frag_shader, 1, &frag_source, NULL);
 	glCompileShader(frag_shader);
-	check_shader_compilation(frag_shader);
+	check_shader_compilation(frag_shader, frag_code_);
 
 	glAttachShader(program_ID, frag_shader);
 	glDeleteShader(frag_shader);
