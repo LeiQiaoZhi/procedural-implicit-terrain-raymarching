@@ -2,23 +2,23 @@
 #include "Debug.frag"
 
 // raymarching parameters
-uniform int iMaxDistance;
-uniform int iMaxSteps;
+uniform int   iMaxDistance;
+uniform int   iMaxSteps;
 uniform float iStepSize;
 uniform float iStepSizeDistanceRatio;
 uniform float iStepSizeAboveTreeRatio;
 
 // camera parameters
-uniform vec3 iCameraPos;
-uniform vec3 iCameraFwd; 
-uniform vec3 iCameraRight; 
-uniform vec3 iCameraUp; 
+uniform vec3  iCameraPos;
+uniform vec3  iCameraFwd;
+uniform vec3  iCameraRight;
+uniform vec3  iCameraUp;
 uniform float iFocalLength;
 
 
 float sphere_sdf(
-	in vec3 _pos,
-	in float _radius
+    in vec3  _pos,
+    in float _radius
 ){
 	return length(_pos) - _radius;
 }
@@ -26,61 +26,61 @@ float sphere_sdf(
 
 // TODO: Fix naming convention
 // returns the distance to the terrain 
-float raymarchTerrain(
-	in vec3 pos,
-	in vec3	ray,
+float raymarch_terrain(
+	in vec3 _pos,
+	in vec3	_ray,
 	in float _max_distance,
 	in float _start_step_size,
-	out float tTree // distance to intersection with tree
+	out float distance_to_tree_ // distance to intersection with tree
 ){
 	// TODO: use max terrain height and max tree height to determine max distance
 
-	tTree = -1; // no tree hit
+	distance_to_tree_ = -1; // no tree hit
 
-	vec3 origin = pos;
-	float clipNear = 0.1;
-	float lastHeight;
-	float lastY;
-	float treeMaxHeight = 1.0 * iTreeHeight + iTreeOffset + 0.5 * iTreeSizeRandomness.y; 
+	vec3 origin = _pos;
+	float clip_near = 0.1;
+	float last_height;
+	float last_y;
+	float tree_max_height = 1.0 * iTreeHeight + iTreeOffset + 0.5 * iTreeSizeRandomness.y; 
 
-	float t = clipNear;
+	float t = clip_near;
 	float step_size = _start_step_size;
 	for (int i = 0; i < iMaxSteps; i++)
 	{
-		pos = origin + t * ray;
+		_pos = origin + t * _ray;
 
-		float height = terrain_fbm(pos.xz);
-		float treeHeight = height + treeMaxHeight;
+		float height = terrain_fbm(_pos.xz);
+		float tree_height = height + tree_max_height;
 
 		// check for tree intersection
-		if (tTree < 0 && pos.y < treeHeight)
+		if (distance_to_tree_ < 0 && _pos.y < tree_height)
 		{
 			// interpolation
-			tTree = t - step_size * 
-				(treeHeight - pos.y) /
-				(lastY - lastHeight - treeMaxHeight + treeHeight - pos.y); 	
-			// tTree = t - 1 * step_size;
+			distance_to_tree_ = t - step_size * 
+				(tree_height - _pos.y) /
+				(last_y - last_height - tree_max_height + tree_height - _pos.y); 	
+			// distance_to_tree_ = t - 1 * step_size;
 		}
 
 		// check for terrain intersection
-		if (pos.y < height) 
+		if (_pos.y < height) 
 		{
 			// interpolation
 			t -= step_size * 
-				(height - pos.y) / (lastY - lastHeight + height - pos.y);
+				(height - _pos.y) / (last_y - last_height + height - _pos.y);
 
 			return t;
 		}
 
-		lastHeight = height;
-		lastY = pos.y;
+		last_height = height;
+		last_y = _pos.y;
 
 		step_size = _start_step_size + t * iStepSizeDistanceRatio * 0.1
-			+ (max(pos.y - treeHeight,0)) * 0.01 * iStepSizeAboveTreeRatio;
+			+ (max(_pos.y - tree_height,0)) * 0.01 * iStepSizeAboveTreeRatio;
 		t += step_size;
 
 		// early termination
-		if (pos.y > iMaxHeight + treeMaxHeight && lastY < pos.y) break;
+		if (_pos.y > iMaxHeight + tree_max_height && last_y < _pos.y) break;
 		if (t > _max_distance) break;
 
 	}
