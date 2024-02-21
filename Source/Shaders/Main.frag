@@ -34,7 +34,8 @@ void main()
 	float current_height = terrain_fbm(iCameraPos.xz) + 1.1 * iTreeHeight + iTreeOffset + 0.5 * iTreeSizeRandomness.y;
 	vec3 camera_pos = iCameraPos;
 	camera_pos.y = max(current_height + 1.0, iCameraPos.y);
-	vec3 ray = get_view_ray(NDC);
+    vec3 pixel_world = get_pixel_world(NDC);
+	vec3 ray = normalize(pixel_world - camera_pos);
 
 	//vec3 sun_pos = get_sun_pos(camera_pos);
 	//vec3 point_to_sun = normalize(sun_pos - camera_pos);
@@ -49,7 +50,8 @@ void main()
 	// raymarching
 	float tree_start_distance;
 	float distance_to_terrain = 
-		raymarch_terrain(camera_pos, ray, iMaxDistance, iStepSize, tree_start_distance);
+		raymarch_terrain(camera_pos, ray, iMaxDistance, 
+                        iStepSize, tree_start_distance);
 
 	int obj = 0; // 0: sky, 1: terrain, 2: trees 
 	float distance_to_obj = -1;

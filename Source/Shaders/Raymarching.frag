@@ -1,9 +1,19 @@
 // raymarching parameters
+uniform bool  iRaymarchStartFromCamera;
 uniform int   iMaxDistance;
 uniform int   iMaxSteps;
 uniform float iStepSize;
-uniform float iStepSizeDistanceRatio;
+uniform float iMinStepSize;
+uniform float iMaxStepSize;
+// dynamic step size
 uniform float iStepSizeAboveTreeRatio;
+uniform int   iStepSizeFunctionSwitch;
+uniform float iStepSizeDistanceRatio;
+uniform float iStepSizeDistanceLogRatio;
+uniform float iStepSizeDistanceExpRatio;
+#define LINEAR 0
+#define LOG 1
+#define EXP 2
 
 // camera parameters
 uniform vec3  iCameraPos;
@@ -25,6 +35,31 @@ float sphere_sdf(
 }
 
 
+float raymarch_stepsize_function(
+    in float _start_size,
+    in float _distance,
+    in vec3 _pos,
+    in float _tree_height
+){
+    float step_size = _start_size;
+    // scale with distance -- LOD
+    switch(iStepSizeFunctionSwitch){
+        case LINEAR:
+            step_size += _distance * iStepSizeDistanceRatio * 0.1;
+            break;
+        case LOG:
+            step_size += log(_distance + 1.0) * iStepSizeDistanceLogRatio * 0.1;
+            break;
+        case EXP:
+            step_size += pow(2, _distance * iStepSizeDistanceExpRatio * 0.1) * 0.1;
+            break;
+    }
+    // scale with height above trees
+    step_size += (max(_pos.y - _tree_height,0)) * 0.01 * iStepSizeAboveTreeRatio;
+    return clamp(step_size, iMinStepSize, iMaxStepSize);
+}
+
+
 // returns the distance to the terrain 
 float raymarch_terrain(
     in  vec3  _pos,
@@ -36,6 +71,8 @@ float raymarch_terrain(
 	// TODO: use max terrain height and max tree height to determine max distance
 
 	distance_to_tree_ = -1; // no tree hit
+    float tree_freeze_distance = -1; // must > it to check for tree
+    bool tree_confirmed = false;
 
 	vec3 origin = _pos;
 	float clip_near = 0.1;
@@ -54,15 +91,6 @@ float raymarch_terrain(
 		float height = terrain_fbm(_pos.xz);
 		float tree_height = height + tree_max_height;
 
-		// check for tree intersection
-		if (distance_to_tree_ < 0 && _pos.y < tree_height)
-		{
-			// interpolation
-			distance_to_tree_ = t - step_size * 
-				(tree_height - _pos.y) /
-				(last_y - last_height - tree_max_height + tree_height - _pos.y); 	
-			// distance_to_tree_ = t - 1 * step_size;
-		}
 
 		// check for terrain intersection
 		if (_pos.y < height) 
@@ -74,15 +102,44 @@ float raymarch_terrain(
 			return t;
 		}
 
+		// check for tree intersection
+		if (!tree_confirmed && _pos.y < tree_height
+            && t > tree_freeze_distance
+        )
+		{
+			// interpolation
+			distance_to_tree_ = t - step_size * 
+				(tree_height - _pos.y) /
+				(last_y - last_height - tree_max_height + tree_height - _pos.y); 	
+
+            // TODO: early test for tree intersection
+            tree_confirmed = true;
+            for (int j = 0; j < iTreeEarlyTestSteps; j++){
+                PROFILE_TREE_RAYMARCH_STEPS();
+                vec3 pos = origin + distance_to_tree_ * _ray;
+                // if (pos.y > tree_height) break;
+                float d = tree_sdf(pos);
+                if (d < 0.001 * distance_to_tree_){
+                    tree_confirmed = true;
+                    break;
+                }else{
+                    tree_confirmed = false;
+                }
+                distance_to_tree_ += 1;
+            }
+            if (!tree_confirmed) {
+                tree_freeze_distance = distance_to_tree_;
+            }
+		}
+
+
 		last_height = height;
 		last_y = _pos.y;
 
-		step_size = _start_step_size + t * iStepSizeDistanceRatio * 0.1
-			+ (max(_pos.y - tree_height,0)) * 0.01 * iStepSizeAboveTreeRatio;
-		t += step_size;
+		t += raymarch_stepsize_function(_start_step_size, t / iFocalLength, _pos, tree_height);
 
 		// early termination
-		if (_pos.y > iMaxHeight + tree_max_height && last_y < _pos.y) break;
+		if (_pos.y > iMaxHeight + tree_max_height + iGlobalMaxHeight && last_y < _pos.y) break;
 		if (t > _max_distance) break;
 
 	}
@@ -121,11 +178,11 @@ float raymarch_trees(
 
 
 
-vec3 get_view_ray(
+vec3 get_pixel_world(
 	in vec2 _ndc 
 ){
 	vec3 screen_center = iCameraPos + normalize(iCameraFwd) * iFocalLength;
 	vec3 pixel_world = screen_center 
 		+ _ndc.x * normalize(iCameraRight) + _ndc.y * normalize(iCameraUp);
-	return normalize(pixel_world - iCameraPos);
+	return pixel_world;
 }
