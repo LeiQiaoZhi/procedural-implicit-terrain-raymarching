@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "Utils.h"
+#include <iostream>
 
 namespace
 {
@@ -39,4 +40,17 @@ void Window::set_callbacks(CallbackManager& _callback_manager)
 				toggle_fullwindow();
 		}
 	);
+}
+
+void Window::set_icon(const char* _icon_path)
+{
+	std::cout << "Setting icon: " << _icon_path << std::endl;
+
+	int width, height, channels;
+	unsigned char* icon_data = stbi_load(_icon_path, &width, &height, &channels, 4);
+	GLFWimage icon[1];
+	icon[0].width = width;
+	icon[0].height = height;
+	icon[0].pixels = icon_data;
+	glfwSetWindowIcon(window_, 1, icon);
 }

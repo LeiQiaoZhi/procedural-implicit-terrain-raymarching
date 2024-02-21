@@ -38,7 +38,7 @@ source_group("External\\Imgui" FILES ${IMGUI})
 source_group("External\\Glad" FILES ${GLAD})
 source_group("External\\Git" FILES ${GIT})
 
-add_executable(TerrainApp ${ALL_CPP} ${ALL_HEADERS} ${IMGUI} ${GLAD} ${GIT} ${ALL_SHADERS})
+add_executable(TerrainApp TerrainApp.rc ${ALL_CPP} ${ALL_HEADERS} ${IMGUI} ${GLAD} ${GIT} ${ALL_SHADERS})
 # don't compile shaders and gitignore files
 set_source_files_properties(${GIT} ${ALL_SHADERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
@@ -49,7 +49,6 @@ target_include_directories(TerrainApp PRIVATE
     "${CMAKE_SOURCE_DIR}/Libraries/include"
     "${CMAKE_SOURCE_DIR}/imgui"   # Assuming imgui is in the same directory as CMakeLists.txt
     "${CMAKE_SOURCE_DIR}/Source"
-    "${CMAKE_SOURCE_DIR}/nlohmann"
     # Add other include directories here if needed
 )
 # print out the include directories
@@ -78,10 +77,12 @@ set(DIR_PATH "${CMAKE_SOURCE_DIR}")
 set(CONFIG_PATH "${DIR_PATH}/Configs")
 set(SRC_PATH "${DIR_PATH}/Source")
 set(SHADER_PATH "${SRC_PATH}/Shaders")
+set(ICON_PATH "${CMAKE_SOURCE_DIR}/Images/TerrainApp.png")
 
 # Add these paths as compile definitions
 add_definitions(-DDIR_PATH="${DIR_PATH}")
 add_definitions(-DCONFIG_PATH="${CONFIG_PATH}")
 add_definitions(-DSRC_PATH="${SRC_PATH}")
 add_definitions(-DSHADER_PATH="${SHADER_PATH}")
+add_definitions(-DICON_PATH="${ICON_PATH}")
 

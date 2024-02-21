@@ -34,6 +34,7 @@ int main()
 
 	// encapsulate the window in an object
 	Window window_obj(window, Constants::WIDTH, Constants::HEIGHT);
+	window_obj.set_icon(ICON_PATH);
 
 	// load glad so it configures opengl
 	gladLoadGL();
