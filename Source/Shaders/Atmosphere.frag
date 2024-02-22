@@ -3,13 +3,13 @@ uniform float iRayleighStrength;
 uniform float iAtmosphereDensityFallOff;
 uniform float iAtmosphereMaxHeight;
 // sampling
-uniform int iOpticalDepthSteps;
-uniform int iRayleighSteps;
+uniform int   iOpticalDepthSteps;
+uniform int   iRayleighSteps;
 // blending with original color
-uniform vec3 iRayleighFogFallOff;
+uniform vec3  iRayleighFogFallOff;
 uniform float iRayleighFogStrength;
 // rayleigh scattering of RGB
-uniform vec3 iScatteringCoefficient;
+uniform vec3  iScatteringCoefficient;
 
 bool ray_inside_atmosphere_i(
 	inout vec3 _start,
