@@ -1,20 +1,26 @@
 // raymarching parameters
-uniform bool  iRaymarchStartFromCamera;
 uniform int   iMaxDistance;
 uniform int   iMaxSteps;
 uniform float iStepSize;
 uniform float iMinStepSize;
 uniform float iMaxStepSize;
 // dynamic step size
+uniform bool  iRaymachDistanceScaleWithFocalLength;
 uniform float iStepSizeAboveTreeRatio;
 uniform int   iStepSizeFunctionSwitch;
 uniform float iStepSizeDistanceRatio;
 uniform float iStepSizeDistanceLogRatio;
 uniform float iStepSizeDistanceExpRatio;
+uniform float iStepSizeSmoothStepRightEdge;
+// refinement
+uniform int   iBinarySearchRefineSteps;
+
 #define LINEAR 0
 #define LOG 1
 #define EXP 2
+#define SMOOTHSTEP 3
 
+// TODO: move camera parameters to a separate file
 // camera parameters
 uniform vec3  iCameraPos;
 uniform vec3  iCameraFwd;
@@ -25,6 +31,7 @@ uniform float iFocalLength;
 #include "Tree.frag"
 #include "Debug.frag"
 #include "ProfilingHeader.frag"
+
 
 
 float sphere_sdf(
@@ -38,7 +45,7 @@ float sphere_sdf(
 float raymarch_stepsize_function(
     in float _start_size,
     in float _distance,
-    in vec3 _pos,
+    in vec3  _pos,
     in float _tree_height
 ){
     float step_size = _start_size;
@@ -53,10 +60,44 @@ float raymarch_stepsize_function(
         case EXP:
             step_size += pow(2, _distance * iStepSizeDistanceExpRatio * 0.1) * 0.1;
             break;
+        case SMOOTHSTEP:
+            step_size += smoothstep(0.0, iStepSizeSmoothStepRightEdge, _distance) * iMaxStepSize;
+            break;
     }
     // scale with height above trees
     step_size += (max(_pos.y - _tree_height,0)) * 0.01 * iStepSizeAboveTreeRatio;
     return clamp(step_size, iMinStepSize, iMaxStepSize);
+}
+
+
+void binary_search_refine(
+    inout vec3 _below_pos_,
+    inout vec3 _above_pos_
+){
+    for (int i = 0; i < iBinarySearchRefineSteps; i++){
+        vec3 mid_pos = 0.5 * (_below_pos_ + _above_pos_);
+        float mid_height = terrain_fbm(mid_pos.xz);
+        float diff = mid_pos.y - mid_height;
+        if (diff < 0){
+            _below_pos_ = mid_pos;
+        }else{
+            _above_pos_ = mid_pos;
+        }
+        if (abs(diff) < 0.01) break;
+    }
+}
+
+
+// returns distance between the below to the intersection
+float interpolate_intersection(
+    in vec3 _below_pos,
+    in vec3 _above_pos
+){
+    float above_height = terrain_fbm(_above_pos.xz);
+    float below_height = terrain_fbm(_below_pos.xz);
+    return  length(_above_pos - _below_pos) *
+            (below_height - _below_pos.y) /
+            (_above_pos.y - above_height + below_height - _below_pos.y);
 }
 
 
@@ -78,6 +119,7 @@ float raymarch_terrain(
 	float clip_near = 0.1;
 	float last_height;
 	float last_y;
+    vec3  last_pos = origin;
 	float tree_max_height = 1.0 * iTreeHeight + iTreeOffset + 0.5 * iTreeSizeRandomness.y; 
 
 	float t = clip_near;
@@ -91,14 +133,18 @@ float raymarch_terrain(
 		float height = terrain_fbm(_pos.xz);
 		float tree_height = height + tree_max_height;
 
-
 		// check for terrain intersection
 		if (_pos.y < height) 
 		{
+            vec3 below_pos = _pos;
+            vec3 above_pos = last_pos;
+            binary_search_refine(below_pos, above_pos);
+            float extra_length = interpolate_intersection(below_pos, above_pos);
 			// interpolation
-			t -= step_size * 
-				(height - _pos.y) / (last_y - last_height + height - _pos.y);
-
+			// t -= step_size * 
+				// (height - _pos.y) / (last_y - last_height + height - _pos.y);
+            t -= length(below_pos - _pos);
+            t -= extra_length;
 			return t;
 		}
 
@@ -135,8 +181,11 @@ float raymarch_terrain(
 
 		last_height = height;
 		last_y = _pos.y;
+        last_pos = _pos;
 
-		t += raymarch_stepsize_function(_start_step_size, t / iFocalLength, _pos, tree_height);
+		t += raymarch_stepsize_function(_start_step_size, 
+            iRaymachDistanceScaleWithFocalLength? (t / iFocalLength) : t,
+            _pos, tree_height);
 
 		// early termination
 		if (_pos.y > iMaxHeight + tree_max_height + iGlobalMaxHeight && last_y < _pos.y) break;
