@@ -24,8 +24,13 @@ namespace UI {
 			std::make_shared<BoolProperty>("Terrain Shadow Steps", "iProfileShadowSteps", false),
 			std::make_shared<BoolProperty>("Clouds Raymarch Steps", "iProfileCloudRaymarchSteps", false),
 			std::make_shared<BoolProperty>("Tree Raymarch Steps", "iProfileTreeRaymarchSteps", false),
+			std::make_shared<BoolProperty>("Last Step Size", "iProfileLastStepSize", false),
 			std::make_shared<ColorProperty>("Min Color", "iProfileRaymarchStepsMinColor", "#00ff00"),
 			std::make_shared<ColorProperty>("Max Color", "iProfileRaymarchStepsMaxColor", "#ff0000"),
+			std::make_shared<BoolProperty>("Mark True Max", "iProfileMarkTrueMaxColor", false),
+			std::make_shared<ColorProperty>("True Max Color", "iProfileTrueMaxColor", "#ff0000"),
+			std::make_shared<BoolProperty>("Use Custom Max", "iProfileUseCustomMax", false),
+			std::make_shared<SliderF>("Custom Max", "iProfileCustomMax", 0, 10000, 10)
 			};
 		}
 	protected:

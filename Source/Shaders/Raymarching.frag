@@ -139,6 +139,7 @@ float raymarch_terrain(
             vec3 below_pos = _pos;
             vec3 above_pos = last_pos;
             binary_search_refine(below_pos, above_pos);
+            PROFILE_LAST_STEP_SIZE(length(below_pos - above_pos));
             float extra_length = interpolate_intersection(below_pos, above_pos);
 			// interpolation
 			// t -= step_size * 

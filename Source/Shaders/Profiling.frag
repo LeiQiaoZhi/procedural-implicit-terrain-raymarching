@@ -1,9 +1,14 @@
 // uniforms
-uniform bool iProfileRaymarchSteps;
-uniform bool iProfileShadowSteps;
-uniform bool iProfileCloudRaymarchSteps;
-uniform bool iProfileTreeRaymarchSteps;
+uniform bool  iProfileUseCustomMax;
+uniform float iProfileCustomMax;
+uniform bool  iProfileMarkTrueMaxColor;
+uniform bool  iProfileRaymarchSteps;
+uniform bool  iProfileShadowSteps;
+uniform bool  iProfileCloudRaymarchSteps;
+uniform bool  iProfileTreeRaymarchSteps;
+uniform bool  iProfileLastStepSize;
 // colors
+uniform vec3 iProfileTrueMaxColor;
 uniform vec3 iProfileRaymarchStepsMinColor;
 uniform vec3 iProfileRaymarchStepsMaxColor;
 
@@ -12,24 +17,38 @@ uniform vec3 iProfileRaymarchStepsMaxColor;
 #include "Clouds.frag"
 #include "Tree.frag"
 
-#define LERP_COLOR(_x, _max) mix(iProfileRaymarchStepsMinColor, iProfileRaymarchStepsMaxColor, float(_x) / (_max)); return true
+vec3 lerp_color(
+    in float _x, 
+    in float _max
+) {
+    if (iProfileUseCustomMax) _max = iProfileCustomMax;
+    
+    return (iProfileMarkTrueMaxColor && _x >= _max)
+    ? iProfileTrueMaxColor 
+    : mix(iProfileRaymarchStepsMinColor, iProfileRaymarchStepsMaxColor, float(_x) / (_max)); 
+}
+
 
 bool show_profile_colors(
     inout vec3 _color_
 )
 {
     if (iProfileRaymarchSteps){
-       _color_ = LERP_COLOR(gTerrainRaymarchSteps, iMaxSteps);
+       _color_ = lerp_color(gTerrainRaymarchSteps, iMaxSteps);
     }
-    if (iProfileShadowSteps){
-       _color_ = LERP_COLOR(gTerrainShadowSteps, iTerrainShadowSteps);
+    else if (iProfileShadowSteps){
+       _color_ = lerp_color(gTerrainShadowSteps, iTerrainShadowSteps);
     }
-    if (iProfileCloudRaymarchSteps){
-       _color_ = LERP_COLOR(gCloudRaymarchSteps, iCloudRaymarchSteps);
+    else if (iProfileCloudRaymarchSteps){
+       _color_ = lerp_color(gCloudRaymarchSteps, iCloudRaymarchSteps);
     }
-    if (iProfileTreeRaymarchSteps){
-       _color_ = LERP_COLOR(gTreeRaymarchSteps, iTreeSteps);
+    else if (iProfileTreeRaymarchSteps){
+       _color_ = lerp_color(gTreeRaymarchSteps, iTreeSteps);
     }
-
-    return false;
+    else if (iProfileLastStepSize){
+        _color_ = lerp_color(gLastStepSize, iMaxStepSize);
+    }else{
+        return false;
+    }
+    return true;
 }
