@@ -11,6 +11,7 @@ uniform float iRayleighFogStrength;
 // rayleigh scattering of RGB
 uniform vec3  iScatteringCoefficient;
 
+
 bool ray_inside_atmosphere_i(
 	inout vec3 _start,
 	inout vec3 _end

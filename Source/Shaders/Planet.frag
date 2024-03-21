@@ -2,7 +2,7 @@
 #include "Raymarching.frag"
 
 // Sphere
-uniform float iDebugSphereRadius = 100;
+uniform float iPlanetRadius = 100;
 uniform int iDebugTriplanarMappingSharpness = 1;
 
 float planet_sdf(
@@ -42,9 +42,9 @@ float raymarch_sphere(
     {
         pos = origin + t * ray;
 
-        float dist_to_outer = sphere_sdf(pos, iDebugSphereRadius + iMaxHeight + iGlobalMaxHeight);
+        float dist_to_outer = sphere_sdf(pos, iPlanetRadius + iMaxHeight + iGlobalMaxHeight);
         if (dist_to_outer < 0) {
-            float height = planet_sdf(pos, iDebugSphereRadius);
+            float height = planet_sdf(pos, iPlanetRadius);
 
             // check for terrain intersection
             if (height < 0) ;
