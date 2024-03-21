@@ -114,8 +114,17 @@
             }
         },
         "Planet Tab": {
+            "End Distance": {
+                "value": 10.0
+            },
             "Radius": {
-                "value": 10000.0
+                "value": 732.5999755859375
+            },
+            "Ray Offset": {
+                "value": -19.299999237060547
+            },
+            "Start Distance": {
+                "value": 10.0
             },
             "Triplanar Sharpness": {
                 "value": 1
@@ -123,10 +132,10 @@
         },
         "Sky Tab": {
             "Atmos Height": {
-                "value": 128205.1328125
+                "value": 14652.009765625
             },
             "Density Fall Off": {
-                "value": 0.7099999785423279
+                "value": 0.550000011920929
             },
             "Fog Falloff": {
                 "values": [
@@ -164,16 +173,16 @@
                     "value": 5128
                 },
                 "Horizontal Scale": {
-                    "value": 4762.0
+                    "value": 7326.10009765625
                 },
                 "Horizontal Shirnk": {
                     "value": 1.899999976158142
                 },
                 "Layers": {
-                    "value": 5
+                    "value": 4
                 },
                 "Max Height": {
-                    "value": 0.25999999046325684
+                    "value": 0.6299999952316284
                 },
                 "Vertical Shrink": {
                     "value": 0.5
@@ -181,7 +190,7 @@
             },
             "Distortion": {
                 "Enable Distortion": {
-                    "value": true
+                    "value": false
                 },
                 "Horizontal Scale": {
                     "value": 10622.7998046875
@@ -205,7 +214,7 @@
                     "value_min": 1
                 },
                 "Horizontal Scale": {
-                    "value": 476.2900085449219
+                    "value": 1758.3199462890625
                 },
                 "Horizontal Shirnk": {
                     "value": 1.690000057220459
@@ -214,10 +223,10 @@
                     "value": 12
                 },
                 "Max Height": {
-                    "value": 0.0
+                    "value": 5531.14013671875
                 },
                 "Normal Layers": {
-                    "value": 16
+                    "value": 13
                 },
                 "Starting Vertical Shrink": {
                     "value": 0.5
@@ -379,6 +388,9 @@
         "Tree Tab": {
             "Domain Size": {
                 "value": 42.90999984741211
+            },
+            "Early Test Steps": {
+                "value": 0
             },
             "Enable": {
                 "value": false
@@ -620,31 +632,31 @@
         "Camera Tab": {
             "camara_transform": {
                 "forward": [
-                    -0.49301978945732117,
-                    0.11228924244642258,
-                    0.8627414107322693
+                    0.0,
+                    0.0,
+                    1.0
                 ],
                 "position": [
-                    17273.830078125,
-                    -1675.325439453125,
-                    -21899.158203125
+                    251.01571655273438,
+                    1541.114501953125,
+                    -49281.48046875
                 ],
                 "right": [
-                    -0.8682324886322021,
-                    -7.264314945132355e-07,
-                    -0.49615758657455444
+                    -1.0,
+                    0.0,
+                    0.0
                 ],
                 "up": [
-                    0.05571426823735237,
-                    0.9936752319335938,
-                    -0.09749656170606613
+                    -0.0,
+                    1.0,
+                    -0.0
                 ]
             },
             "camera_settings": {
                 "invert_x": false,
                 "invert_y": false,
                 "invert_zoom": false,
-                "keyboard_speed": 54.14799880981445,
+                "keyboard_speed": 254.12899780273438,
                 "move_speed": 692.3389892578125,
                 "rotate_speed": 2.4059998989105225,
                 "zoom_speed": 0.26100000739097595
@@ -656,11 +668,32 @@
             }
         },
         "Raymarch Tab": {
+            "BS refine steps": {
+                "value": 0
+            },
+            "Distance Scale with Focal Length": {
+                "value": true
+            },
+            "Exp Step Size Distance Ratio": {
+                "value": 0.009999999776482582
+            },
+            "Linear Step Size Distance Ratio": {
+                "value": 0.03999999910593033
+            },
+            "Log Step Size Distance Ratio": {
+                "value": 1.0
+            },
             "Max Distance": {
-                "value": 55136
+                "value": 100000
+            },
+            "Max Step Size": {
+                "value": 10000.0
             },
             "Max Steps": {
-                "value": 325
+                "value": 195
+            },
+            "Min Step Size": {
+                "value": 0.10000000149011612
             },
             "Shadow Step Size": {
                 "value": 53.619998931884766
@@ -668,14 +701,17 @@
             "Shadow Steps": {
                 "value": 32
             },
-            "Step Size": {
-                "value": 264.94000244140625
+            "Smoothstep Step Size Right Edge": {
+                "value": 10000.0
+            },
+            "Start Step Size": {
+                "value": 5.5
             },
             "Step Size Above Tree Ratio": {
                 "value": 10.0
             },
-            "Step Size Distance Ratio": {
-                "value": 0.03999999910593033
+            "Step Size Distance Relationship": {
+                "value": 0
             }
         }
     },
@@ -742,7 +778,7 @@
                 "value": 1000
             },
             "Dot Power 2": {
-                "value": 16
+                "value": 96
             },
             "Dot Product Threshold": {
                 "value": 70.0
@@ -751,16 +787,16 @@
                 "value": true
             },
             "Phi": {
-                "value": 1.7699999809265137
+                "value": 0.0
             },
             "Radius": {
                 "value": 1000000.0
             },
             "Strength 1": {
-                "value": 1.7899999618530273
+                "value": 0.7200000286102295
             },
             "Strength 2": {
-                "value": 1.0499999523162842
+                "value": 0.3700000047683716
             },
             "Sun Center": {
                 "values": [
@@ -777,11 +813,58 @@
                 ]
             },
             "Theta": {
-                "value": 1.2999999523162842
+                "value": 0.7300000190734863
             },
             "phi": 0.0,
             "radius": 40000.0,
             "theta": 0.0
+        },
+        "Profiling Tab": {
+            "Clouds Raymarch Steps": {
+                "value": false
+            },
+            "Custom Max": {
+                "value": 201.00999450683594
+            },
+            "Last Step Size": {
+                "value": false
+            },
+            "Mark True Max": {
+                "value": false
+            },
+            "Max Color": {
+                "colors": [
+                    1.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "Min Color": {
+                "colors": [
+                    0.0,
+                    1.0,
+                    0.0
+                ]
+            },
+            "Terrain Raymarch Steps": {
+                "value": false
+            },
+            "Terrain Shadow Steps": {
+                "value": false
+            },
+            "Tree Raymarch Steps": {
+                "value": false
+            },
+            "True Max Color": {
+                "colors": [
+                    0.9411764144897461,
+                    0.0,
+                    1.0
+                ]
+            },
+            "Use Custom Max": {
+                "value": false
+            }
         }
     },
     "Short 3 Panel": {

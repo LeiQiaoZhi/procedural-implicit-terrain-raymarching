@@ -35,8 +35,8 @@
                 },
                 "Offset": {
                     "values": [
-                        0.4300000071525574,
-                        0.10000000149011612
+                        -0.5600000023841858,
+                        0.47999998927116394
                     ]
                 },
                 "Vertical Shrink": {
@@ -89,14 +89,14 @@
                     "value": 67.02999877929688
                 },
                 "Step Density Scale": {
-                    "value": 0.3700000047683716
+                    "value": 0.7200000286102295
                 },
                 "Step Dist Scale": {
-                    "value": 0.019999999552965164
+                    "value": 0.029999999329447746
                 }
             },
             "Steps": {
-                "value": 352
+                "value": 205
             },
             "Strength": {
                 "value": 0.949999988079071
@@ -145,7 +145,7 @@
                 "value": 10
             },
             "Rayleigh Strength": {
-                "value": 1.6799999475479126
+                "value": 1.9700000286102295
             },
             "Scattering Coefficients": {
                 "values": [
@@ -378,7 +378,10 @@
         },
         "Tree Tab": {
             "Domain Size": {
-                "value": 42.90999984741211
+                "value": 27.18000030517578
+            },
+            "Early Test Steps": {
+                "value": 0
             },
             "Enable": {
                 "value": false
@@ -389,7 +392,7 @@
                     "value_min": 1
                 },
                 "FBM strength": {
-                    "value": 10.0
+                    "value": 42.119998931884766
                 },
                 "Horizontal Scale": {
                     "value": 0.10000000149011612
@@ -411,7 +414,7 @@
                 }
             },
             "Height": {
-                "value": 30.100000381469727
+                "value": 66.69999694824219
             },
             "Lighting": {
                 "Ambient Strength": {
@@ -449,7 +452,7 @@
                 "value": 1.0
             },
             "Radius": {
-                "value": 12.899999618530273
+                "value": 18.760000228881836
             },
             "Shadow": {
                 "Max Distance": {
@@ -459,7 +462,7 @@
                     "value": -952.3800048828125
                 },
                 "Shadow Steps": {
-                    "value": 5
+                    "value": 0
                 },
                 "Shadow Threshold": {
                     "value": 7.329999923706055
@@ -531,10 +534,10 @@
                 }
             },
             "Steepness Threshold": {
-                "value": 0.9700000286102295
+                "value": 0.6800000071525574
             },
             "Steps": {
-                "value": 45
+                "value": 63
             },
             "Terrain Normal Proportion": {
                 "value": 2.450000047683716
@@ -620,24 +623,24 @@
         "Camera Tab": {
             "camara_transform": {
                 "forward": [
-                    -0.8011103272438049,
-                    -0.13811618089675903,
-                    0.5823625326156616
+                    0.450030118227005,
+                    -0.26511093974113464,
+                    -0.8527538180351257
                 ],
                 "position": [
-                    31508.716796875,
-                    1426.3541259765625,
-                    16912.994140625
+                    34162.4453125,
+                    643.30419921875,
+                    24395.125
                 ],
                 "right": [
-                    -0.5879979133605957,
-                    -1.4156104555240745e-07,
-                    -0.808862566947937
+                    0.8843994140625,
+                    -7.450580596923828e-07,
+                    0.46673092246055603
                 ],
                 "up": [
-                    -0.1117132306098938,
-                    0.9904167056083679,
-                    0.08120910823345184
+                    0.12373334169387817,
+                    0.9642196297645569,
+                    -0.23445838689804077
                 ]
             },
             "camera_settings": {
@@ -652,15 +655,36 @@
         },
         "Motion Tab": {
             "Speed": {
-                "value": 0.10000000149011612
+                "value": 0.05000000074505806
             }
         },
         "Raymarch Tab": {
+            "BS refine steps": {
+                "value": 0
+            },
+            "Distance Scale with Focal Length": {
+                "value": true
+            },
+            "Exp Step Size Distance Ratio": {
+                "value": 0.009999999776482582
+            },
+            "Linear Step Size Distance Ratio": {
+                "value": 0.03999999910593033
+            },
+            "Log Step Size Distance Ratio": {
+                "value": 1.0
+            },
             "Max Distance": {
                 "value": 100000
             },
+            "Max Step Size": {
+                "value": 10000.0
+            },
             "Max Steps": {
-                "value": 325
+                "value": 368
+            },
+            "Min Step Size": {
+                "value": 0.10000000149011612
             },
             "Shadow Step Size": {
                 "value": 5.400000095367432
@@ -668,14 +692,17 @@
             "Shadow Steps": {
                 "value": 27
             },
-            "Step Size": {
-                "value": 0.10000000149011612
+            "Smoothstep Step Size Right Edge": {
+                "value": 10000.0
+            },
+            "Start Step Size": {
+                "value": 5.5
             },
             "Step Size Above Tree Ratio": {
-                "value": 10.0
+                "value": 50.0
             },
-            "Step Size Distance Ratio": {
-                "value": 0.10000000149011612
+            "Step Size Distance Relationship": {
+                "value": 0
             }
         }
     },
@@ -728,7 +755,7 @@
                 "value": 1.1200000047683716
             },
             "Used 2D Clouds": {
-                "value": true
+                "value": false
             },
             "Used 2D Sky": {
                 "value": false
@@ -751,7 +778,7 @@
                 "value": true
             },
             "Phi": {
-                "value": 1.7400000095367432
+                "value": 3.25
             },
             "Radius": {
                 "value": 1000000.0
@@ -782,12 +809,59 @@
             "phi": 0.0,
             "radius": 40000.0,
             "theta": 0.0
+        },
+        "Profiling Tab": {
+            "Clouds Raymarch Steps": {
+                "value": false
+            },
+            "Custom Max": {
+                "value": 201.00999450683594
+            },
+            "Last Step Size": {
+                "value": false
+            },
+            "Mark True Max": {
+                "value": false
+            },
+            "Max Color": {
+                "colors": [
+                    1.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "Min Color": {
+                "colors": [
+                    0.0,
+                    1.0,
+                    0.0
+                ]
+            },
+            "Terrain Raymarch Steps": {
+                "value": false
+            },
+            "Terrain Shadow Steps": {
+                "value": false
+            },
+            "Tree Raymarch Steps": {
+                "value": false
+            },
+            "True Max Color": {
+                "colors": [
+                    0.9411764144897461,
+                    0.0,
+                    1.0
+                ]
+            },
+            "Use Custom Max": {
+                "value": false
+            }
         }
     },
     "Short 3 Panel": {
         "Debug Tab": {
             "Render Target": {
-                "value": 0
+                "value": 8
             }
         },
         "Performance Tab": null

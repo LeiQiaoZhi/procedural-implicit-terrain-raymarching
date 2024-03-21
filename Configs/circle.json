@@ -114,8 +114,17 @@
             }
         },
         "Planet Tab": {
+            "End Distance": {
+                "value": 10.0
+            },
             "Radius": {
                 "value": 10000.0
+            },
+            "Ray Offset": {
+                "value": -19.299999237060547
+            },
+            "Start Distance": {
+                "value": 10.0
             },
             "Triplanar Sharpness": {
                 "value": 1
@@ -123,7 +132,7 @@
         },
         "Sky Tab": {
             "Atmos Height": {
-                "value": 128205.1328125
+                "value": 18315.01953125
             },
             "Density Fall Off": {
                 "value": 0.7099999785423279
@@ -380,6 +389,9 @@
             "Domain Size": {
                 "value": 42.90999984741211
             },
+            "Early Test Steps": {
+                "value": 0
+            },
             "Enable": {
                 "value": false
             },
@@ -625,9 +637,9 @@
                     1.0
                 ],
                 "position": [
-                    71.3588638305664,
-                    1139.746337890625,
-                    827.6386108398438
+                    -90.2054214477539,
+                    1923.256103515625,
+                    -36.81989288330078
                 ],
                 "right": [
                     -1.0,
@@ -656,11 +668,32 @@
             }
         },
         "Raymarch Tab": {
+            "BS refine steps": {
+                "value": 0
+            },
+            "Distance Scale with Focal Length": {
+                "value": true
+            },
+            "Exp Step Size Distance Ratio": {
+                "value": 0.009999999776482582
+            },
+            "Linear Step Size Distance Ratio": {
+                "value": 0.03999999910593033
+            },
+            "Log Step Size Distance Ratio": {
+                "value": 1.0
+            },
             "Max Distance": {
                 "value": 55136
             },
+            "Max Step Size": {
+                "value": 10000.0
+            },
             "Max Steps": {
                 "value": 325
+            },
+            "Min Step Size": {
+                "value": 0.10000000149011612
             },
             "Shadow Step Size": {
                 "value": 53.619998931884766
@@ -668,14 +701,17 @@
             "Shadow Steps": {
                 "value": 32
             },
-            "Step Size": {
-                "value": 264.94000244140625
+            "Smoothstep Step Size Right Edge": {
+                "value": 10000.0
+            },
+            "Start Step Size": {
+                "value": 5.5
             },
             "Step Size Above Tree Ratio": {
                 "value": 10.0
             },
-            "Step Size Distance Ratio": {
-                "value": 0.03999999910593033
+            "Step Size Distance Relationship": {
+                "value": 0
             }
         }
     },
@@ -713,6 +749,16 @@
             },
             "Scale": {
                 "value": 21287.9609375
+            },
+            "Sky Fog Color": {
+                "colors": [
+                    0.9764705896377563,
+                    0.9921568632125854,
+                    0.8549019694328308
+                ]
+            },
+            "Sky Fog Strength": {
+                "value": 0.20000000298023224
             },
             "Upper Threshold": {
                 "value": 1.1200000047683716
@@ -772,6 +818,53 @@
             "phi": 0.0,
             "radius": 40000.0,
             "theta": 0.0
+        },
+        "Profiling Tab": {
+            "Clouds Raymarch Steps": {
+                "value": false
+            },
+            "Custom Max": {
+                "value": 201.00999450683594
+            },
+            "Last Step Size": {
+                "value": false
+            },
+            "Mark True Max": {
+                "value": false
+            },
+            "Max Color": {
+                "colors": [
+                    1.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "Min Color": {
+                "colors": [
+                    0.0,
+                    1.0,
+                    0.0
+                ]
+            },
+            "Terrain Raymarch Steps": {
+                "value": false
+            },
+            "Terrain Shadow Steps": {
+                "value": false
+            },
+            "Tree Raymarch Steps": {
+                "value": false
+            },
+            "True Max Color": {
+                "colors": [
+                    0.9411764144897461,
+                    0.0,
+                    1.0
+                ]
+            },
+            "Use Custom Max": {
+                "value": false
+            }
         }
     },
     "Short 3 Panel": {
