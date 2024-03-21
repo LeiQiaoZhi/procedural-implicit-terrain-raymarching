@@ -10,7 +10,7 @@
 #include "Motion.frag"
 #include "Profiling.frag"
 
-out vec4 FragColor;
+out vec4 iFragColor;
 
 // global parameters
 uniform vec2 iResolution;
@@ -25,9 +25,8 @@ void main()
 	//vec2 NDC = (gl_FragCoord.xy / min(iResolution.x, iResolution.y)) * 2.0 - 1.0; // [-1,1]
 	vec2 NDC = (2 * gl_FragCoord.xy - iResolution) / min(iResolution.x, iResolution.y);
 
-	// DEBUG noise
 	if (debug_noises(NDC, iCameraPos, iMaxHeight, color)){
-		FragColor = vec4(color, 1.0); return;
+		iFragColor = vec4(color, 1.0); return;
 	}
 
 	// naive way to prevent clipping through terrain
@@ -40,10 +39,11 @@ void main()
 	//vec3 sun_pos = get_sun_pos(camera_pos);
 	//vec3 point_to_sun = normalize(sun_pos - camera_pos);
 	vec3 point_to_sun = get_sun_dir(camera_pos);
-	// spherical
-	if (debug_sphere(NDC, iCameraPos, ray, point_to_sun, color)){
-		FragColor = vec4(color, 1.0); return;
+
+	if (debug_sphere(NDC, iCameraPos, normalize(pixel_world - iCameraPos), get_sun_dir(iCameraPos), color)){
+		iFragColor = vec4(color, 1.0); return;
 	}
+
 	if (point_to_sun.y < -0.12) return; // sun below horizon
 
 
@@ -82,7 +82,7 @@ void main()
 		color += sun_disk(point_to_sun, camera_pos, ray);
 
 		if (two_d_sky_i(NDC, ray, camera_pos, color)) {
-			FragColor = vec4(color, 1.0); return;
+			iFragColor = vec4(color, 1.0); return;
 		}
 	}
 	
@@ -97,7 +97,7 @@ void main()
 		bool in_atmosphere = ray_inside_atmosphere_i(start, end);
 
 		if (debug_depth_and_od(start, end, in_atmosphere, color)){
-			FragColor = vec4(color, 1.0); return;
+			iFragColor = vec4(color, 1.0); return;
 		}
 
 		if (in_atmosphere){
@@ -117,9 +117,9 @@ void main()
 
     // debug profiling
     if (show_profile_colors(color)) {
-        FragColor = vec4(color, 1.0); return;
+        iFragColor = vec4(color, 1.0); return;
     }
 
-	FragColor = vec4(color, 1.0);
+	iFragColor = vec4(color, 1.0);
 	return;
 }
