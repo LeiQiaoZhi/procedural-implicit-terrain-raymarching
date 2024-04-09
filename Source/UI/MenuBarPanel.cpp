@@ -1,6 +1,7 @@
 #include "MenuBarPanel.h"
 #include "JsonUtils.h"
 #include "UI/UIUtils.h"
+#include "RenderTarget.h"
 
 UI::WindowInfo UI::MenuBarPanel::show()
 {
@@ -27,6 +28,14 @@ UI::WindowInfo UI::MenuBarPanel::show()
 		if (ImGui::MenuItem("Substitute Uniforms")) {
 			auto json = parent_app->get_glsl_json();
 			shader_modifiable_.substitute_uniforms(json);
+		}
+		if (ImGui::BeginMenu("Evaluation")) {
+			if (ImGui::MenuItem("Ground Truth Raymarch")) {
+				RenderTarget::instance().set_render_target(RenderTarget::Target::GroundTruthRaymarch);
+			}
+			else {
+				RenderTarget::instance().set_render_target(RenderTarget::Target::Default);
+			}
 		}
 
 		if (ImGui::BeginMenu("Layouts")) {

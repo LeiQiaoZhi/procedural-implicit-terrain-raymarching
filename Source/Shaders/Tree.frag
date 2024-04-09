@@ -1,4 +1,5 @@
 #include "Terrain.frag"
+#include "Water.frag"
 
 uniform bool iTreeEnabled;
 // sdf
@@ -12,6 +13,7 @@ uniform float iTreeSteepnessThreshold;
 // normal
 uniform float iTreeNormalEpsilon;
 // raymarching
+uniform int   iTreeEarlyTestSteps;
 uniform int   iTreeSteps;
 uniform int   iTreeShadowSteps;
 uniform float iTreeShadowThreshold;
@@ -104,7 +106,7 @@ float tree_sdf(
             center.y = heightd.x + iTreeOffset;
 
             vec3 normal = heightd.yzw;
-            if (normal.y < iTreeSteepnessThreshold) continue; // don't place trees on steep slopes
+            if (normal.y < iTreeSteepnessThreshold || center.y < 20) continue; // don't place trees on steep slopes
 
 			// size variation
             vec2 random_size_offset =  iTreeSizeRandomness 

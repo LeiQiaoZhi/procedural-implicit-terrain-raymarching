@@ -27,6 +27,7 @@ namespace UI {
 	std::make_shared<SliderF>("Offset", "iTreeOffset", -50.0f, 50.0f, 0.0f),
 	std::make_shared<SliderF>("Position Randomness", "iTreeRandomness",0.0f, 1.0f, 0.8f),
 	std::make_shared<SliderI>("Steps", "iTreeSteps",0, 200, 64),
+	std::make_shared<SliderI>("Early Test Steps", "iTreeEarlyTestSteps",0, 20, 4),
 	std::make_shared<SliderF>("Steepness Threshold", "iTreeSteepnessThreshold",0.0f, 1.0f, 0.5f),
 	std::make_shared<Float2>("Size Randomness", "iTreeSizeRandomness", std::array<float, 2>{0,0}),
 	std::make_shared<SliderF>("Normal Epsilon", "iTreeNormalEpsilon",1.0f, 100.0f, 10.0f),

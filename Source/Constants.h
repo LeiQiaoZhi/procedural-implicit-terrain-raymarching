@@ -12,6 +12,15 @@ namespace Constants {
 		 1.0f,  1.0f, -1.0f,   // Top-right
 	};
 
+	constexpr float VERTICES_WITH_TEX[] = {
+		// positions   // texCoords
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		-1.0f, -1.0f,  0.0f, 0.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+		 1.0f,  1.0f,  1.0f, 1.0f
+	};
+
+
 	constexpr unsigned int INDICES[] = {
 		0, 1, 2,   // First triangle
 		2, 3, 0    // Second triangle

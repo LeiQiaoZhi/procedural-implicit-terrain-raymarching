@@ -147,7 +147,7 @@ float terrain_shadow(in vec3 pos, in vec3 pointToSun){
 		}
 	}
 
-	float shadow = smoothstep(0.0, 1.0, minR);
+	float shadow = smoothstep(0.0, 0.001, minR);
 	return shadow;
 }
 

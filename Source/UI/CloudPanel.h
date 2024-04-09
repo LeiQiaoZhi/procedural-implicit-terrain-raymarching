@@ -26,6 +26,7 @@ namespace UI {
 			std::make_shared<SliderI>("Steps", "iCloudRaymarchSteps", 0, 1000, 10),
 			std::make_shared<SliderF>("Strength", "iCloudStrength", 0, 10, 0.5),
 			std::make_shared<SliderF>("Density", "iCloudDensity", -10000, 10000, 0.0),
+			std::make_shared<SliderF>("Max Density", "iCloudMaxDensity", 0, 1, 0.25),
 			std::make_shared<GroupProperty>("Raymarch", std::vector<std::shared_ptr<Property>>{
 				//std::make_shared<SliderF>("Fbm Strength", "iCloudFbmStrength", 0, 10, 0.5),
 				std::make_shared<SliderF>("Min Stepsize", "iCloudMinStepSize", 0, 100, 0.5),

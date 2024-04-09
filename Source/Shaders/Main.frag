@@ -1,5 +1,10 @@
 #version 330 core
 
+out vec4 iFragColor;
+
+// global parameters
+uniform vec2 iResolution;
+
 #include "Debug.frag"
 #include "Atmosphere.frag"
 #include "Clouds.frag"
@@ -9,12 +14,7 @@
 #include "Shading.frag"
 #include "Motion.frag"
 #include "Profiling.frag"
-
-out vec4 iFragColor;
-
-// global parameters
-uniform vec2 iResolution;
-
+#include "IntersectionDistanceError.frag"
 
 
 void main() 
@@ -41,17 +41,31 @@ void main()
 	vec3 point_to_sun = get_sun_dir(camera_pos);
 
 	if (debug_sphere(NDC, iCameraPos, normalize(pixel_world - iCameraPos), get_sun_dir(iCameraPos), color)){
-		iFragColor = vec4(color, 1.0); return;
+		iFragColor = vec4(color, 1.0); 
+        if (show_profile_colors(color)) {
+            iFragColor = vec4(color, 1.0); return;
+        }
+        return;
 	}
 
 	if (point_to_sun.y < -0.12) return; // sun below horizon
-
 
 	// raymarching
 	float tree_start_distance;
 	float distance_to_terrain = 
 		raymarch_terrain(camera_pos, ray, iMaxDistance, 
                         iStepSize, tree_start_distance);
+
+
+    vec4 ide_color;
+    if (render_intersection_distance_error(distance_to_terrain, camera_pos, ray, ide_color)){
+        iFragColor = ide_color; return;
+    }
+    vec4 hde_color;
+    if (render_height_diffrence_error(distance_to_terrain, camera_pos, ray, hde_color)){
+        iFragColor = hde_color; return;
+    }
+
 
 	int obj = 0; // 0: sky, 1: terrain, 2: trees 
 	float distance_to_obj = -1;

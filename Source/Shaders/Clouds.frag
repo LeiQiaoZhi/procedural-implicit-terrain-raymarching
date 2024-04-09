@@ -8,6 +8,7 @@ uniform bool  iEnableClouds;
 uniform float iCloudStrength;
 uniform float iCloudBaseColor; 
 uniform float iCloudDensity; 
+uniform float iCloudMaxDensity; 
 // sun blend
 uniform float iCloudSunBlendStrength;
 uniform float iCloudSunBlendDensityFactor;
@@ -80,7 +81,7 @@ vec4 cloud_density_d(
 	gradient -= fbm_d.yzw;
 	gradient = normalize(gradient);
 
-	d = min(-d + iCloudDensity, 0.25);
+	d = min(-d + iCloudDensity, iCloudMaxDensity);
 	return vec4(d, gradient);
 }
 
@@ -133,7 +134,6 @@ vec4 inigo_raymarch_clouds(
 
 			// lighting
 			vec3 normal = density_d.yzw;
-			//vec3 sun_ray = normalize(_sun_pos - p);
 			// shadow
 			float shadow = 0.0; // 1.0 if in full shadow (black)
 			for (int j = 1; j <= iCloudShadowSteps; j++){

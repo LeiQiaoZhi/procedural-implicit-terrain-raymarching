@@ -167,9 +167,9 @@ vec3 shade(
 	if (iTreeEnabled){
 		shadow *= tree_shadow(pos + vec3(0, 0, 0), _point_to_sun);
 	}
-
+    
 	if (shadow >= iShadeShadowThreshold){
-		if (_obj == TERRAIN_OBJ){
+	    if (_obj == TERRAIN_OBJ){
 			color = shade_terrain(pos, _point_to_sun, _view_ray, normal);
 		}
 		else if (_obj == TREE_OBJ){

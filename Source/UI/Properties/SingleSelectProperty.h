@@ -5,6 +5,7 @@
 #include <imgui_impl_glfw.h>;
 #include <imgui_impl_opengl3.h>;
 #include <nlohmann/json.hpp>
+#include <algorithm>
 
 #include "UI/UIUtils.h"
 #include "Property.h"
@@ -41,6 +42,8 @@ namespace UI {
 
 		void from_json(const nlohmann::json& _json) override {
 			selected_ = _json.value("value", 0);
+			if (selected_ < 0 || selected_ >= items_.size())
+				selected_ = 0;
 		}
 
 		void add_glsl_to_json(nlohmann::json& _json) const override {

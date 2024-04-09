@@ -10,6 +10,8 @@ uniform float iCloudUpperThreshold;
 uniform float iSkyFogStrength;
 uniform vec3 iSkyFogColor;
 
+#include "Fbm.frag"
+
 
 
 void two_d_clouds_i(
