@@ -24,6 +24,7 @@ uniform float iDebugRayEndDistance;
 uniform float iDebugRayOffset;
 
 #include "Atmosphere.frag"
+#include "Clouds.frag"
 #include "Terrain.frag"
 #include "Shading.frag"
 #include "Raymarching.frag"
@@ -41,13 +42,36 @@ bool debug_sphere(
 	if (iDebugRenderTarget == SPHERE_RENDER_TARGET){
 		color_ = vec3(0);
 
+        // vec3 pos = _camera_pos;
+        // float lastHeight = -1;
+        // float t = 0;
+        // for (int i = 0; i < iMaxSteps; i++)
+        // {
+        //     PROFILE_PLANET_RAYMARCH_STEPS();
+
+        //     pos = _camera_pos + t * _ray;
+
+        //     float height = 1;
+
+        //     if (height < 0) 
+        //     {
+        //         if (lastHeight >= 0)
+        //             t -= 100 * height / (height - lastHeight);
+        //         color_ = RED; return true;
+        //     }
+
+        //     lastHeight = height;
+        //     t += 100;
+        // }
+        // color_ = BLUE; return true;
+
         // draw the atmosphere boundary
         float sin_theta = length(cross(_ray, normalize(_camera_pos)));
         float distance_to_atmosphere = length(_camera_pos) * sin_theta;
         if (distance_to_atmosphere < iAtmosphereMaxHeight
             && dot(_ray, -_camera_pos) > 0 // camera must face the planet
         ){
-            color_ = vec3(0,0,0.4);
+            // color_ = vec3(0,0,0.4);
         }
 
         // draw a line
@@ -55,40 +79,47 @@ bool debug_sphere(
         // vec3 a = vec3(1,0,0) * iDebugRayOffset * iPlanetRadius;
         float line_distance = dot(_camera_pos - a, cross(_ray, _sun_dir));
         if (abs(line_distance) < 100){
-            color_ = vec3(1,0,0);
+            // color_ = vec3(1,0,0);
+        }
+
+        vec3 ray_start = _camera_pos;
+        vec3 _ = ray_start + 10 * iAtmosphereMaxHeight * _ray;
+        bool ray_inside = ray_inside_sphere_i(ray_start, _, iPlanetRadius + iMaxHeight + iGlobalMaxHeight);
+        if (!ray_inside){
+            return true;
         }
 
         // draw the planet
-		float dist = raymarch_sphere(_camera_pos, _ray);
+		float dist = raymarch_sphere(ray_start, _ray);
 		if (dist > 0){
-			vec3 pos = _camera_pos + _ray * dist;
+			vec3 pos = ray_start + _ray * dist;
 			vec4 heightd = triplanar_mapping(pos);
 			vec3 normal = heightd.yzw;
 
-			// TODO: get normal and do lighting
-			// color_ = vec3(heightd.x);
+			// color_ = vec3(length(pos));
 			// color_ = vec3(normal);
 
 			float diffuse = max(dot(normal, _sun_dir), 0) + 0.1;
 			color_ = vec3(diffuse);
+            // color_ = RED; return true;
 		} else{
 			color_ += sun_disk(_sun_dir, _camera_pos, _ray);
 		}
 
         // debug optical depth
         vec3 od_start = _camera_pos;
-        vec3 od_end = od_start + (dist > 0 ? dist : 10 * iAtmosphereMaxHeight) * _ray;
-        bool od_inside = ray_inside_spherical_atmosphere_i(od_start, od_end);
+        vec3 od_end = ray_start + (dist > 0 ? dist : 10 * iAtmosphereMaxHeight) * _ray;
+        bool od_inside = ray_inside_sphere_i(od_start, od_end, iAtmosphereMaxHeight);
         if (od_inside){
             // color_ = vec3(distance(od_start, od_end)) / (2 * iAtmosphereMaxHeight);
             vec3 rayleigh = iRayleighStrength * 
                 spherical_rayleigh(od_start, od_end, iRayleighSteps, _sun_dir);
-			// float view_ray_od = spherical_optical_depth(od_start, od_end, iOpticalDepthSteps);
+			float view_ray_od = spherical_optical_depth(od_start, od_end, iOpticalDepthSteps);
             // color_ = vec3(view_ray_od) / 1000;
-            color_ = rayleigh;
+            // color_ = rayleigh;
 			// blending with object color
-			// color_ = color_ * exp(-view_ray_od * iRayleighFogFallOff * iRayleighFogStrength) 
-				    // + rayleigh;
+			color_ = color_ * exp(-view_ray_od * iRayleighFogFallOff * iRayleighFogStrength) 
+				    + rayleigh;
         }
         return true;
 
@@ -101,7 +132,7 @@ bool debug_sphere(
         if (dot(_ray, normalize(end - _camera_pos)) > dot_size){
             color_ += vec3(0,1,0);
         }
-        bool inside = ray_inside_spherical_atmosphere_i(start, end);
+        bool inside = ray_inside_sphere_i(start, end, iAtmosphereMaxHeight);
         if (inside) {
             if (dot(_ray, normalize(start - _camera_pos)) > dot_size){
                 color_ += vec3(1,0,0);
@@ -161,7 +192,7 @@ bool debug_sphere(
         if (distance(end, pos_3D) < dot_size){
             color_ += vec3(0,1,0);
         }
-        bool inside = ray_inside_spherical_atmosphere_i(start, end);
+        bool inside = ray_inside_sphere_i(start, end, iAtmosphereMaxHeight);
         if (inside) {
             if (distance(start, pos_3D) < dot_size){
                 color_ += vec3(1,0,0);
@@ -185,31 +216,52 @@ bool debug_noises(
 ) {
 
 	if (iDebugRenderTarget == NOISE1D_RENDER_TARGET){
-		_color = vec3(0, 0, 0);
+		_color = WHITE;
 		float scale = 1 * pow(1.002,(_camera_pos.y+3000));
 		vec2 noise_pos = vec2(_ndc.x * scale, 0)
 			+ vec2(-_camera_pos.x, iDebugNoise1DZ);
-		vec4 fbm = terrain_fbm_d(noise_pos);
-		float height = fbm.x;
+		float height = terrain_fbm(noise_pos);
+        float biome = biome(noise_pos) * iGlobalMaxHeight;
 		float y = _ndc.y * scale + _camera_pos.z;
         // x axis
 		if (abs(y) < iDebugLineHeight * scale) {
-			_color = vec3(0.5,0,0);
+			// _color = vec3(0.5,0,0);
 		}
         // terrain shape
 		if (abs(y - height) < iDebugLineHeight * scale){
-			_color = vec3(1);
-		}else if (y > height && y < iWaterLevel){
+			_color = DARK_GRAY;
+		}
+		else if (y < height) {
+            _color = LIGHT_GRAY;
+        }
+        else if (y > height && y < iWaterLevel){
             _color = vec3(0,0,1);
-        }else if (y > height && y < iAtmosphereMaxHeight){
-            float density = atmosphere_density(y);
-            _color = mix(vec3(0.2), vec3(1), density);
+        }
+        else if (y > height && y < iAtmosphereMaxHeight){
+            // float density = atmosphere_density(y);
+            // _color = mix(vec3(0.2), vec3(1), density);
         }
 
-        // 
-        if (abs(y - iAtmosphereMaxHeight) < iDebugLineHeight * scale){
-            _color = vec3(1);
+        // biome shape
+		if (abs(y - biome) < iDebugLineHeight * scale && iEnableBiome){
+            _color = BLUE;
         }
+
+        if (abs(y - iAtmosphereMaxHeight) < iDebugLineHeight * scale){
+            // _color = vec3(1);
+        }
+
+        // clouds
+        if (abs(y - iCloudBoxUpperY) < iDebugLineHeight * scale){
+            _color = RED;
+        }
+        else if (abs(y - iCloudBoxLowerY) < iDebugLineHeight * scale){
+            _color = RED;
+        } else if (y > iCloudBoxLowerY && y < iCloudBoxUpperY){
+            float density = cloud_density_d(vec3(noise_pos.x, y, noise_pos.y)).x;
+            _color = vec3(smoothstep(-abs(iDebugNoise1DZ), iCloudMaxDensity, density));
+        }
+
 		return true;
 	}
 	if (iDebugRenderTarget == NOISE2D_RENDER_TARGET){
