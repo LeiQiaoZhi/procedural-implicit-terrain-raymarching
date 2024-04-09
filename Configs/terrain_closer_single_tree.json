@@ -11,7 +11,7 @@
                 "value": 109.88999938964844
             },
             "Enabled": {
-                "value": false
+                "value": true
             },
             "FBM": {
                 "Band Pass (Layers to Filter Out)": {
@@ -135,7 +135,7 @@
                 "value": 128205.1328125
             },
             "Density Fall Off": {
-                "value": 0.7099999785423279
+                "value": 0.7200000286102295
             },
             "Fog Falloff": {
                 "values": [
@@ -154,7 +154,7 @@
                 "value": 10
             },
             "Rayleigh Strength": {
-                "value": 2.700000047683716
+                "value": 1.9700000286102295
             },
             "Scattering Coefficients": {
                 "values": [
@@ -223,7 +223,7 @@
                     "value": 12
                 },
                 "Max Height": {
-                    "value": 1318.6800537109375
+                    "value": 3772.889892578125
                 },
                 "Normal Layers": {
                     "value": 14
@@ -271,24 +271,24 @@
                     "value": 0.10000000149011612
                 },
                 "Diffuse Strength": {
-                    "value": 1.0
+                    "value": 0.8199999928474426
                 },
                 "Fresnel Dot Power": {
                     "value": 5
                 },
                 "Fresnel F0": {
-                    "value": 0.17000000178813934
+                    "value": 0.11999999731779099
                 },
                 "Specular Dot Power": {
                     "value": 10
                 },
                 "Specular Strength": {
-                    "value": 0.49000000953674316
+                    "value": 0.3499999940395355
                 }
             },
             "Material": {
                 "Dirt Threshold": {
-                    "value": 0.949999988079071
+                    "value": 0.7200000286102295
                 },
                 "Grass Color": {
                     "colors": [
@@ -314,7 +314,7 @@
                     "value": -92
                 },
                 "Grass Threshold": {
-                    "value": 0.6200000047683716
+                    "value": 0.46000000834465027
                 },
                 "Grass Upper Fade Length": {
                     "value": 352
@@ -387,13 +387,13 @@
         },
         "Tree Tab": {
             "Domain Size": {
-                "value": 27.18000030517578
+                "value": 100.0
             },
             "Early Test Steps": {
                 "value": 0
             },
             "Enable": {
-                "value": false
+                "value": true
             },
             "FBM": {
                 "Band Pass (Layers to Filter Out)": {
@@ -401,29 +401,29 @@
                     "value_min": 1
                 },
                 "FBM strength": {
-                    "value": 42.119998931884766
+                    "value": 84.9800033569336
                 },
                 "Horizontal Scale": {
-                    "value": 0.10000000149011612
+                    "value": 1.0
                 },
                 "Horizontal Shirnk": {
-                    "value": 1.2300000190734863
+                    "value": 3.319999933242798
                 },
                 "Layers": {
-                    "value": 1
+                    "value": 3
                 },
                 "Max Height": {
-                    "value": 100.0
+                    "value": 47.619998931884766
                 },
                 "Starting Vertical Shrink": {
                     "value": 0.07999999821186066
                 },
                 "Vertical Shrink": {
-                    "value": 0.4099999964237213
+                    "value": 0.8299999833106995
                 }
             },
             "Height": {
-                "value": 66.69999694824219
+                "value": 52.43000030517578
             },
             "Lighting": {
                 "Ambient Strength": {
@@ -436,7 +436,7 @@
                     "value": 6
                 },
                 "Fresnel F0": {
-                    "value": 0.10000000149011612
+                    "value": 0.12999999523162842
                 },
                 "Occulusion Lower": {
                     "value": -0.4699999988079071
@@ -455,13 +455,13 @@
                 "value": 14.050000190734863
             },
             "Offset": {
-                "value": -4.03000020980835
+                "value": 50.0
             },
             "Position Randomness": {
-                "value": 1.0
+                "value": 0.0
             },
             "Radius": {
-                "value": 18.760000228881836
+                "value": 22.059999465942383
             },
             "Shadow": {
                 "Max Distance": {
@@ -483,7 +483,7 @@
             "Size Randomness": {
                 "values": [
                     4.0,
-                    50.0
+                    5.0
                 ]
             },
             "Species": {
@@ -543,10 +543,10 @@
                 }
             },
             "Steepness Threshold": {
-                "value": 0.6800000071525574
+                "value": 0.8600000143051147
             },
             "Steps": {
-                "value": 63
+                "value": 17
             },
             "Terrain Normal Proportion": {
                 "value": 2.450000047683716
@@ -632,24 +632,24 @@
         "Camera Tab": {
             "camara_transform": {
                 "forward": [
-                    0.2047082930803299,
-                    -0.2011926919221878,
-                    -0.9579227566719055
+                    0.8018988370895386,
+                    -0.2284739762544632,
+                    -0.552048921585083
                 ],
                 "position": [
-                    6969.7578125,
-                    801.0159301757813,
-                    7140.68798828125
+                    6011.92822265625,
+                    873.9306640625,
+                    9027.3779296875
                 ],
                 "right": [
-                    0.9779195189476013,
-                    -1.3709068298339844e-06,
-                    0.20898190140724182
+                    0.5670469999313354,
+                    -1.2889503295809845e-06,
+                    0.8236854076385498
                 ],
                 "up": [
-                    0.0420454703271389,
-                    0.9795531630516052,
-                    -0.19674308598041534
+                    0.18818703293800354,
+                    0.9735512733459473,
+                    -0.1295514553785324
                 ]
             },
             "camera_settings": {
@@ -669,7 +669,7 @@
         },
         "Raymarch Tab": {
             "BS refine steps": {
-                "value": 0
+                "value": 4
             },
             "Distance Scale with Focal Length": {
                 "value": true
@@ -678,7 +678,7 @@
                 "value": 0.009999999776482582
             },
             "Linear Step Size Distance Ratio": {
-                "value": 0.03999999910593033
+                "value": 0.15000000596046448
             },
             "Log Step Size Distance Ratio": {
                 "value": 1.0
@@ -705,7 +705,7 @@
                 "value": 10000.0
             },
             "Start Step Size": {
-                "value": 5.5
+                "value": 16.309999465942383
             },
             "Step Size Above Tree Ratio": {
                 "value": 50.0
@@ -787,7 +787,7 @@
                 "value": true
             },
             "Phi": {
-                "value": 4.639999866485596
+                "value": 3.569999933242798
             },
             "Radius": {
                 "value": 1000000.0
@@ -813,7 +813,7 @@
                 ]
             },
             "Theta": {
-                "value": 1.3300000429153442
+                "value": 0.5
             },
             "phi": 0.0,
             "radius": 40000.0,

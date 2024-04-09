@@ -81,6 +81,9 @@
                     "value": 4.619999885559082
                 }
             },
+            "Max Density": {
+                "value": 0.25
+            },
             "Raymarch": {
                 "Max Ray Distance": {
                     "value": 75091.578125
@@ -118,7 +121,7 @@
                 "value": 10.0
             },
             "Radius": {
-                "value": 732.5999755859375
+                "value": 3296.699951171875
             },
             "Ray Offset": {
                 "value": -19.299999237060547
@@ -132,10 +135,10 @@
         },
         "Sky Tab": {
             "Atmos Height": {
-                "value": 14652.009765625
+                "value": 76923.078125
             },
             "Density Fall Off": {
-                "value": 0.550000011920929
+                "value": 26.739999771118164
             },
             "Fog Falloff": {
                 "values": [
@@ -145,16 +148,16 @@
                 ]
             },
             "Fog Strength": {
-                "value": 4.409999847412109
+                "value": 24.920000076293945
             },
             "OD Steps": {
                 "value": 20
             },
             "Rayleigh Steps": {
-                "value": 10
+                "value": 20
             },
             "Rayleigh Strength": {
-                "value": 1.6799999475479126
+                "value": 34.619998931884766
             },
             "Scattering Coefficients": {
                 "values": [
@@ -170,10 +173,10 @@
                     "value": true
                 },
                 "Global Max Height": {
-                    "value": 5128
+                    "value": 3297
                 },
                 "Horizontal Scale": {
-                    "value": 7326.10009765625
+                    "value": 2564.199951171875
                 },
                 "Horizontal Shirnk": {
                     "value": 1.899999976158142
@@ -182,7 +185,7 @@
                     "value": 4
                 },
                 "Max Height": {
-                    "value": 0.6299999952316284
+                    "value": 0.6000000238418579
                 },
                 "Vertical Shrink": {
                     "value": 0.5
@@ -214,19 +217,19 @@
                     "value_min": 1
                 },
                 "Horizontal Scale": {
-                    "value": 1758.3199462890625
+                    "value": 366.3900146484375
                 },
                 "Horizontal Shirnk": {
                     "value": 1.690000057220459
                 },
                 "Layers": {
-                    "value": 12
+                    "value": 5
                 },
                 "Max Height": {
-                    "value": 5531.14013671875
+                    "value": 2490.840087890625
                 },
                 "Normal Layers": {
-                    "value": 13
+                    "value": 12
                 },
                 "Starting Vertical Shrink": {
                     "value": 0.5
@@ -632,24 +635,24 @@
         "Camera Tab": {
             "camara_transform": {
                 "forward": [
-                    0.0,
-                    0.0,
-                    1.0
+                    -0.6827922463417053,
+                    -0.08442733436822891,
+                    0.7257181406021118
                 ],
                 "position": [
-                    -2764.478271484375,
-                    5360.650390625,
-                    -52740.96484375
+                    7777.923828125,
+                    1084.685791015625,
+                    -10423.1201171875
                 ],
                 "right": [
-                    -1.0,
-                    0.0,
-                    0.0
+                    0.7283183336257935,
+                    2.492218982297345e-06,
+                    0.6852389574050903
                 ],
                 "up": [
-                    -0.0,
-                    1.0,
-                    -0.0
+                    0.05784985050559044,
+                    -0.9964302778244019,
+                    -0.06148311123251915
                 ]
             },
             "camera_settings": {
@@ -690,13 +693,13 @@
                 "value": 10000.0
             },
             "Max Steps": {
-                "value": 195
+                "value": 1000
             },
             "Min Step Size": {
                 "value": 0.10000000149011612
             },
             "Shadow Step Size": {
-                "value": 53.619998931884766
+                "value": 0.0
             },
             "Shadow Steps": {
                 "value": 32
@@ -705,7 +708,7 @@
                 "value": 10000.0
             },
             "Start Step Size": {
-                "value": 5.5
+                "value": 21.719999313354492
             },
             "Step Size Above Tree Ratio": {
                 "value": 10.0
@@ -787,7 +790,7 @@
                 "value": true
             },
             "Phi": {
-                "value": 0.0
+                "value": 6.28000020980835
             },
             "Radius": {
                 "value": 1000000.0
@@ -801,7 +804,7 @@
             "Sun Center": {
                 "values": [
                     0.0,
-                    -100000.0,
+                    502.5199890136719,
                     0.0
                 ]
             },
@@ -813,7 +816,7 @@
                 ]
             },
             "Theta": {
-                "value": 0.7300000190734863
+                "value": 1.5700000524520874
             },
             "phi": 0.0,
             "radius": 40000.0,
@@ -824,7 +827,7 @@
                 "value": false
             },
             "Custom Max": {
-                "value": 201.00999450683594
+                "value": 50.2599983215332
             },
             "Last Step Size": {
                 "value": false
@@ -846,6 +849,12 @@
                     0.0
                 ]
             },
+            "Planet Raymarch Steps": {
+                "value": false
+            },
+            "Raymarch Precision": {
+                "value": false
+            },
             "Terrain Raymarch Steps": {
                 "value": false
             },
@@ -863,7 +872,7 @@
                 ]
             },
             "Use Custom Max": {
-                "value": false
+                "value": true
             }
         }
     },
