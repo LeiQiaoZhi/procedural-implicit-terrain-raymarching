@@ -7,7 +7,7 @@ float spherical_atmosphere_density(
 	in vec3 _pos // relative to the planet center
 ){
     float height = length(_pos); // TODO: minus planet radius?
-    return exp(-height * 0.0001 * iAtmosphereDensityFallOff) 
+    return exp(-height * 0.0001 * iAtmosphereDensityFallOff)
 			* (iAtmosphereMaxHeight - height) 
 			/ iAtmosphereMaxHeight;
 }
@@ -34,15 +34,16 @@ float spherical_optical_depth(
 }
 
 
-bool ray_inside_spherical_atmosphere_i(
+bool ray_inside_sphere_i(
 	inout vec3 _start,
-	inout vec3 _end
+	inout vec3 _end,
+    in float _radius
 ){
     // if both points are inside the atmosphere, we're done
     vec3 start_to_end = _end - _start;
     float start_length = length(_start);
     float end_length = length(_end);
-    if (start_length < iAtmosphereMaxHeight && end_length < iAtmosphereMaxHeight) {
+    if (start_length < _radius && end_length < _radius) {
         return true;
     }
 
@@ -54,7 +55,7 @@ bool ray_inside_spherical_atmosphere_i(
     // a lambda^2 + b lambda + c = 0
     float a = s2 + e2 - 2.0 * se;
     float b = -2.0 * s2 + 2.0 * se;
-    float c = s2 - iAtmosphereMaxHeight * iAtmosphereMaxHeight;
+    float c = s2 - _radius * _radius;
 
     // solve the quadratic equation
     float delta = b * b - 4.0 * a * c;
@@ -67,17 +68,17 @@ bool ray_inside_spherical_atmosphere_i(
 
     // check if the intersection points are on the segment
     if ((lambda1 < -0.001 || lambda1 > 1.001) 
-        && start_length > iAtmosphereMaxHeight
+        && start_length > _radius
     ) {
         return false;
     }
 
     vec3 original_start = _start;
-    if (start_length > iAtmosphereMaxHeight){
+    if (start_length > _radius){
         _start += lambda1 * (start_to_end);
     }
 
-    if (end_length > iAtmosphereMaxHeight){
+    if (end_length > _radius){
         _end = original_start + lambda2 * (start_to_end);
     }
     return true;
@@ -103,20 +104,19 @@ vec3 spherical_rayleigh(
 		vec3 scatter_point = _start + t * ray;
 
 		vec3 sun_end = scatter_point + _sun_dir * 2 * iAtmosphereMaxHeight;
-		bool sun_inside_atmos = ray_inside_spherical_atmosphere_i(scatter_point, sun_end);
+		bool sun_inside_atmos = ray_inside_sphere_i(scatter_point, sun_end, iAtmosphereMaxHeight);
 
 		float od_sun = sun_inside_atmos
 			? spherical_optical_depth(scatter_point, sun_end, iOpticalDepthSteps) 
 			: 0.0;
 		float od_eye = spherical_optical_depth(scatter_point, _start, iOpticalDepthSteps);
 
-		float phase = rayleigh_phase_function(-ray, _sun_dir);
 		rayleigh += spherical_atmosphere_density(scatter_point) 
-			* exp(-(od_sun + od_eye) * iScatteringCoefficient)
-			* iScatteringCoefficient * phase;
+			* exp(-(od_sun + od_eye) * iScatteringCoefficient * 4 * 3.1415);
             
         t += step_size;
 	}
+	float phase = rayleigh_phase_function(-ray, _sun_dir);
 	// since step_size is constant, we can factor it out
-	return rayleigh * step_size;
+	return rayleigh * step_size * phase * iScatteringCoefficient;
 }

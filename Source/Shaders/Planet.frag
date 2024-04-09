@@ -2,7 +2,7 @@
 #include "Raymarching.frag"
 
 // Sphere
-uniform float iPlanetRadius = 100;
+uniform float iPlanetRadius;
 uniform int iDebugTriplanarMappingSharpness = 1;
 
 float planet_sdf(
@@ -28,35 +28,37 @@ float planet_sdf(
 }
 
 float raymarch_sphere(
-    in vec3 pos,
-    in vec3 ray
+    in vec3 _pos,
+    in vec3 _ray
 ) {
-    vec3 origin = pos;
+    vec3 origin = _pos;
     float clipNear = 0.1;
-    float lastHeight;
-    float lastY;
+    float lastHeight = -1;
 
-    float t = clipNear;
+    float t = 0;
     float step_size = iStepSize;
     for (int i = 0; i < iMaxSteps; i++)
     {
-        pos = origin + t * ray;
+        PROFILE_PLANET_RAYMARCH_STEPS();
 
-        float dist_to_outer = sphere_sdf(pos, iPlanetRadius + iMaxHeight + iGlobalMaxHeight);
+        _pos = origin + t * _ray;
+
+        float dist_to_outer = sphere_sdf(_pos, iPlanetRadius + iMaxHeight + iGlobalMaxHeight);
         if (dist_to_outer < 0) {
-            float height = planet_sdf(pos, iPlanetRadius);
+            float height = planet_sdf(_pos, iPlanetRadius);
 
             // check for terrain intersection
-            if (height < 0) ;
+            if (height < 0)
             {
                 // interpolation
-                t -= step_size * height / (height - lastHeight);
+                if (lastHeight >= 0)
+                    t -= step_size * height / (height - lastHeight);
                 return t;
             }
 
             lastHeight = height;
         }
-        step_size = max(iStepSize, dist_to_outer);
+        step_size += max(iStepSize, dist_to_outer);
         t += step_size;
 
         if (t > iMaxDistance) break;
