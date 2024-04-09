@@ -146,6 +146,8 @@ float raymarch_terrain(
 				// (height - _pos.y) / (last_y - last_height + height - _pos.y);
             t -= length(below_pos - _pos);
             t -= extra_length;
+            _pos = origin + t * _ray;
+            PROFILE_RAYMARCH_PRECISION(abs(terrain_fbm(_pos.xz) - _pos.y));
 			return t;
 		}
 

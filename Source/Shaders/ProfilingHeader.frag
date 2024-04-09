@@ -4,6 +4,8 @@ int   gTerrainShadowSteps   = 0;
 int   gCloudRaymarchSteps   = 0;
 int   gTreeRaymarchSteps    = 0;
 float gLastStepSize         = 0;
+float gRaymarchPrecision    = 0;
+int gPlanetRaymarchSteps  = 0;
 
 #define PROFILING_ENABLED 1
 
@@ -19,3 +21,7 @@ float gLastStepSize         = 0;
 #define PROFILE_CLOUD_RAYMARCH_STEPS()    PROFILE(gCloudRaymarchSteps)
 #define PROFILE_TREE_RAYMARCH_STEPS()     PROFILE(gTreeRaymarchSteps)
 #define PROFILE_LAST_STEP_SIZE(step_size) (gLastStepSize = step_size);
+#define PROFILE_RAYMARCH_PRECISION(raymarch_precision) (gRaymarchPrecision = raymarch_precision);
+#define PROFILE_PLANET_RAYMARCH_STEPS()     PROFILE(gPlanetRaymarchSteps)
+
+

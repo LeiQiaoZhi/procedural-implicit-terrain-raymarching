@@ -7,6 +7,8 @@ uniform bool  iProfileShadowSteps;
 uniform bool  iProfileCloudRaymarchSteps;
 uniform bool  iProfileTreeRaymarchSteps;
 uniform bool  iProfileLastStepSize;
+uniform bool  iProfileRaymarchPrecision;
+uniform bool  iProfilePlanetRaymarchSteps;
 // colors
 uniform vec3 iProfileTrueMaxColor;
 uniform vec3 iProfileRaymarchStepsMinColor;
@@ -47,7 +49,14 @@ bool show_profile_colors(
     }
     else if (iProfileLastStepSize){
         _color_ = lerp_color(gLastStepSize, iMaxStepSize);
-    }else{
+    }
+    else if (iProfileRaymarchPrecision){
+        _color_ = lerp_color(gRaymarchPrecision, iProfileCustomMax);
+    }
+    if (iProfilePlanetRaymarchSteps){
+       _color_ = lerp_color(gPlanetRaymarchSteps, iMaxSteps);
+    }
+    else{
         return false;
     }
     return true;
