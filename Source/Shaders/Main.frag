@@ -15,6 +15,7 @@ uniform vec2 iResolution;
 #include "Motion.frag"
 #include "Profiling.frag"
 #include "IntersectionDistanceError.frag"
+#include "HeightDifferenceError.frag"
 
 
 void main() 

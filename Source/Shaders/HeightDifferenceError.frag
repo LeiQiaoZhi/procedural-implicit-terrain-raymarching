@@ -4,7 +4,7 @@ uniform bool iStartHDE = false;
 
 
 bool render_height_diffrence_error(
-    in    float _t, // distance to compare to
+    in    float _t, 
     in    vec3  _camera_pos,
     in    vec3  _ray,
     inout vec4  color_
@@ -19,8 +19,8 @@ bool render_height_diffrence_error(
     }
 
     vec3 pos = _camera_pos + _t * _ray;
-    vec3 height = terrain_fbm(pos.xz);
-    float hde = abs(pos.y - height.y);
+    float height = terrain_fbm(pos.xz);
+    float hde = abs(pos.y - height);
 
     color_ = float_to_vec4(hde);
 
