@@ -84,27 +84,29 @@ public:
 		return { {"position", JsonUtils::vec3_to_json_array(get_position())},
 				 {"forward", JsonUtils::vec3_to_json_array(get_forward())},
 				 {"up", JsonUtils::vec3_to_json_array(get_up())},
-				 {"right", JsonUtils::vec3_to_json_array(get_right())}
-		};
-	}
+				 {"right", JsonUtils::vec3_to_json_array(get_right())},
+				 {"focal_length", get_focal_length() } };
+	};
 
-	// setters
-	void set_focal_length(float _fov) { camera_->set_focal_length(_fov); }
-	void set_direction(glm::vec3 _forward) {
-		_forward = glm::normalize(_forward);
-		auto ref_up = glm::vec3(0, (_forward.y < 0 ? 0.999 : -0.999), 0);
-		auto right = glm::cross(_forward, ref_up);
-		auto up = glm::cross(right, _forward);
-		if (up.y < 0)
-			up = -up;
-		camera_->set_direction(_forward, up);
-	}
-	void set_transform_json(const nlohmann::json& _json) {
-		auto position = JsonUtils::json_array_to_vec3(_json["position"]);
-		auto forward = JsonUtils::json_array_to_vec3(_json["forward"]);
-		auto up = JsonUtils::json_array_to_vec3(_json["up"]);
-		auto right = JsonUtils::json_array_to_vec3(_json["right"]);
-		camera_->set_position(position);
-		camera_->set_direction(forward, up);
-	}
+// setters
+void set_focal_length(float _fov) { camera_->set_focal_length(_fov); }
+void set_direction(glm::vec3 _forward) {
+	_forward = glm::normalize(_forward);
+	auto ref_up = glm::vec3(0, (_forward.y < 0 ? 0.999 : -0.999), 0);
+	auto right = glm::cross(_forward, ref_up);
+	auto up = glm::cross(right, _forward);
+	if (up.y < 0)
+		up = -up;
+	camera_->set_direction(_forward, up);
+}
+void set_transform_json(const nlohmann::json& _json) {
+	auto position = JsonUtils::json_array_to_vec3(_json["position"]);
+	auto forward = JsonUtils::json_array_to_vec3(_json["forward"]);
+	auto up = JsonUtils::json_array_to_vec3(_json["up"]);
+	auto right = JsonUtils::json_array_to_vec3(_json["right"]);
+	auto focal_length = _json.value("focal_length", 1.0f);
+	camera_->set_position(position);
+	camera_->set_direction(forward, up);
+	camera_->set_focal_length(focal_length);
+}
 };
