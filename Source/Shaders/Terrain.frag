@@ -20,6 +20,7 @@ uniform float iBiomeMaxHeight;
 uniform int   iBiomeNumLayers;
 uniform float iBiomeHorizontalShrink;
 uniform float iBiomeVerticalShrink;
+uniform float iBiomeUnderWaterDecay = 1.0;
 // distortion
 uniform bool  iEnableDistortion;
 uniform float iDistortionHorizontalScale;
@@ -58,6 +59,10 @@ float biome(in vec2 pos){
 		vec2(1,1),
 		false
 	);
+    // if (result < 0.0) {
+        // result = exp(iBiomeUnderWaterDecay * result) - 1;
+    // }
+    result = (result + iBiomeUnderWaterDecay) / (1 + iBiomeUnderWaterDecay);
 	return result * iBiomeMaxHeight;
 }
 
@@ -74,8 +79,13 @@ vec4 biome_d(in vec2 pos){
 		vec2(1,1), -1,
 		false
 	);
+    result.x = (result.x + iBiomeUnderWaterDecay) / (1 + iBiomeUnderWaterDecay);
+    // if (result.x < 0.0) {
+        // result.x = exp(iBiomeUnderWaterDecay * result.x) - 1;
+        // result.yz *= (result.x + 1) * iBiomeUnderWaterDecay; // chain rule
+    // }
 	result *= iBiomeMaxHeight;
-	result.yz /= iBiomeHorizontalScale;
+	result.yz /= iBiomeHorizontalScale * (1 + iBiomeUnderWaterDecay);
 	vec3 normal = normalize(vec3(-result.y, 1.0, -result.z));
 	return vec4(result.x, normal);
 }
