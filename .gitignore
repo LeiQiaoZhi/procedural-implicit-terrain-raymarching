@@ -7,6 +7,10 @@ build/
 *.o
 *.obj
 
+# Images
+
+Images/Eval/
+
 # Precompiled Headers
 *.gch
 *.pch
