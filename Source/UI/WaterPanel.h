@@ -18,7 +18,7 @@ namespace UI {
 			: UIPanel("Water", _shader) {
 			properties_ = {
 
-			std::make_shared<SliderI>("Water Level", "iWaterLevel", -10000, 10000, 0),
+			std::make_shared<SliderI>("Water Level", "iWaterLevel", -2000, 2000, 0),
 			std::make_shared<ColorProperty>("Shallow Color", "iWaterShallowColor", "#BD724F"),
 			std::make_shared<ColorProperty>("Deep Color", "iWaterDeepColor", "#BD724F"),
 			std::make_shared<SliderF>("Transmittance Decay", "iWaterTransmittanceDecay", 0.0, 10, 1),

@@ -1,6 +1,7 @@
+#include <iostream>
+
 #include "Window.h"
 #include "Utils.h"
-#include <iostream>
 
 namespace
 {

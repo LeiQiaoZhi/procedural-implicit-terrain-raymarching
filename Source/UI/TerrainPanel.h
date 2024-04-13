@@ -81,6 +81,7 @@ namespace UI {
 			std::make_shared<SliderI>("Layers", "iBiomeNumLayers", 1, 20, 4),
 			std::make_shared<SliderF>("Horizontal Shirnk", "iBiomeHorizontalShrink", 1.0f, 4.0f, 1.9f),
 			std::make_shared<SliderF>("Vertical Shrink", "iBiomeVerticalShrink", 0.1f, 0.99f, 0.5f),
+			std::make_shared<SliderF>("Under Water Decay", "iBiomeUnderWaterDecay", 0.0f, 2.0f, 0.0f),
 		}),
 		std::make_shared<GroupProperty>("Distortion", std::vector<std::shared_ptr<Property>>{
 			std::make_shared<BoolProperty>("Enable Distortion", "iEnableDistortion", false),
