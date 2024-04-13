@@ -78,6 +78,7 @@ set(CONFIG_PATH "${DIR_PATH}/Configs")
 set(SRC_PATH "${DIR_PATH}/Source")
 set(SHADER_PATH "${SRC_PATH}/Shaders")
 set(ICON_PATH "${CMAKE_SOURCE_DIR}/Images/TerrainApp.png")
+set(EVAL_IMAGES_PATH "${CMAKE_SOURCE_DIR}/Images/Eval")
 
 # Add these paths as compile definitions
 add_definitions(-DDIR_PATH="${DIR_PATH}")
@@ -85,4 +86,4 @@ add_definitions(-DCONFIG_PATH="${CONFIG_PATH}")
 add_definitions(-DSRC_PATH="${SRC_PATH}")
 add_definitions(-DSHADER_PATH="${SHADER_PATH}")
 add_definitions(-DICON_PATH="${ICON_PATH}")
-
+add_definitions(-DEVAL_IMAGES_PATH="${EVAL_IMAGES_PATH}")
