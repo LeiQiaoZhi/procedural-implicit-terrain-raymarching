@@ -1,6 +1,7 @@
-#include <iostream>
+#define GLFW_INCLUDE_NONE
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -9,31 +10,39 @@
 #include <chrono>
 #include <stb/stb_image_write.h>
 
+#include "Utils.h"
 #include "Constants.h"
 #include "Init.h"
 #include "ShaderClass.h"
 #include "VAO.h"
 #include "EBO.h"
 #include "Camera/CameraController.h"
-#include "UI/UIApp.h"
 #include "CallbackManager.h"
 #include "Window.h"
-#include "Utils.h"
 #include "FPSCounter.h"
 #include "RenderTarget.h"
 #include "FBO.h"
+#include "UI/UIApp.h"
 
-std::string generate_unique_filename(const std::string& baseName) {
+namespace fs = std::filesystem;
+
+void create_folder(const std::string& _path) {
+	std::cout << "Creating folder " << _path << std::endl;
+	fs::create_directories(_path);
+}
+
+std::string generate_unique_name(const std::string& _base_name) {
 	auto now = std::chrono::system_clock::now();
 	auto now_c = std::chrono::system_clock::to_time_t(now);
 
 	std::stringstream ss;
-	ss << baseName << "_" << std::put_time(std::localtime(&now_c), "%Y%m%d_%H%M%S") << ".png";
+	ss << _base_name << "_" << std::put_time(std::localtime(&now_c), "%Y%m%d_%H%M%S");
 
 	return ss.str();
 }
 
-void save_framebuffer_to_image(FBO* _fbo, const std::string& _base_name) {
+
+void save_framebuffer_to_image(FBO* _fbo, const std::string& _base_name, const std::string& _path) {
 	_fbo->bind();
 	glBindTexture(GL_TEXTURE_2D, _fbo->texture);
 
@@ -48,10 +57,11 @@ void save_framebuffer_to_image(FBO* _fbo, const std::string& _base_name) {
 		memcpy(flipped_pixels + (height - 1 - y) * width * 4, pixels + y * width * 4, width * 4);
 	}
 
-	std::string filename = generate_unique_filename(_base_name);
-	stbi_write_png(filename.c_str(), width, height, 4, flipped_pixels, width * 4);
+	std::string filename = generate_unique_name(_base_name);
+	std::string file_path = _path + "\\" + filename + ".png";
+	stbi_write_png(file_path.c_str(), width, height, 4, flipped_pixels, width * 4);
 
-	std::cout << "Saved framebuffer to " << filename << std::endl;
+	std::cout << "Saved framebuffer to " << file_path << std::endl;
 
 	// Clean up
 	delete[] pixels;
@@ -59,6 +69,7 @@ void save_framebuffer_to_image(FBO* _fbo, const std::string& _base_name) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 	_fbo->unbind();
 }
+
 
 int main()
 {
@@ -126,11 +137,13 @@ int main()
 	FBO fbo2(Constants::WIDTH, Constants::HEIGHT);
 	fbo2.unbind();
 	std::array<FBO*, 2> fbos = { &fbo1, &fbo2 };
-	bool save_image = false;
+	bool save_output = false;
 	int incremental_steps = 0;
 	constexpr int EVAL_STEPS = 4;
 	int previous_index = 0;
 	int current_index = 1;
+	std::string output_base_name;
+	std::string output_folder;
 
 	// render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -142,15 +155,29 @@ int main()
 		{
 		case RenderTarget::Target::Default:
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			save_image = false;
+			save_output = false;
+			shader.set_uniform_bool("iStartHDE", false);
 			break;
 		case RenderTarget::Target::IDE:
 			// start incremental rendering
-			shader.set_uniform_bool("iStartIDE", true);
 			incremental_steps = 20 + EVAL_STEPS;
+			output_folder = (EVAL_IMAGES_PATH  "\\") + generate_unique_name("IDE");
+			//output_folder = EVAL_IMAGES_PATH;
+			create_folder(output_folder);
+			// clear fbos for IDE
+			for (auto fbo : fbos)
+				fbo->clear();
+			RenderTarget::instance().set_render_target(RenderTarget::Target::Default);
 			break;
 		case RenderTarget::Target::HDE:
 			shader.set_uniform_bool("iStartHDE", true);
+			output_base_name = "HDE";
+			output_folder = EVAL_IMAGES_PATH;
+			save_output = true;
+			for (auto fbo : fbos)
+				fbo->clear();
+			fbos[current_index]->bind();
+			RenderTarget::instance().set_render_target(RenderTarget::Target::Default);
 			break;
 		default:
 			break;
@@ -169,14 +196,15 @@ int main()
 			glBindTexture(GL_TEXTURE_2D, fbos[previous_index]->texture);
 			shader.set_uniform_int("iIncrementalTexture", 0);
 
-			save_image = true;
-			std::cout << "Rendering " << incremental_steps << " steps" << std::endl;
+			save_output = true;
+			output_base_name = "IDE_" + std::to_string(incremental_steps);
+			std::cout << "Rendering " << output_base_name << std::endl;
 			incremental_steps--;
 			shader.set_uniform_int("iIncrementalStepsLeft", incremental_steps);
+			shader.set_uniform_bool("iStartIDE", true);
 		}
-		else
-		{
-			shader.set_uniform_bool("iGroundTruthRaymarch", false);
+		else {
+			shader.set_uniform_bool("iStartIDE", false);
 		}
 
 		fps_counter.count_fps();
@@ -205,10 +233,8 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-		if (save_image) {
-			// generate a name based on incremental steps
-			std::string base_name = "IDE-" + std::to_string(incremental_steps+1);
-			save_framebuffer_to_image(fbos[current_index], base_name);
+		if (save_output) {
+			save_framebuffer_to_image(fbos[current_index], output_base_name, output_folder);
 		}
 	}
 
