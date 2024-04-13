@@ -2,10 +2,10 @@
     "Long 1 Panel": {
         "Clouds Tab": {
             "Box Lower Y": {
-                "value": 1062.27001953125
+                "value": 3772.889892578125
             },
             "Box Upper Y": {
-                "value": 12527.4697265625
+                "value": 20000.0
             },
             "Density": {
                 "value": 36.630001068115234
@@ -170,7 +170,7 @@
         "Terrain Tab": {
             "Boime": {
                 "Enable Biome": {
-                    "value": true
+                    "value": false
                 },
                 "Global Max Height": {
                     "value": 1099
@@ -187,16 +187,13 @@
                 "Max Height": {
                     "value": 1.0299999713897705
                 },
-                "Under Water Decay": {
-                    "value": 0.0
-                },
                 "Vertical Shrink": {
                     "value": 0.5
                 }
             },
             "Distortion": {
                 "Enable Distortion": {
-                    "value": true
+                    "value": false
                 },
                 "Horizontal Scale": {
                     "value": 4762.0
@@ -229,7 +226,7 @@
                     "value": 12
                 },
                 "Max Height": {
-                    "value": 1318.6800537109375
+                    "value": 402.92999267578125
                 },
                 "Normal Layers": {
                     "value": 14
@@ -644,9 +641,9 @@
                     0.7892200350761414
                 ],
                 "position": [
-                    42773.19921875,
-                    386.6669616699219,
-                    24703.744140625
+                    42852.1015625,
+                    1180.2640380859375,
+                    24600.013671875
                 ],
                 "right": [
                     -0.7959434390068054,
@@ -671,7 +668,7 @@
         },
         "Motion Tab": {
             "Speed": {
-                "value": 0.0
+                "value": 0.05000000074505806
             }
         },
         "Raymarch Tab": {
@@ -809,7 +806,7 @@
                 "values": [
                     0.0,
                     -100000.0,
-                    -22613.0703125
+                    0.0
                 ]
             },
             "Sun Disk Color": {
