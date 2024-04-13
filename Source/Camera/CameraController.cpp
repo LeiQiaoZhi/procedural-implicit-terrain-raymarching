@@ -13,7 +13,8 @@ void CameraController::set_callbacks(CallbackManager& _callback_manager)
 void CameraController::handle_inputs(GLFWwindow* _window, const int _width, const int _height)
 {
 	if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) ||
-		ImGui::IsAnyItemActive())
+		ImGui::IsAnyItemActive() || ImGui::IsAnyItemHovered()
+		)
 		return;
 
 	// get mouse pos
