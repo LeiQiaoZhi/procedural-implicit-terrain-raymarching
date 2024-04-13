@@ -30,12 +30,17 @@ UI::WindowInfo UI::MenuBarPanel::show()
 			shader_modifiable_.substitute_uniforms(json);
 		}
 		if (ImGui::BeginMenu("Evaluation")) {
-			if (ImGui::MenuItem("Ground Truth Raymarch")) {
-				RenderTarget::instance().set_render_target(RenderTarget::Target::GroundTruthRaymarch);
+
+			if (ImGui::MenuItem("Intersection Distance Error (IDE)")) {
+				RenderTarget::instance().set_render_target(RenderTarget::Target::IDE);
 			}
-			else {
+			if (ImGui::MenuItem("Height Difference Error (HDE)")) {
+				RenderTarget::instance().set_render_target(RenderTarget::Target::HDE);
+			}
+			/*else {
 				RenderTarget::instance().set_render_target(RenderTarget::Target::Default);
-			}
+			}*/
+			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Layouts")) {
