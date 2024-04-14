@@ -1,0 +1,891 @@
+{
+    "Long 1 Panel": {
+        "Clouds Tab": {
+            "Box Lower Y": {
+                "value": 1062.27001953125
+            },
+            "Box Upper Y": {
+                "value": 12527.4697265625
+            },
+            "Density": {
+                "value": 36.630001068115234
+            },
+            "Enabled": {
+                "value": false
+            },
+            "FBM": {
+                "Band Pass (Layers to Filter Out)": {
+                    "value_max": 1,
+                    "value_min": 1
+                },
+                "Horizontal Scale": {
+                    "value": 12234.4697265625
+                },
+                "Horizontal Shirnk": {
+                    "value": 1.899999976158142
+                },
+                "Layers": {
+                    "value": 7
+                },
+                "Max Height": {
+                    "value": 7765.56982421875
+                },
+                "Normal Layers": {
+                    "value": 4
+                },
+                "Offset": {
+                    "values": [
+                        -0.5600000023841858,
+                        0.47999998927116394
+                    ]
+                },
+                "Vertical Shrink": {
+                    "value": 0.6000000238418579
+                }
+            },
+            "Front to Back Blending": {
+                "Base Color": {
+                    "value": 0.8100000023841858
+                },
+                "Sample Alpha": {
+                    "value": 0.33000001311302185
+                }
+            },
+            "Lighting": {
+                "Ambient": {
+                    "value": 1.2400000095367432
+                },
+                "Diffuse": {
+                    "value": 0.30000001192092896
+                },
+                "Shadow Color": {
+                    "colors": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                "Shadow Density Higher": {
+                    "value": 4.739999771118164
+                },
+                "Shadow Density Lower": {
+                    "value": -0.07000000029802322
+                },
+                "Shadow Step Size": {
+                    "value": 472.5299987792969
+                },
+                "Shadow Steps": {
+                    "value": 3
+                },
+                "Shadow Strength": {
+                    "value": 4.619999885559082
+                }
+            },
+            "Max Density": {
+                "value": 0.25
+            },
+            "Raymarch": {
+                "Max Ray Distance": {
+                    "value": 100000.0
+                },
+                "Min Stepsize": {
+                    "value": 67.02999877929688
+                },
+                "Step Density Scale": {
+                    "value": 0.7200000286102295
+                },
+                "Step Dist Scale": {
+                    "value": 0.029999999329447746
+                }
+            },
+            "Steps": {
+                "value": 205
+            },
+            "Strength": {
+                "value": 0.949999988079071
+            },
+            "Sun Blend": {
+                "Density Factor": {
+                    "value": 0.15000000596046448
+                },
+                "Dot Power": {
+                    "value": 37
+                },
+                "Strength": {
+                    "value": 0.11999999731779099
+                }
+            }
+        },
+        "Planet Tab": {
+            "End Distance": {
+                "value": 10.0
+            },
+            "Radius": {
+                "value": 10000.0
+            },
+            "Ray Offset": {
+                "value": -19.299999237060547
+            },
+            "Start Distance": {
+                "value": 10.0
+            },
+            "Triplanar Sharpness": {
+                "value": 1
+            }
+        },
+        "Sky Tab": {
+            "Atmos Height": {
+                "value": 128205.1328125
+            },
+            "Density Fall Off": {
+                "value": 0.7099999785423279
+            },
+            "Fog Falloff": {
+                "values": [
+                    0.10000000149011612,
+                    0.3199999928474426,
+                    0.6800000071525574
+                ]
+            },
+            "Fog Strength": {
+                "value": 6.96999979019165
+            },
+            "OD Steps": {
+                "value": 20
+            },
+            "Rayleigh Steps": {
+                "value": 10
+            },
+            "Rayleigh Strength": {
+                "value": 1.9700000286102295
+            },
+            "Scattering Coefficients": {
+                "values": [
+                    0.10000000149011612,
+                    0.3199999928474426,
+                    0.6800000071525574
+                ]
+            }
+        },
+        "Terrain Tab": {
+            "Boime": {
+                "Enable Biome": {
+                    "value": true
+                },
+                "Global Max Height": {
+                    "value": 2198
+                },
+                "Horizontal Scale": {
+                    "value": 3663.10009765625
+                },
+                "Horizontal Shirnk": {
+                    "value": 1.899999976158142
+                },
+                "Layers": {
+                    "value": 5
+                },
+                "Max Height": {
+                    "value": 1.0299999713897705
+                },
+                "Under Water Decay": {
+                    "value": 0.36000001430511475
+                },
+                "Vertical Shrink": {
+                    "value": 0.5
+                }
+            },
+            "Distortion": {
+                "Enable Distortion": {
+                    "value": false
+                },
+                "Horizontal Scale": {
+                    "value": 732.7000122070313
+                },
+                "Horizontal Shirnk": {
+                    "value": 1.9199999570846558
+                },
+                "Layers": {
+                    "value": 5
+                },
+                "Max Height": {
+                    "value": 0.18000000715255737
+                },
+                "Vertical Shrink": {
+                    "value": 0.28999999165534973
+                }
+            },
+            "FBM": {
+                "Band Pass (Layers to Filter Out)": {
+                    "value_max": 1,
+                    "value_min": 1
+                },
+                "Horizontal Scale": {
+                    "value": 1428.6500244140625
+                },
+                "Horizontal Shirnk": {
+                    "value": 1.7000000476837158
+                },
+                "Layers": {
+                    "value": 12
+                },
+                "Max Height": {
+                    "value": 3479.85009765625
+                },
+                "Normal Layers": {
+                    "value": 12
+                },
+                "Starting Vertical Shrink": {
+                    "value": 0.5
+                },
+                "Vertical Shrink": {
+                    "value": 0.5099999904632568
+                }
+            },
+            "Grass Color FBM": {
+                "Horizontal Scale": {
+                    "value": 435.92999267578125
+                },
+                "Horizontal Shirnk": {
+                    "value": 1.899999976158142
+                },
+                "Layers": {
+                    "value": 4
+                },
+                "Vertical Shrink": {
+                    "value": 0.5
+                }
+            },
+            "Grass Edge FBM": {
+                "Edge Strength": {
+                    "value": 100.0
+                },
+                "Horizontal Scale": {
+                    "value": 219.8800048828125
+                },
+                "Horizontal Shirnk": {
+                    "value": 1.809999942779541
+                },
+                "Layers": {
+                    "value": 4
+                },
+                "Vertical Shrink": {
+                    "value": 0.6100000143051147
+                }
+            },
+            "Lighting": {
+                "Ambient Strength": {
+                    "value": 0.10000000149011612
+                },
+                "Diffuse Strength": {
+                    "value": 0.8199999928474426
+                },
+                "Fresnel Dot Power": {
+                    "value": 5
+                },
+                "Fresnel F0": {
+                    "value": 0.11999999731779099
+                },
+                "Specular Dot Power": {
+                    "value": 10
+                },
+                "Specular Strength": {
+                    "value": 0.3499999940395355
+                }
+            },
+            "Material": {
+                "Dirt Threshold": {
+                    "value": 0.949999988079071
+                },
+                "Grass Color": {
+                    "colors": [
+                        0.8039215803146362,
+                        0.8039215207099915,
+                        0.1852172315120697
+                    ]
+                },
+                "Grass Color 2": {
+                    "colors": [
+                        0.3071252405643463,
+                        0.6617647409439087,
+                        0.08758651465177536
+                    ]
+                },
+                "Grass Lower Fade Length": {
+                    "value": 114
+                },
+                "Grass Max Height": {
+                    "value": 2967
+                },
+                "Grass Min Height": {
+                    "value": -128
+                },
+                "Grass Threshold": {
+                    "value": 0.6200000047683716
+                },
+                "Grass Upper Fade Length": {
+                    "value": 352
+                },
+                "Sand Color": {
+                    "colors": [
+                        0.46568626165390015,
+                        0.3845805823802948,
+                        0.12098713219165802
+                    ]
+                },
+                "Sand Upper Fade Length": {
+                    "value": 84
+                }
+            },
+            "Rock Texture": {
+                "Dirt Color": {
+                    "colors": [
+                        0.9019607901573181,
+                        0.800000011920929,
+                        0.6745098233222961
+                    ]
+                },
+                "Hide Stripe Color": {
+                    "colors": [
+                        0.9019607901573181,
+                        0.800000011920929,
+                        0.6745098233222961
+                    ]
+                },
+                "Hide Stripe Normal Lower": {
+                    "value": 0.23999999463558197
+                },
+                "Hide Stripe Normal Upper": {
+                    "value": 0.5600000023841858
+                },
+                "Stripe Color 1": {
+                    "colors": [
+                        0.6431372761726379,
+                        0.5098039507865906,
+                        0.3333333432674408
+                    ]
+                },
+                "Stripe Color 2": {
+                    "colors": [
+                        0.9019607901573181,
+                        0.800000011920929,
+                        0.6745098233222961
+                    ]
+                },
+                "Stripe Horizontal Scale": {
+                    "value": 0.18000000715255737
+                },
+                "Stripe Vertical Scale": {
+                    "value": 0.5799999833106995
+                },
+                "XZ Noise Base": {
+                    "value": 1.0
+                },
+                "XZ Noise Scale": {
+                    "value": 0.0
+                },
+                "XZ Noise Strength": {
+                    "value": 0.0
+                }
+            },
+            "Shade Shadow Threshold": {
+                "value": 0.3400000035762787
+            }
+        },
+        "Tree Tab": {
+            "Domain Size": {
+                "value": 27.18000030517578
+            },
+            "Early Test Steps": {
+                "value": 0
+            },
+            "Enable": {
+                "value": false
+            },
+            "FBM": {
+                "Band Pass (Layers to Filter Out)": {
+                    "value_max": 1,
+                    "value_min": 1
+                },
+                "FBM strength": {
+                    "value": 42.119998931884766
+                },
+                "Horizontal Scale": {
+                    "value": 0.10000000149011612
+                },
+                "Horizontal Shirnk": {
+                    "value": 1.2300000190734863
+                },
+                "Layers": {
+                    "value": 1
+                },
+                "Max Height": {
+                    "value": 100.0
+                },
+                "Starting Vertical Shrink": {
+                    "value": 0.07999999821186066
+                },
+                "Vertical Shrink": {
+                    "value": 0.4099999964237213
+                }
+            },
+            "Height": {
+                "value": 66.69999694824219
+            },
+            "Lighting": {
+                "Ambient Strength": {
+                    "value": 0.10000000149011612
+                },
+                "Diffuse Strength": {
+                    "value": 0.8500000238418579
+                },
+                "Fresnel Dot Power": {
+                    "value": 6
+                },
+                "Fresnel F0": {
+                    "value": 0.10000000149011612
+                },
+                "Occulusion Lower": {
+                    "value": -0.4699999988079071
+                },
+                "Occulusion Upper": {
+                    "value": 0.8600000143051147
+                },
+                "Specular Dot Power": {
+                    "value": 12
+                },
+                "Specular Strength": {
+                    "value": 0.3100000023841858
+                }
+            },
+            "Normal Epsilon": {
+                "value": 14.050000190734863
+            },
+            "Offset": {
+                "value": -4.03000020980835
+            },
+            "Position Randomness": {
+                "value": 1.0
+            },
+            "Radius": {
+                "value": 18.760000228881836
+            },
+            "Shadow": {
+                "Max Distance": {
+                    "value": 166.3000030517578
+                },
+                "Shadow Lower": {
+                    "value": -952.3800048828125
+                },
+                "Shadow Steps": {
+                    "value": 0
+                },
+                "Shadow Threshold": {
+                    "value": 7.329999923706055
+                },
+                "Step Size": {
+                    "value": 5.710000038146973
+                }
+            },
+            "Size Randomness": {
+                "values": [
+                    4.0,
+                    50.0
+                ]
+            },
+            "Species": {
+                "Colors": null,
+                "FBM": null,
+                "Horizontal Scale": {
+                    "value": 143.9499969482422
+                },
+                "Horizontal Shirnk": {
+                    "value": 1.899999976158142
+                },
+                "Layers": {
+                    "value": 4
+                },
+                "S1 Color": {
+                    "colors": [
+                        0.20181715488433838,
+                        0.5392156839370728,
+                        0.12951751053333282
+                    ]
+                },
+                "S1 Old Color": {
+                    "colors": [
+                        0.5292964577674866,
+                        0.6980392336845398,
+                        0.1764705926179886
+                    ]
+                },
+                "S2 Color": {
+                    "colors": [
+                        0.2110472321510315,
+                        0.44117647409439087,
+                        0.006487895734608173
+                    ]
+                },
+                "S2 Height Factor": {
+                    "value": 0.8100000023841858
+                },
+                "S2 Lower Threshold": {
+                    "value": -0.07999999821186066
+                },
+                "S2 Old Color": {
+                    "colors": [
+                        0.37702691555023193,
+                        0.47058820724487305,
+                        0.016147641465067863
+                    ]
+                },
+                "S2 Radius Factor": {
+                    "value": 1.340000033378601
+                },
+                "Starting Vertical Shrink": {
+                    "value": 0.5
+                },
+                "Vertical Shrink": {
+                    "value": 0.5
+                }
+            },
+            "Steepness Threshold": {
+                "value": 0.6800000071525574
+            },
+            "Steps": {
+                "value": 63
+            },
+            "Terrain Normal Proportion": {
+                "value": 2.450000047683716
+            }
+        },
+        "Water Tab": {
+            "Deep Color": {
+                "colors": [
+                    0.19492502510547638,
+                    0.34575003385543823,
+                    0.7647058963775635
+                ]
+            },
+            "Initial Transparency": {
+                "value": 0.8700000047683716
+            },
+            "Lighting": {
+                "Ambient Strength": {
+                    "value": 0.10000000149011612
+                },
+                "Diffuse Strength": {
+                    "value": 0.9800000190734863
+                },
+                "Fresnel Dot Power": {
+                    "value": 5
+                },
+                "Fresnel F0": {
+                    "value": 0.25
+                },
+                "Shadow": {
+                    "value": false
+                },
+                "Specular Dot Power": {
+                    "value": 200
+                },
+                "Specular Strength": {
+                    "value": 1.3600000143051147
+                }
+            },
+            "Normal Map": {
+                "Horizontal Scale": {
+                    "value": 439.6099853515625
+                },
+                "Horizontal Shirnk": {
+                    "value": 2.069999933242798
+                },
+                "Layers": {
+                    "value": 5
+                },
+                "Max Height": {
+                    "value": 13.1899995803833
+                },
+                "Offset": {
+                    "values": [
+                        0.10000000149011612,
+                        0.10000000149011612
+                    ]
+                },
+                "Vertical Shrink": {
+                    "value": 0.4000000059604645
+                }
+            },
+            "Shallow Color": {
+                "colors": [
+                    0.18291041254997253,
+                    0.8480392098426819,
+                    0.7880687713623047
+                ]
+            },
+            "Transmittance Decay": {
+                "value": 9.3100004196167
+            },
+            "Transparency Decrease": {
+                "value": 0.17000000178813934
+            },
+            "Water Level": {
+                "value": -22
+            }
+        }
+    },
+    "Menu Bar Panel": null,
+    "Short 1 Panel": {
+        "Camera Tab": {
+            "camara_transform": {
+                "focal_length": 1.783000111579895,
+                "forward": [
+                    0.46874067187309265,
+                    -0.26603928208351135,
+                    0.8423213362693787
+                ],
+                "position": [
+                    366.15045166015625,
+                    1412.0101318359375,
+                    1254.453125
+                ],
+                "right": [
+                    -0.8738118410110474,
+                    -1.6391277313232422e-06,
+                    0.4862642288208008
+                ],
+                "up": [
+                    0.12936101853847504,
+                    0.9639639258384705,
+                    0.23246368765830994
+                ]
+            },
+            "camera_settings": {
+                "invert_x": false,
+                "invert_y": false,
+                "invert_zoom": false,
+                "keyboard_speed": 21.7189998626709,
+                "move_speed": 692.3389892578125,
+                "rotate_speed": 2.4059998989105225,
+                "zoom_speed": 0.26100000739097595
+            }
+        },
+        "Motion Tab": {
+            "Speed": {
+                "value": 0.0
+            }
+        },
+        "Raymarch Tab": {
+            "BS refine steps": {
+                "value": 3
+            },
+            "Distance Scale with Focal Length": {
+                "value": true
+            },
+            "Exp Step Size Distance Ratio": {
+                "value": 0.009999999776482582
+            },
+            "Linear Step Size Distance Ratio": {
+                "value": 0.07000000029802322
+            },
+            "Log Step Size Distance Ratio": {
+                "value": 1.0
+            },
+            "Max Distance": {
+                "value": 100000
+            },
+            "Max Step Size": {
+                "value": 10000.0
+            },
+            "Max Steps": {
+                "value": 465
+            },
+            "Min Step Size": {
+                "value": 0.10000000149011612
+            },
+            "Shadow Step Size": {
+                "value": 5.400000095367432
+            },
+            "Shadow Steps": {
+                "value": 27
+            },
+            "Smoothstep Step Size Right Edge": {
+                "value": 10000.0
+            },
+            "Start Step Size": {
+                "value": 5.5
+            },
+            "Step Size Above Tree Ratio": {
+                "value": 41.08000183105469
+            },
+            "Step Size Distance Relationship": {
+                "value": 0
+            }
+        }
+    },
+    "Short 2 Panel": {
+        "2D Sky Tab": {
+            "Color Bottom": {
+                "colors": [
+                    0.6666666865348816,
+                    1.0,
+                    0.9411764740943909
+                ]
+            },
+            "Color Top": {
+                "colors": [
+                    0.21960784494876862,
+                    0.4941176474094391,
+                    1.0
+                ]
+            },
+            "Fog Color": {
+                "colors": [
+                    0.9764705896377563,
+                    0.9921568632125854,
+                    0.8549019694328308
+                ]
+            },
+            "Fog Strength": {
+                "value": 0.0
+            },
+            "Height": {
+                "value": 24623.119140625
+            },
+            "Lower Threshold": {
+                "value": -0.5199999809265137
+            },
+            "Scale": {
+                "value": 21287.9609375
+            },
+            "Sky Fog Color": {
+                "colors": [
+                    0.9764705896377563,
+                    0.9921568632125854,
+                    0.8549019694328308
+                ]
+            },
+            "Sky Fog Strength": {
+                "value": 0.20000000298023224
+            },
+            "Upper Threshold": {
+                "value": 1.1200000047683716
+            },
+            "Used 2D Clouds": {
+                "value": false
+            },
+            "Used 2D Sky": {
+                "value": false
+            }
+        },
+        "Light Tab": {
+            "Camera as Sun Center": {
+                "value": false
+            },
+            "Dot Power 1": {
+                "value": 1000
+            },
+            "Dot Power 2": {
+                "value": 16
+            },
+            "Dot Product Threshold": {
+                "value": 70.0
+            },
+            "Enable Sun Disk": {
+                "value": true
+            },
+            "Phi": {
+                "value": 3.25
+            },
+            "Radius": {
+                "value": 1000000.0
+            },
+            "Strength 1": {
+                "value": 1.7899999618530273
+            },
+            "Strength 2": {
+                "value": 1.0499999523162842
+            },
+            "Sun Center": {
+                "values": [
+                    0.0,
+                    -100000.0,
+                    0.0
+                ]
+            },
+            "Sun Disk Color": {
+                "colors": [
+                    1.0,
+                    0.7475490570068359,
+                    0.4950980544090271
+                ]
+            },
+            "Theta": {
+                "value": 0.4399999976158142
+            },
+            "phi": 0.0,
+            "radius": 40000.0,
+            "theta": 0.0
+        },
+        "Profiling Tab": {
+            "Clouds Raymarch Steps": {
+                "value": false
+            },
+            "Custom Max": {
+                "value": 1005.030029296875
+            },
+            "Last Step Size": {
+                "value": false
+            },
+            "Mark True Max": {
+                "value": false
+            },
+            "Max Color": {
+                "colors": [
+                    1.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "Min Color": {
+                "colors": [
+                    0.0,
+                    1.0,
+                    0.0
+                ]
+            },
+            "Planet Raymarch Steps": {
+                "value": false
+            },
+            "Raymarch Precision": {
+                "value": false
+            },
+            "Terrain Raymarch Steps": {
+                "value": false
+            },
+            "Terrain Shadow Steps": {
+                "value": false
+            },
+            "Tree Raymarch Steps": {
+                "value": false
+            },
+            "True Max Color": {
+                "colors": [
+                    0.9411764144897461,
+                    0.0,
+                    1.0
+                ]
+            },
+            "Use Custom Max": {
+                "value": false
+            }
+        }
+    },
+    "Short 3 Panel": {
+        "Debug Tab": {
+            "Render Target": {
+                "value": 0
+            }
+        },
+        "Performance Tab": null
+    }
+}

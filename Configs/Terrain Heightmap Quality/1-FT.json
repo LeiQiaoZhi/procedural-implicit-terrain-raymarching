@@ -11,7 +11,7 @@
                 "value": 36.630001068115234
             },
             "Enabled": {
-                "value": true
+                "value": false
             },
             "FBM": {
                 "Band Pass (Layers to Filter Out)": {
@@ -186,6 +186,9 @@
                 },
                 "Max Height": {
                     "value": 1.0299999713897705
+                },
+                "Under Water Decay": {
+                    "value": 0.0
                 },
                 "Vertical Shrink": {
                     "value": 0.5
@@ -660,7 +663,7 @@
                 "invert_x": false,
                 "invert_y": false,
                 "invert_zoom": false,
-                "keyboard_speed": 21.7189998626709,
+                "keyboard_speed": 5.504000186920166,
                 "move_speed": 692.3389892578125,
                 "rotate_speed": 2.4059998989105225,
                 "zoom_speed": 0.26100000739097595
@@ -806,7 +809,7 @@
                 "values": [
                     0.0,
                     -100000.0,
-                    0.0
+                    -22613.0703125
                 ]
             },
             "Sun Disk Color": {

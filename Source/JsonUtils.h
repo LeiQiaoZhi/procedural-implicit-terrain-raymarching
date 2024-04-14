@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <fstream>
 #include <imgui.h>
+#include <string>
 
 namespace JsonUtils {
 	constexpr char* Default_Config_Name = "//default.json";
@@ -68,6 +69,21 @@ namespace JsonUtils {
 
 	inline nlohmann::json json_from_default_layout() {
 		return json_from_file(CONFIG_PATH + std::string(Default_Layout_Name));
+	}
+
+	inline std::string remove_json_extension(const std::string& _filename) {
+		std::string result = _filename;
+		std::string extension = ".json";
+
+		// Find the position of ".json" in the string
+		size_t pos = result.rfind(extension);
+
+		// Check if ".json" was found and if it's at the end of the string
+		if (pos != std::string::npos && pos == result.length() - extension.length()) {
+			result.erase(pos, extension.length());
+		}
+
+		return result;
 	}
 
 }

@@ -11,7 +11,7 @@
                 "value": 36.630001068115234
             },
             "Enabled": {
-                "value": true
+                "value": false
             },
             "FBM": {
                 "Band Pass (Layers to Filter Out)": {
@@ -148,7 +148,7 @@
                 ]
             },
             "Fog Strength": {
-                "value": 6.96999979019165
+                "value": 5.139999866485596
             },
             "OD Steps": {
                 "value": 20
@@ -157,7 +157,7 @@
                 "value": 10
             },
             "Rayleigh Strength": {
-                "value": 1.9700000286102295
+                "value": 2.1500000953674316
             },
             "Scattering Coefficients": {
                 "values": [
@@ -173,10 +173,10 @@
                     "value": true
                 },
                 "Global Max Height": {
-                    "value": 1099
+                    "value": 2198
                 },
                 "Horizontal Scale": {
-                    "value": 3296.800048828125
+                    "value": 5860.89990234375
                 },
                 "Horizontal Shirnk": {
                     "value": 1.899999976158142
@@ -185,10 +185,10 @@
                     "value": 5
                 },
                 "Max Height": {
-                    "value": 1.0299999713897705
+                    "value": 0.550000011920929
                 },
                 "Under Water Decay": {
-                    "value": 0.0
+                    "value": 0.3100000023841858
                 },
                 "Vertical Shrink": {
                     "value": 0.5
@@ -196,10 +196,10 @@
             },
             "Distortion": {
                 "Enable Distortion": {
-                    "value": true
+                    "value": false
                 },
                 "Horizontal Scale": {
-                    "value": 4762.0
+                    "value": 732.7000122070313
                 },
                 "Horizontal Shirnk": {
                     "value": 1.9199999570846558
@@ -208,10 +208,10 @@
                     "value": 5
                 },
                 "Max Height": {
-                    "value": 1.7200000286102295
+                    "value": 0.18000000715255737
                 },
                 "Vertical Shrink": {
-                    "value": 0.27000001072883606
+                    "value": 0.28999999165534973
                 }
             },
             "FBM": {
@@ -220,30 +220,30 @@
                     "value_min": 1
                 },
                 "Horizontal Scale": {
-                    "value": 732.6900024414063
+                    "value": 1758.3299560546875
                 },
                 "Horizontal Shirnk": {
-                    "value": 1.690000057220459
+                    "value": 1.7000000476837158
                 },
                 "Layers": {
                     "value": 12
                 },
                 "Max Height": {
-                    "value": 1318.6800537109375
+                    "value": 6959.7001953125
                 },
                 "Normal Layers": {
-                    "value": 14
+                    "value": 12
                 },
                 "Starting Vertical Shrink": {
                     "value": 0.5
                 },
                 "Vertical Shrink": {
-                    "value": 0.5400000214576721
+                    "value": 0.5099999904632568
                 }
             },
             "Grass Color FBM": {
                 "Horizontal Scale": {
-                    "value": 252.77999877929688
+                    "value": 435.92999267578125
                 },
                 "Horizontal Shirnk": {
                     "value": 1.899999976158142
@@ -260,16 +260,16 @@
                     "value": 100.0
                 },
                 "Horizontal Scale": {
-                    "value": 366.3999938964844
+                    "value": 219.8800048828125
                 },
                 "Horizontal Shirnk": {
-                    "value": 1.899999976158142
+                    "value": 1.809999942779541
                 },
                 "Layers": {
-                    "value": 6
+                    "value": 4
                 },
                 "Vertical Shrink": {
-                    "value": 0.5
+                    "value": 0.6100000143051147
                 }
             },
             "Lighting": {
@@ -311,13 +311,13 @@
                     ]
                 },
                 "Grass Lower Fade Length": {
-                    "value": 33
+                    "value": 73
                 },
                 "Grass Max Height": {
                     "value": 2967
                 },
                 "Grass Min Height": {
-                    "value": -685
+                    "value": -495
                 },
                 "Grass Threshold": {
                     "value": 0.6200000047683716
@@ -333,7 +333,7 @@
                     ]
                 },
                 "Sand Upper Fade Length": {
-                    "value": 95
+                    "value": 81
                 }
             },
             "Rock Texture": {
@@ -639,24 +639,24 @@
             "camara_transform": {
                 "focal_length": 1.783000111579895,
                 "forward": [
-                    -0.6002572774887085,
-                    -0.12970392405986786,
-                    0.7892200350761414
+                    -0.14552362263202667,
+                    0.13786247372627258,
+                    0.9797024130821228
                 ],
                 "position": [
-                    42773.19921875,
-                    386.6669616699219,
-                    24703.744140625
+                    8890.8125,
+                    12596.576171875,
+                    1112.899658203125
                 ],
                 "right": [
-                    -0.7959434390068054,
-                    -1.2442469596862793e-06,
-                    -0.6053711175918579
+                    -0.9891474843025208,
+                    -1.3317912817001343e-06,
+                    -0.1469263881444931
                 ],
                 "up": [
-                    -0.07851613312959671,
-                    0.9915536046028137,
-                    0.10323116928339005
+                    0.020255206152796745,
+                    0.9904506206512451,
+                    -0.1363724023103714
                 ]
             },
             "camera_settings": {
@@ -740,16 +740,16 @@
             },
             "Fog Color": {
                 "colors": [
-                    0.9764705896377563,
-                    0.9921568632125854,
-                    0.8549019694328308
+                    0.4709726870059967,
+                    0.47775736451148987,
+                    0.4901960492134094
                 ]
             },
             "Fog Strength": {
-                "value": 0.0
+                "value": 0.30000001192092896
             },
             "Height": {
-                "value": 24623.119140625
+                "value": 22613.060546875
             },
             "Lower Threshold": {
                 "value": -0.5199999809265137
@@ -759,13 +759,13 @@
             },
             "Sky Fog Color": {
                 "colors": [
-                    0.9764705896377563,
-                    0.9921568632125854,
-                    0.8549019694328308
+                    0.3284313678741455,
+                    0.3284313678741455,
+                    0.3284313678741455
                 ]
             },
             "Sky Fog Strength": {
-                "value": 0.20000000298023224
+                "value": 0.0
             },
             "Upper Threshold": {
                 "value": 1.1200000047683716
@@ -794,7 +794,7 @@
                 "value": true
             },
             "Phi": {
-                "value": 3.25
+                "value": 0.0
             },
             "Radius": {
                 "value": 1000000.0
@@ -820,7 +820,7 @@
                 ]
             },
             "Theta": {
-                "value": 0.4399999976158142
+                "value": 1.149999976158142
             },
             "phi": 0.0,
             "radius": 40000.0,

@@ -11,7 +11,7 @@
                 "value": 36.630001068115234
             },
             "Enabled": {
-                "value": true
+                "value": false
             },
             "FBM": {
                 "Band Pass (Layers to Filter Out)": {
@@ -187,6 +187,9 @@
                 "Max Height": {
                     "value": 1.0299999713897705
                 },
+                "Under Water Decay": {
+                    "value": 0.0
+                },
                 "Vertical Shrink": {
                     "value": 0.5
                 }
@@ -196,19 +199,19 @@
                     "value": false
                 },
                 "Horizontal Scale": {
-                    "value": 4762.0
+                    "value": 1831.5999755859375
                 },
                 "Horizontal Shirnk": {
                     "value": 1.9199999570846558
                 },
                 "Layers": {
-                    "value": 5
+                    "value": 8
                 },
                 "Max Height": {
-                    "value": 1.7200000286102295
+                    "value": 0.2199999988079071
                 },
                 "Vertical Shrink": {
-                    "value": 0.27000001072883606
+                    "value": 0.5600000023841858
                 }
             },
             "FBM": {
@@ -232,7 +235,7 @@
                     "value": 14
                 },
                 "Starting Vertical Shrink": {
-                    "value": 0.5
+                    "value": 0.5699999928474426
                 },
                 "Vertical Shrink": {
                     "value": 0.5400000214576721
@@ -806,7 +809,7 @@
                 "values": [
                     0.0,
                     -100000.0,
-                    0.0
+                    -22613.0703125
                 ]
             },
             "Sun Disk Color": {
