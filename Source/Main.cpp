@@ -216,6 +216,9 @@ int main()
 				previous_index = incremental_steps % 2;
 				current_index = (incremental_steps + 1) % 2;
 			}
+			else {
+				save_output = true; // move this line outside to save all steps
+			}
 			std::cout << "Previous index: " << previous_index << " Current index: " << current_index << std::endl;
 
 			fbos[current_index]->bind();
@@ -225,7 +228,6 @@ int main()
 			glBindTexture(GL_TEXTURE_2D, fbos[previous_index]->texture);
 			shader.set_uniform_int("iIncrementalTexture", 0);
 
-			save_output = true;
 			output_base_name = "IDE_" + std::to_string(incremental_steps);
 			std::cout << "Rendering " << output_base_name << std::endl;
 			incremental_steps--;

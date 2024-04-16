@@ -24,8 +24,8 @@ namespace UI {
 				std::make_shared<SliderI>("Max Steps", "iMaxSteps", 1, 1000, 500),
 				std::make_shared<SliderF>("Min Step Size", "iMinStepSize", 0.1f, 100.0f, 10.0f),
 				std::make_shared<SliderF>("Max Step Size", "iMaxStepSize", 0.1f, 10000.0f, 100.0f),
-				std::make_shared<SliderF>("Start Step Size", "iStepSize", 0.1f, 1000.0f, 100.0f),
-				std::make_shared<SliderF>("Step Size Above Tree Ratio", "iStepSizeAboveTreeRatio", 0.0f, 50.0f, 0.01f),
+				std::make_shared<SliderF>("Start Step Size", "iStepSize", 5.0f, 100.0f, 20.0f),
+				std::make_shared<SliderF>("Step Size Above Tree Ratio", "iStepSizeAboveTreeRatio", 0.0f, 100.0f, 0.01f),
 				std::make_shared<SingleSelectProperty>("Step Size Distance Relationship", "iStepSizeFunctionSwitch", 0, std::vector<std::string>{
 					"Linear",
 					"Log",
