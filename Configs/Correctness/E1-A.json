@@ -685,7 +685,7 @@
                 "value": 0.009999999776482582
             },
             "Linear Step Size Distance Ratio": {
-                "value": 0.009999999776482582
+                "value": 0.03999999910593033
             },
             "Log Step Size Distance Ratio": {
                 "value": 1.0
@@ -712,10 +712,10 @@
                 "value": 10000.0
             },
             "Start Step Size": {
-                "value": 5.0
+                "value": 20.0
             },
             "Step Size Above Tree Ratio": {
-                "value": 20.270000457763672
+                "value": 50.0
             },
             "Step Size Distance Relationship": {
                 "value": 0
