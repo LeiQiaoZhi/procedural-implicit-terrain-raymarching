@@ -120,6 +120,19 @@ float terrain_fbm(in vec2 _pos){
 	return biome * result * iMaxHeight + biome * iGlobalMaxHeight;
 }
 
+float terrain_fbm_smooth(in vec2 _pos){
+	float result = fbm(
+		_pos / iHorizontalScale + domain_distortion(_pos), 
+		3,
+		iHorizontalShrink,
+		iVerticalShrinkStart,
+		iVerticalShrink,
+		iFilterRange
+	);
+	float biome = biome(_pos);
+	return biome * result * iMaxHeight + biome * iGlobalMaxHeight;
+}
+
 
 // return (height, normal)
 vec4 terrain_fbm_d(in vec2 _pos){

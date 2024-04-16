@@ -31,17 +31,19 @@ void main()
 	}
 
 	// naive way to prevent clipping through terrain
-	float current_height = terrain_fbm(iCameraPos.xz) + 1.1 * iTreeHeight + iTreeOffset + 0.5 * iTreeSizeRandomness.y;
+	float current_height = terrain_fbm_smooth(iCameraPos.xz) + 200;
+    // 1.1 * iTreeHeight + iTreeOffset + 0.5 * iTreeSizeRandomness.y;
 	vec3 camera_pos = iCameraPos;
-	camera_pos.y = max(current_height + 1.0, iCameraPos.y);
-    vec3 pixel_world = get_pixel_world(NDC);
+	camera_pos.y = max(current_height + 0.0, iCameraPos.y);
+    vec3 pixel_world = get_pixel_world(camera_pos, NDC);
 	vec3 ray = normalize(pixel_world - camera_pos);
 
 	//vec3 sun_pos = get_sun_pos(camera_pos);
 	//vec3 point_to_sun = normalize(sun_pos - camera_pos);
 	vec3 point_to_sun = get_sun_dir(camera_pos);
 
-	if (debug_sphere(NDC, iCameraPos, normalize(pixel_world - iCameraPos), get_sun_dir(iCameraPos), color)){
+    vec3 original_ray = normalize(get_pixel_world(iCameraPos, NDC) - iCameraPos);
+	if (debug_sphere(NDC, iCameraPos, original_ray, get_sun_dir(iCameraPos), color)){
 		iFragColor = vec4(color, 1.0); 
         if (show_profile_colors(color)) {
             iFragColor = vec4(color, 1.0); return;
@@ -106,7 +108,7 @@ void main()
 		distance_to_obj = 100000;
 	}
 	// too close, don't bother
-	if (distance_to_obj > 100){
+	if (distance_to_obj > 100 && iRayleighStrength > 0.0001){
 		vec3 start = camera_pos;
 		vec3 end = camera_pos + ray * distance_to_obj;
 		bool in_atmosphere = ray_inside_atmosphere_i(start, end);

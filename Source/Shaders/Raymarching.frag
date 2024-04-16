@@ -153,7 +153,7 @@ float raymarch_terrain(
 
 		// check for tree intersection
 		if (!tree_confirmed && _pos.y < tree_height
-            && t > tree_freeze_distance
+            && t > tree_freeze_distance && iTreeEnabled
         )
 		{
 			// interpolation
@@ -231,9 +231,10 @@ float raymarch_trees(
 
 
 vec3 get_pixel_world(
+    in vec3 _camera_pos,
 	in vec2 _ndc 
 ){
-	vec3 screen_center = iCameraPos + normalize(iCameraFwd) * iFocalLength;
+	vec3 screen_center = _camera_pos + normalize(iCameraFwd) * iFocalLength;
 	vec3 pixel_world = screen_center 
 		+ _ndc.x * normalize(iCameraRight) + _ndc.y * normalize(iCameraUp);
 	return pixel_world;
