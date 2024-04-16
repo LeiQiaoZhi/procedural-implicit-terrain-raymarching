@@ -16,8 +16,10 @@ namespace UI {
 
 		// setter
 		void set_fps_str(std::string_view _fps_str) { fps_str_ = _fps_str; }
+		void set_frame_time(float _frame_time) { frame_time_ = _frame_time; }
 
 	private:
 		std::string fps_str_ = "EMPTY FPS STRING";
+		float frame_time_;
 	};
 }

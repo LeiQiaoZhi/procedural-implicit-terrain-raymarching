@@ -13,8 +13,9 @@ public:
 private:
 	GLFWwindow* window_;
 	double previous_time_ = 0.0;
-	double count_interval_ = 0.5;
+	double count_interval_ = 2.0;
 	unsigned int frame_count_ = 0;
+	unsigned int MAX_FRAME = 100;
 
 	std::shared_ptr<UI::PerformancePanel> performance_panel_;
 };

@@ -24,6 +24,7 @@ void Init::setup_window(GLFWwindow* _window)
 {
 	// make the window into the current context (show it)
 	glfwMakeContextCurrent(_window);
+	glfwSwapInterval(0);
 }
 
 void Init::set_window_fullscreen(GLFWwindow* _window, bool _fullscreen)

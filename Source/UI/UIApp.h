@@ -43,9 +43,24 @@ namespace UI {
 		WindowInfos get_window_infos() const { return window_infos_; }
 		PanelsList get_panels() const { return panels_; }
 		std::shared_ptr<PerformancePanel> get_performance_panel() const { return performance_panel_; }
+		std::string get_last_loaded_config() const { return last_loaded_config_; }
 
 		// setters
 		void toggle_hide_ui() { hide_ui_ = !hide_ui_; }
+		void set_last_loaded_config(const std::string& _last_loaded_config) { 
+			std::string filename = JsonUtils::remove_json_extension(_last_loaded_config);
+			size_t pos = filename.find_last_of('\\');
+
+			if (pos != std::string::npos) {
+				std::string lastPart = filename.substr(pos + 1);
+				last_loaded_config_ = lastPart;
+			}
+			else 
+				last_loaded_config_ = filename;
+
+			std::cout << "last_loaded_config_ : " << last_loaded_config_ << std::endl;
+		}
+
 
 	private:
 		GLFWwindow* window_;
@@ -57,5 +72,8 @@ namespace UI {
 		bool hide_ui_ = false;
 
 		std::shared_ptr<PerformancePanel> performance_panel_;
+
+	public:
+		std::string last_loaded_config_ = "default";
 	};
 }

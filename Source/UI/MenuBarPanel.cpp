@@ -8,22 +8,25 @@ UI::WindowInfo UI::MenuBarPanel::show()
 	if (ImGui::BeginMainMenuBar()) {
 
 		if (ImGui::MenuItem("Save All", "Ctrl+S")) {
-			//std::cout << parent_app->to_json().dump(4) << std::endl;
 			JsonUtils::json_to_default_config(parent_app->to_json());
 		}
 		if (ImGui::MenuItem("Reset to Default")) {
 			parent_app->from_json(JsonUtils::json_from_default_config());
+			parent_app->set_last_loaded_config("default");
 		}
 		if (ImGui::MenuItem("Save As", "Ctrl+Shift+S")) {
 			std::string path = UI::win_file_select();
-			if (!path.empty())
+			if (!path.empty()) {
 				JsonUtils::json_to_file(parent_app->to_json(), path);
+				parent_app->set_last_loaded_config(path);
+			}
 		}
 		if (ImGui::MenuItem("Load")) {
 			std::string path = UI::win_file_select();
-			//std::cout << JsonUtils::json_from_file(path).dump(4) << std::endl;
-			if (!path.empty())
+			if (!path.empty()) {
 				parent_app->from_json(JsonUtils::json_from_file(path));
+				parent_app->set_last_loaded_config(path);
+			}
 		}
 		if (ImGui::MenuItem("Substitute Uniforms")) {
 			auto json = parent_app->get_glsl_json();
@@ -40,6 +43,17 @@ UI::WindowInfo UI::MenuBarPanel::show()
 			/*else {
 				RenderTarget::instance().set_render_target(RenderTarget::Target::Default);
 			}*/
+			ImGui::EndMenu();
+		}
+		if (ImGui::MenuItem("Screenshot")) {
+			RenderTarget::instance().set_render_target(RenderTarget::Target::Screenshot);
+		}
+		if (ImGui::BeginMenu("Viewport")) {
+			ImGui::InputInt2("Viewport Size", viewport_size_);
+
+			if (ImGui::Button("Apply")) {
+				glViewport(0, 0, viewport_size_[0], viewport_size_[0]);
+			}
 			ImGui::EndMenu();
 		}
 

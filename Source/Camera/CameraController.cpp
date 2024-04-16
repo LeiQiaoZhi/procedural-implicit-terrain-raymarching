@@ -32,6 +32,7 @@ void CameraController::handle_inputs(GLFWwindow* _window, const int _width, cons
 	// calculate delta time
 	float current_frame_time = glfwGetTime();
 	float delta_time = 100 * (current_frame_time - last_frame_time_);
+	last_frame_time_ = current_frame_time;
 
 	float min_dimension = std::min(_width, _height);
 	float dx = (settings.invert_x ? -1 : 1) * (last_x_ - x_pos) / min_dimension;
@@ -52,17 +53,17 @@ void CameraController::handle_inputs(GLFWwindow* _window, const int _width, cons
 	glm::vec2 input_direction{ 0,0 };
 	int vertical_input = 0;
 	if (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS)
-		input_direction.y += 1;
+		input_direction.y = 1;
 	if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS)
-		input_direction.y -= 1;
+		input_direction.y = -1;
 	if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS)
-		input_direction.x -= 1;
+		input_direction.x = -1;
 	if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
-		input_direction.x += 1;
+		input_direction.x = 1;
 	if (glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS)
-		vertical_input += 1;
+		vertical_input = 1;
 	if (glfwGetKey(_window, GLFW_KEY_Q) == GLFW_PRESS)
-		vertical_input -= 1;
+		vertical_input = -1;
 
 	if (input_direction.x != 0 || input_direction.y != 0)
 		camera_->move_foward_right(
@@ -74,7 +75,6 @@ void CameraController::handle_inputs(GLFWwindow* _window, const int _width, cons
 	last_x_ = x_pos;
 	last_y_ = y_pos;
 
-	last_frame_time_ = current_frame_time;
 }
 
 void CameraController::pan(float _dx, float _dy)

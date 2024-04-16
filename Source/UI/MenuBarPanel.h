@@ -20,5 +20,6 @@ namespace UI {
 	private:
 		UIApp* parent_app;
 		Shader& shader_modifiable_;
+		int viewport_size_[2] = { 800, 600 };
 	};
 }

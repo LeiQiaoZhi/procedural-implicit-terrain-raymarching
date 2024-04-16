@@ -70,6 +70,29 @@ void save_framebuffer_to_image(FBO* _fbo, const std::string& _base_name, const s
 	_fbo->unbind();
 }
 
+void save_default_framebuffer_to_image(const std::string& _base_name, const std::string& _path) {
+	const int width = Constants::WIDTH;
+	const int height = Constants::HEIGHT;
+
+	GLubyte* pixels = new GLubyte[4 * width * height];
+	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+	// Flip the image in memory because OpenGL's origin is at the bottom left
+	GLubyte* flipped_pixels = new GLubyte[4 * width * height];
+	for (int y = 0; y < height; ++y) {
+		memcpy(flipped_pixels + (height - 1 - y) * width * 4, pixels + y * width * 4, width * 4);
+	}
+
+	std::string file_path = _path + "/" + _base_name + ".png"; 
+	stbi_write_png(file_path.c_str(), width, height, 4, flipped_pixels, width * 4);
+
+	std::cout << "Saved default framebuffer to " << file_path << std::endl;
+
+	// Clean up
+	delete[] pixels;
+	delete[] flipped_pixels;
+}
+
 
 int main()
 {
@@ -129,6 +152,7 @@ int main()
 	imgui_app.set_callbacks(callback_manager);
 	camera_controller.set_callbacks(callback_manager);
 	window_obj.set_callbacks(callback_manager);
+	RenderTarget::instance().set_callbacks(callback_manager);
 
 	FPSCounter fps_counter(window, imgui_app.get_performance_panel());
 
@@ -158,6 +182,11 @@ int main()
 			save_output = false;
 			shader.set_uniform_bool("iStartHDE", false);
 			break;
+		case RenderTarget::Target::Screenshot:
+			save_default_framebuffer_to_image(
+				generate_unique_name(imgui_app.get_last_loaded_config()),
+				(EVAL_IMAGES_PATH "\\Screenshots"));
+			break;
 		case RenderTarget::Target::IDE:
 			// start incremental rendering
 			incremental_steps = 20 + EVAL_STEPS;
@@ -167,7 +196,6 @@ int main()
 			// clear fbos for IDE
 			for (auto fbo : fbos)
 				fbo->clear();
-			RenderTarget::instance().set_render_target(RenderTarget::Target::Default);
 			break;
 		case RenderTarget::Target::HDE:
 			shader.set_uniform_bool("iStartHDE", true);
@@ -177,11 +205,12 @@ int main()
 			for (auto fbo : fbos)
 				fbo->clear();
 			fbos[current_index]->bind();
-			RenderTarget::instance().set_render_target(RenderTarget::Target::Default);
 			break;
 		default:
 			break;
 		}
+		RenderTarget::instance().set_render_target(RenderTarget::Target::Default);
+
 		if (incremental_steps > 0) {
 			if (incremental_steps >= EVAL_STEPS) { // last few steps not for incremental rendering
 				previous_index = incremental_steps % 2;
