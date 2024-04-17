@@ -715,7 +715,7 @@
                 "value": 5.0
             },
             "Step Size Above Tree Ratio": {
-                "value": 50.27000045776367
+                "value": 100.0
             },
             "Step Size Distance Relationship": {
                 "value": 0
