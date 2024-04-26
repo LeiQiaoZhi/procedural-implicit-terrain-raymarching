@@ -204,7 +204,7 @@ void Shader::activate()
 	glUseProgram(program_ID);
 }
 
-void Shader::substitute_uniforms(nlohmann::json& _glsl_json)
+std::string Shader::substitute_uniforms(nlohmann::json& _glsl_json)
 {
 	glDeleteProgram(program_ID);
 
@@ -234,6 +234,9 @@ void Shader::substitute_uniforms(nlohmann::json& _glsl_json)
 	glDeleteShader(frag_shader);
 
 	glLinkProgram(program_ID);
+
+	write_to_file("substituted_frag.glsl", frag_code_);
+	return frag_code_;
 }
 
 void Shader::set_uniform_vec2(const std::string& name, const glm::vec2& value) const

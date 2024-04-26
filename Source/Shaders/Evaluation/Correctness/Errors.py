@@ -91,11 +91,11 @@ def HDE(image_path, print_output=False, display_image=False):
     median_value = np.median(positive_values)
 
     result_dict = {
-        "num_no_intersection": num_no_intersection,
+        "num_no_intersection_HDE": num_no_intersection,
         "average_HDE": average_HDE,
-        "highest_value": highest_value,
-        "lowest_value": lowest_value,
-        "median_value": median_value
+        "highest_HDE": highest_value,
+        "lowest_HDE": lowest_value,
+        "median_HDE": median_value
     }
 
     if print_output:
@@ -132,12 +132,12 @@ def IDE(image_path, print_output=False, display_image=False):
     median_value = np.median(positive_values)
 
     result_dict = {
-        "num_missed_intersection": num_missed_intersection,
-        "num_no_intersection": num_no_intersection,
+        "num_missed_intersection_IDE": num_missed_intersection,
+        "num_no_intersection_IDE": num_no_intersection,
         "average_IDE": average_IDE,
-        "highest_value": highest_value,
-        "lowest_value": lowest_value,
-        "median_value": median_value
+        "highest_IDE": highest_value,
+        "lowest_IDE": lowest_value,
+        "median_IDE": median_value
     }
 
 
@@ -158,6 +158,68 @@ def IDE(image_path, print_output=False, display_image=False):
         display(decoded_image)
     
     return result_dict
+
+
+def IDE_distance_constraint_1(image_path, distance_path, num_brackets, print_output=False, display_image=False):
+    decoded = decode(image_path)
+
+    img = Image.open(distance_path)
+    img_rgba = img.convert("RGBA")
+    distances = np.array(img_rgba, dtype=np.uint32)
+    print(distances)
+
+    result = []
+
+    for i in range(num_brackets):
+        min_distance = 255 / num_brackets * i
+        max_distance = 255 / num_brackets * (i + 1)
+        # consider only the red channel
+        mask = (distances[:, :, 0] >= min_distance) & (distances[:, :, 0] <= max_distance)
+        print(f"In mask: {np.sum(mask)} pixels for distance {min_distance} to {max_distance}")
+
+        # treat pixels outside the distance range as -100 -- no intersection
+        decoded = np.where(mask, decoded, -100)
+
+        total_pixels = decoded.size
+
+        # count the number of -1 and -100 values
+        num_missed_intersection = np.sum(decoded == -1)
+        num_no_intersection = np.sum(decoded == -100)
+
+        # average the positive values
+        positive_values = decoded[decoded > 0]
+        average_IDE = np.mean(positive_values)
+        highest_value = np.max(positive_values)
+        lowest_value = np.min(positive_values)
+        median_value = np.median(positive_values)
+
+        result_dict = {
+            "num_missed_intersection": num_missed_intersection,
+            "num_no_intersection": num_no_intersection,
+            "average_IDE": average_IDE,
+            "highest_value": highest_value,
+            "lowest_value": lowest_value,
+            "median_value": median_value
+        }
+        result.append(result_dict)
+
+        if print_output:
+            print((
+                f"For {image_path.split("\\")[-2]}:\n"
+                f"\tAmong {total_pixels} pixels:\n"
+                f"\tNumber of missed intersections (-1): {num_missed_intersection}\n"
+                f"\tNumber of no intersections (-100): {num_no_intersection}\n"
+                f"\tAverage IDE value: {average_IDE}\n"
+                f"\tMedian IDE value: {median_value}\n"
+                f"\tLowest IDE value: {lowest_value}\n"
+                f"\tHighest IDE value: {highest_value}"
+            ))
+
+        decoded_image = decoded_IDE_to_image(decoded)
+        if display_image:
+            display(decoded_image)
+    
+    return result
 
 
 def path_to_value(path):

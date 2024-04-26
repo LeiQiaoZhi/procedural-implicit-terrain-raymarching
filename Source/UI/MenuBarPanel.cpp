@@ -30,7 +30,9 @@ UI::WindowInfo UI::MenuBarPanel::show()
 		}
 		if (ImGui::MenuItem("Substitute Uniforms")) {
 			auto json = parent_app->get_glsl_json();
-			shader_modifiable_.substitute_uniforms(json);
+			auto frag_code = shader_modifiable_.substitute_uniforms(json);
+			ImGui::SetClipboardText(frag_code.c_str());
+			std::cout << "Code copied" << std::endl;
 		}
 		if (ImGui::BeginMenu("Evaluation")) {
 

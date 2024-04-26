@@ -19,7 +19,7 @@ public:
 
 	void activate();
 
-	void substitute_uniforms(nlohmann::json& _glsl_json);
+	std::string substitute_uniforms(nlohmann::json& _glsl_json);
 
 	void set_uniform_vec2(const std::string& name, const glm::vec2& value) const;
 	void set_uniform_vec3(const std::string& name, const glm::vec3& value) const;
