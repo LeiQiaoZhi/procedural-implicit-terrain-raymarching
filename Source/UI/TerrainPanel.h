@@ -75,7 +75,7 @@ namespace UI {
 		}),
 		std::make_shared<GroupProperty>("Boime", std::vector<std::shared_ptr<Property>>{
 			std::make_shared<BoolProperty>("Enable Biome", "iEnableBiome", false),
-			std::make_shared<SliderI>("Global Max Height", "iGlobalMaxHeight", 0, 100000, 0),
+			std::make_shared<SliderI>("Global Max Height", "iGlobalMaxHeight", 0, 10000, 0),
 			std::make_shared<SliderF>("Horizontal Scale", "iBiomeHorizontalScale", 0.1f, 100000.0f, 30000.0f),
 			std::make_shared<SliderF>("Max Height", "iBiomeMaxHeight", 0.0f, 10.0f, 1.0f),
 			std::make_shared<SliderI>("Layers", "iBiomeNumLayers", 1, 20, 4),
@@ -92,6 +92,7 @@ namespace UI {
 			std::make_shared<SliderF>("Vertical Shrink", "iDistortionVerticalShrink", 0.1f, 0.99f, 0.5f),
 		}),
 			std::make_shared<SliderF>("Shade Shadow Threshold", "iShadeShadowThreshold", -0.1f, 1.0f, 0.1f),
+			std::make_shared<SliderF>("Vertical offset", "iVerticalOffset", -10000.0f, 10000.0f, 0.0f),
 
 			};
 

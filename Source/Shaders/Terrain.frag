@@ -9,6 +9,7 @@ uniform vec2  iFilterRange;
 uniform float iHorizontalShrink;
 uniform float iVerticalShrink;
 uniform float iVerticalShrinkStart;
+uniform float iVerticalOffset;
 // shadow
 uniform int   iTerrainShadowSteps;
 uniform float iTerrainShadowStepSize;
@@ -117,7 +118,7 @@ float terrain_fbm(in vec2 _pos){
 		iFilterRange
 	);
 	float biome = biome(_pos);
-	return biome * result * iMaxHeight + biome * iGlobalMaxHeight;
+	return biome * result * iMaxHeight + biome * iGlobalMaxHeight + iVerticalOffset;
 }
 
 float terrain_fbm_smooth(in vec2 _pos){
@@ -130,7 +131,7 @@ float terrain_fbm_smooth(in vec2 _pos){
 		iFilterRange
 	);
 	float biome = biome(_pos);
-	return biome * result * iMaxHeight + biome * iGlobalMaxHeight;
+	return biome * result * iMaxHeight + biome * iGlobalMaxHeight + iVerticalOffset;
 }
 
 
@@ -150,7 +151,7 @@ vec4 terrain_fbm_d(in vec2 _pos){
 	result.yz /= iHorizontalScale;
 	result.yz -= biome_d.yw * iGlobalMaxHeight;
 	vec3 normal = normalize(vec3(-result.y, 1.0, -result.z));
-	return vec4(result.x + biome_d.x * iGlobalMaxHeight, normal);
+	return vec4(result.x + biome_d.x * iGlobalMaxHeight + iVerticalOffset, normal);
 }
 
 
@@ -170,7 +171,7 @@ float terrain_shadow(in vec3 pos, in vec3 pointToSun){
 		}
 	}
 
-	float shadow = smoothstep(0.0, 0.001, minR);
+	float shadow = smoothstep(0.0, 1.0, minR);
 	return shadow;
 }
 
