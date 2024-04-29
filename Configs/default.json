@@ -89,17 +89,17 @@
                     "value": 100000.0
                 },
                 "Min Stepsize": {
-                    "value": 100.0
+                    "value": 67.02999877929688
                 },
                 "Step Density Scale": {
-                    "value": 1.4800000190734863
+                    "value": 0.7200000286102295
                 },
                 "Step Dist Scale": {
                     "value": 0.029999999329447746
                 }
             },
             "Steps": {
-                "value": 77
+                "value": 205
             },
             "Strength": {
                 "value": 0.949999988079071
@@ -157,7 +157,7 @@
                 "value": 10
             },
             "Rayleigh Strength": {
-                "value": 0.0
+                "value": 1.9700000286102295
             },
             "Scattering Coefficients": {
                 "values": [
@@ -170,13 +170,13 @@
         "Terrain Tab": {
             "Boime": {
                 "Enable Biome": {
-                    "value": true
+                    "value": false
                 },
                 "Global Max Height": {
-                    "value": 3663
+                    "value": 0
                 },
                 "Horizontal Scale": {
-                    "value": 8425.0
+                    "value": 10256.5
                 },
                 "Horizontal Shirnk": {
                     "value": 1.899999976158142
@@ -185,10 +185,10 @@
                     "value": 5
                 },
                 "Max Height": {
-                    "value": 1.0299999713897705
+                    "value": 0.47999998927116394
                 },
                 "Under Water Decay": {
-                    "value": 0.3700000047683716
+                    "value": 0.36000001430511475
                 },
                 "Vertical Shrink": {
                     "value": 0.5
@@ -196,22 +196,22 @@
             },
             "Distortion": {
                 "Enable Distortion": {
-                    "value": true
+                    "value": false
                 },
                 "Horizontal Scale": {
-                    "value": 4029.39990234375
+                    "value": 732.7000122070313
                 },
                 "Horizontal Shirnk": {
                     "value": 1.9199999570846558
                 },
                 "Layers": {
-                    "value": 4
+                    "value": 5
                 },
                 "Max Height": {
-                    "value": 1.059999942779541
+                    "value": 0.18000000715255737
                 },
                 "Vertical Shrink": {
-                    "value": 0.25999999046325684
+                    "value": 0.28999999165534973
                 }
             },
             "FBM": {
@@ -220,30 +220,30 @@
                     "value_min": 1
                 },
                 "Horizontal Scale": {
-                    "value": 769.3200073242188
+                    "value": 659.4299926757813
                 },
                 "Horizontal Shirnk": {
-                    "value": 1.690000057220459
+                    "value": 1.7000000476837158
                 },
                 "Layers": {
                     "value": 12
                 },
                 "Max Height": {
-                    "value": 989.010009765625
+                    "value": 183.14999389648438
                 },
                 "Normal Layers": {
-                    "value": 14
+                    "value": 12
                 },
                 "Starting Vertical Shrink": {
                     "value": 0.5
                 },
                 "Vertical Shrink": {
-                    "value": 0.5199999809265137
+                    "value": 0.5099999904632568
                 }
             },
             "Grass Color FBM": {
                 "Horizontal Scale": {
-                    "value": 252.77999877929688
+                    "value": 1245.510009765625
                 },
                 "Horizontal Shirnk": {
                     "value": 1.899999976158142
@@ -260,16 +260,16 @@
                     "value": 100.0
                 },
                 "Horizontal Scale": {
-                    "value": 366.3999938964844
+                    "value": 219.8800048828125
                 },
                 "Horizontal Shirnk": {
-                    "value": 1.899999976158142
+                    "value": 1.809999942779541
                 },
                 "Layers": {
-                    "value": 6
+                    "value": 4
                 },
                 "Vertical Shrink": {
-                    "value": 0.5
+                    "value": 0.6100000143051147
                 }
             },
             "Lighting": {
@@ -311,13 +311,13 @@
                     ]
                 },
                 "Grass Lower Fade Length": {
-                    "value": 33
+                    "value": 114
                 },
                 "Grass Max Height": {
                     "value": 2967
                 },
                 "Grass Min Height": {
-                    "value": -92
+                    "value": -128
                 },
                 "Grass Threshold": {
                     "value": 0.6200000047683716
@@ -333,7 +333,7 @@
                     ]
                 },
                 "Sand Upper Fade Length": {
-                    "value": 95
+                    "value": 84
                 }
             },
             "Rock Texture": {
@@ -389,11 +389,14 @@
             },
             "Shade Shadow Threshold": {
                 "value": 0.3400000035762787
+            },
+            "Vertical offset": {
+                "value": 0.0
             }
         },
         "Tree Tab": {
             "Domain Size": {
-                "value": 27.18000030517578
+                "value": 31.56999969482422
             },
             "Early Test Steps": {
                 "value": 0
@@ -629,7 +632,7 @@
                 "value": 0.17000000178813934
             },
             "Water Level": {
-                "value": -2000
+                "value": -22
             }
         }
     },
@@ -637,33 +640,33 @@
     "Short 1 Panel": {
         "Camera Tab": {
             "camara_transform": {
-                "focal_length": 1.0,
+                "focal_length": 1.5220000743865967,
                 "forward": [
-                    0.5496795177459717,
-                    -0.650719940662384,
-                    -0.5238473415374756
+                    0.016163630411028862,
+                    -0.5068079233169556,
+                    0.8619075417518616
                 ],
                 "position": [
-                    8140.86767578125,
-                    2967.511962890625,
-                    9660.7236328125
+                    2125.5673828125,
+                    2660.263671875,
+                    241.18460083007813
                 ],
                 "right": [
-                    0.6898919939994812,
-                    -1.341104507446289e-07,
-                    0.7239123582839966
+                    -0.9998242259025574,
+                    -1.037493348121643e-06,
+                    0.0187494158744812
                 ],
                 "up": [
-                    0.4710599482059479,
-                    0.759323000907898,
-                    -0.4489222466945648
+                    0.009501331485807896,
+                    0.8620630502700806,
+                    0.5067120790481567
                 ]
             },
             "camera_settings": {
                 "invert_x": false,
                 "invert_y": false,
                 "invert_zoom": false,
-                "keyboard_speed": 21.7189998626709,
+                "keyboard_speed": 10.0,
                 "move_speed": 692.3389892578125,
                 "rotate_speed": 2.4059998989105225,
                 "zoom_speed": 0.26100000739097595
@@ -676,7 +679,7 @@
         },
         "Raymarch Tab": {
             "BS refine steps": {
-                "value": 0
+                "value": 3
             },
             "Distance Scale with Focal Length": {
                 "value": true
@@ -685,7 +688,7 @@
                 "value": 0.009999999776482582
             },
             "Linear Step Size Distance Ratio": {
-                "value": 0.10000000149011612
+                "value": 0.07000000029802322
             },
             "Log Step Size Distance Ratio": {
                 "value": 1.0
@@ -697,7 +700,7 @@
                 "value": 10000.0
             },
             "Max Steps": {
-                "value": 1000
+                "value": 465
             },
             "Min Step Size": {
                 "value": 0.10000000149011612
@@ -706,16 +709,16 @@
                 "value": 5.400000095367432
             },
             "Shadow Steps": {
-                "value": 0
+                "value": 27
             },
             "Smoothstep Step Size Right Edge": {
                 "value": 10000.0
             },
             "Start Step Size": {
-                "value": 5.0
+                "value": 5.5
             },
             "Step Size Above Tree Ratio": {
-                "value": 50.27000045776367
+                "value": 41.08000183105469
             },
             "Step Size Distance Relationship": {
                 "value": 0
@@ -791,7 +794,7 @@
                 "value": 70.0
             },
             "Enable Sun Disk": {
-                "value": false
+                "value": true
             },
             "Phi": {
                 "value": 3.25
@@ -831,7 +834,7 @@
                 "value": false
             },
             "Custom Max": {
-                "value": 201.00999450683594
+                "value": 1005.030029296875
             },
             "Last Step Size": {
                 "value": false
