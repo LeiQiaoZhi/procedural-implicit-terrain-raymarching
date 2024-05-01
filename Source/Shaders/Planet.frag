@@ -91,10 +91,14 @@ vec4 triplanar_mapping(
     vec2 zpartial = -zfbm.yw; // dx, dy
     vec3 znormal = zfbm.yzw;
 
-    vec3 axis_sign = sign(normal);
-    xnormal.y *= axis_sign.x;
-    ynormal.y *= axis_sign.y;
-    znormal.y *= axis_sign.z;
+    // vec3 axis_sign = sign(normal);
+    // xnormal.y *= axis_sign.x;
+    // ynormal.y *= axis_sign.y;
+    // znormal.y *= axis_sign.z;
+    // UDN blend
+    xnormal = vec3(xnormal.xy + normal.yz, normal.x * abs(xnormal.z));
+    ynormal = vec3(ynormal.xy + normal.xy, normal.y * abs(ynormal.z));
+    znormal = vec3(znormal.xy + normal.xz, normal.z * abs(znormal.z));
 
     vec3 heights = vec3(xheight, yheight, zheight);
     heights = (heights / (iMaxHeight + iGlobalMaxHeight) + 1) * 0.5;
@@ -105,7 +109,7 @@ vec4 triplanar_mapping(
 
     // basic swizzle
     vec3 normal_world = normalize(
-            xnormal.yzx * weights.x +
+                xnormal.yzx * weights.x +
                 ynormal.xyz * weights.y +
                 znormal.xzy * weights.z
         );
@@ -113,7 +117,7 @@ vec4 triplanar_mapping(
     vec2 duv = xpartial * weights.x + ypartial * weights.y + zpartial * weights.z;
     vec3 normal_ts = vec3(-duv.x, 1, -duv.y); // (u, n, v)
 
-    return vec4(height, normal_world);
+    return vec4(height + iPlanetRadius, normal_world);
 }
 
 float planet_circle_sdf(

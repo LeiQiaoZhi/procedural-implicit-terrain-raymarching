@@ -30,6 +30,7 @@ uniform float iDebugRayOffset;
 #include "Raymarching.frag"
 #include "Planet.frag"
 #include "SphericalAtmosphere.frag"
+#include "PlanetShading.frag"
 
 
 bool debug_sphere(
@@ -86,7 +87,7 @@ bool debug_sphere(
         vec3 _ = ray_start + 10 * iAtmosphereMaxHeight * _ray;
         bool ray_inside = ray_inside_sphere_i(ray_start, _, iPlanetRadius + iMaxHeight + iGlobalMaxHeight);
         if (!ray_inside){
-            return true;
+            // return true;
         }
 
         // draw the planet
@@ -94,13 +95,10 @@ bool debug_sphere(
 		if (dist > 0){
 			vec3 pos = ray_start + _ray * dist;
 			vec4 heightd = triplanar_mapping(pos);
+            // pos = heightd.x * normalize(pos);
 			vec3 normal = heightd.yzw;
 
-			// color_ = vec3(length(pos));
-			// color_ = vec3(normal);
-
-			float diffuse = max(dot(normal, _sun_dir), 0) + 0.1;
-			color_ = vec3(diffuse);
+            color_ = shade_planet(pos, _ray, _sun_dir, normal, _camera_pos, dist);
             // color_ = RED; return true;
 		} else{
 			color_ += sun_disk(_sun_dir, _camera_pos, _ray);
