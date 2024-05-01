@@ -40,8 +40,11 @@ void CameraController::handle_inputs(GLFWwindow* _window, const int _width, cons
 
 	if (dx != 0 || dy != 0) {
 		// Handles mouse inputs
-		if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-			orbit(dx * delta_time, dy * delta_time);
+		if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+			trackball_rotate(x_pos / min_dimension, y_pos / min_dimension, last_x_ / min_dimension, last_y_ / min_dimension);
+
+			//orbit(dx * delta_time, dy * delta_time);
+		}
 		else if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 			pan(dx * delta_time, dy * delta_time);
 		else if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE
@@ -89,7 +92,7 @@ void CameraController::scroll_callback(GLFWwindow* _window, double _x_offset, do
 
 void CameraController::set_shader_uniforms(Shader& _shader)
 {
-	_shader.set_uniform_vec3("iCameraPos",get_position());
+	_shader.set_uniform_vec3("iCameraPos", get_position());
 	_shader.set_uniform_vec3("iCameraFwd", get_forward());
 	_shader.set_uniform_vec3("iCameraUp", get_up());
 	_shader.set_uniform_vec3("iCameraRight", get_right());
@@ -109,6 +112,7 @@ void CameraController::zoom(float _zoom_factor)
 	camera_->set_focal_length(new_focal_length);
 }
 
+
 // camera_position, camera_direction change
 // target, target_distance does not change
 void CameraController::orbit(float _angle_x, float _angle_y)
@@ -127,5 +131,62 @@ void CameraController::orbit(float _angle_x, float _angle_y)
 	// update camera position
 	auto new_position = get_target() - target_distance_ * camera_->get_forward();
 	camera_->set_position(new_position);
+}
 
+
+void CameraController::trackball_rotate(float _x, float _y, float _last_x, float _last_y)
+{
+	// use origin as center for planets
+	glm::vec3 center = glm::vec3(0.0f);
+
+	if ((_x == _last_x) && (_y == _last_y))
+		return;
+
+	// get trackball positions
+	auto pos1 = glm::vec3(mouse_to_trackball_pos(-_last_x, _last_y));
+	auto pos2 = glm::vec3(mouse_to_trackball_pos(-_x, _y));
+	glm::vec3 rot_axis = glm::normalize(glm::cross(pos1, pos2));
+
+	// axis to world pos
+	rot_axis =
+		rot_axis.x * get_right() +
+		rot_axis.y * get_up() +
+		rot_axis.z * get_forward();
+
+	float rot_angle =
+		settings.trackball_radius *
+		glm::distance(glm::vec2(_x, _y), glm::vec2(_last_x, _last_y)) *
+		settings.rotate_speed;
+
+	// rotate
+	auto rot = glm::rotate(glm::mat4(1.0f), rot_angle, rot_axis);
+	auto up_to_center = center - (get_position() + get_up());
+	auto new_fwd = glm::vec3(rot * glm::vec4(get_forward(), 1.0f));
+	up_to_center = glm::vec3(rot * glm::vec4(up_to_center, 1.0f));
+
+	auto new_pos = center - new_fwd * glm::length(get_position() - center);
+	auto new_up = glm::normalize(-up_to_center + center - new_pos);
+	// reinforce orthogonality
+	auto new_right = glm::normalize(glm::cross(new_fwd, new_up));
+	new_up = glm::normalize(glm::cross(new_right, new_fwd));
+
+	camera_->set_position(new_pos);
+	camera_->set_direction(new_fwd, new_up);
+}
+
+
+glm::vec3 CameraController::mouse_to_trackball_pos(float _x, float _y)
+{
+	float r2 = _x * _x + _y * _y;
+	float t = 0.5f * settings.trackball_radius * settings.trackball_radius;
+
+	glm::vec3 pos;
+	pos.x = _x;
+	pos.y = _y;
+	if (r2 < t)
+		pos.z = sqrtf(2.0f * t - r2);
+	else
+		pos.z = t / sqrtf(r2);
+
+	return glm::normalize(pos);
 }

@@ -20,6 +20,7 @@ class CameraController
 		bool invert_x = false;
 		bool invert_y = false;
 		bool invert_zoom = false;
+		float trackball_radius = 1.0f;
 
 		nlohmann::json to_json() {
 			return {
@@ -29,7 +30,8 @@ class CameraController
 				{"zoom_speed", zoom_speed},
 				{"invert_x", invert_x},
 				{"invert_y", invert_y},
-				{"invert_zoom", invert_zoom}
+				{"invert_zoom", invert_zoom},
+				{"trackball_radius", trackball_radius}
 			};
 		}
 
@@ -41,6 +43,7 @@ class CameraController
 			invert_x = _json.value("invert_x", invert_x);
 			invert_y = _json.value("invert_y", invert_y);
 			invert_zoom = _json.value("invert_zoom", invert_zoom);
+			trackball_radius = _json.value("trackball_radius", trackball_radius);
 		}
 	};
 
@@ -71,6 +74,8 @@ public:
 	void pan(float _dx, float _dy);
 	void orbit(float _angle_x, float _angle_y);
 	void zoom(float zoom_factor);
+	void trackball_rotate(float _x, float _y, float _last_x, float _last_y);
+	glm::vec3 mouse_to_trackball_pos(float _x, float _y);
 
 	// queries
 	glm::vec3 get_position() { return camera_->get_position(); }
@@ -88,25 +93,25 @@ public:
 				 {"focal_length", get_focal_length() } };
 	};
 
-// setters
-void set_focal_length(float _fov) { camera_->set_focal_length(_fov); }
-void set_direction(glm::vec3 _forward) {
-	_forward = glm::normalize(_forward);
-	auto ref_up = glm::vec3(0, (_forward.y < 0 ? 0.999 : -0.999), 0);
-	auto right = glm::cross(_forward, ref_up);
-	auto up = glm::cross(right, _forward);
-	if (up.y < 0)
-		up = -up;
-	camera_->set_direction(_forward, up);
-}
-void set_transform_json(const nlohmann::json& _json) {
-	auto position = JsonUtils::json_array_to_vec3(_json["position"]);
-	auto forward = JsonUtils::json_array_to_vec3(_json["forward"]);
-	auto up = JsonUtils::json_array_to_vec3(_json["up"]);
-	auto right = JsonUtils::json_array_to_vec3(_json["right"]);
-	auto focal_length = _json.value("focal_length", 1.0f);
-	camera_->set_position(position);
-	camera_->set_direction(forward, up);
-	camera_->set_focal_length(focal_length);
-}
+	// setters
+	void set_focal_length(float _fov) { camera_->set_focal_length(_fov); }
+	void set_direction(glm::vec3 _forward) {
+		_forward = glm::normalize(_forward);
+		auto ref_up = glm::vec3(0, (_forward.y < 0 ? 0.999 : -0.999), 0);
+		auto right = glm::cross(_forward, ref_up);
+		auto up = glm::cross(right, _forward);
+		if (up.y < 0)
+			up = -up;
+		camera_->set_direction(_forward, up);
+	}
+	void set_transform_json(const nlohmann::json& _json) {
+		auto position = JsonUtils::json_array_to_vec3(_json["position"]);
+		auto forward = JsonUtils::json_array_to_vec3(_json["forward"]);
+		auto up = JsonUtils::json_array_to_vec3(_json["up"]);
+		auto right = JsonUtils::json_array_to_vec3(_json["right"]);
+		auto focal_length = _json.value("focal_length", 1.0f);
+		camera_->set_position(position);
+		camera_->set_direction(forward, up);
+		camera_->set_focal_length(focal_length);
+	}
 };
