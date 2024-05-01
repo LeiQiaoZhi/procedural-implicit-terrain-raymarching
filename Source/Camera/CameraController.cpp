@@ -41,9 +41,10 @@ void CameraController::handle_inputs(GLFWwindow* _window, const int _width, cons
 	if (dx != 0 || dy != 0) {
 		// Handles mouse inputs
 		if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-			trackball_rotate(x_pos / min_dimension, y_pos / min_dimension, last_x_ / min_dimension, last_y_ / min_dimension);
-
-			//orbit(dx * delta_time, dy * delta_time);
+			if (settings.mode == 0)
+				trackball_rotate(x_pos / min_dimension, y_pos / min_dimension, last_x_ / min_dimension, last_y_ / min_dimension);
+			else
+				orbit(dx * delta_time, dy * delta_time);
 		}
 		else if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 			pan(dx * delta_time, dy * delta_time);
@@ -72,8 +73,12 @@ void CameraController::handle_inputs(GLFWwindow* _window, const int _width, cons
 		camera_->move_foward_right(
 			input_direction.y * settings.keyboard_speed * delta_time,
 			input_direction.x * settings.keyboard_speed * delta_time);
-	if (vertical_input != 0)
-		camera_->move_along_y(vertical_input * settings.keyboard_speed * delta_time);
+	if (vertical_input != 0){
+		if (settings.mode == 1)
+			camera_->move_along_y(vertical_input * settings.keyboard_speed * delta_time);
+		else
+			camera_->move_right_up(0, vertical_input * settings.keyboard_speed * delta_time);
+	}
 
 	last_x_ = x_pos;
 	last_y_ = y_pos;
@@ -119,9 +124,10 @@ void CameraController::orbit(float _angle_x, float _angle_y)
 {
 	// rotation matrices
 	glm::mat4 rot_x = glm::mat4(1.0f);
-	rot_x = glm::rotate(rot_x, _angle_x * settings.rotate_speed, glm::vec3(0.0f, 1.0f, 0.0f));
+	//rot_x = glm::rotate(rot_x, _angle_x * settings.rotate_speed, glm::vec3(0.0f, 1.0f, 0.0f));
+	rot_x = glm::rotate(rot_x, _angle_x * settings.rotate_speed, get_up());
 	glm::mat4 rot_y = glm::mat4(1.0f);
-	rot_y = glm::rotate(rot_y, _angle_y * settings.rotate_speed, camera_->get_right());
+	rot_y = glm::rotate(rot_y, _angle_y * settings.rotate_speed, get_right());
 
 	// apply rotation
 	glm::vec4 new_forward = rot_x * rot_y * glm::vec4(camera_->get_forward(), 1.0f);

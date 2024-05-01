@@ -4,12 +4,14 @@ void UI::CameraPanel::gui()
 {
 	// camera settings
 	focal_length = camera_.get_focal_length();
+	ImGui::Combo("Control Mode", &camera_.settings.mode, "Trackball\0FPS(Y)\0FPS(UP)\0");
 	if (ImGui::SliderFloat("Focal Length", &focal_length, 0.1f, 100.0f))
 		camera_.set_focal_length(focal_length);
 	ImGui::SliderFloat("Movement Speed", &camera_.settings.move_speed, 0.1f, 1000.0f);
 	ImGui::SliderFloat("Keyboard Speed", &camera_.settings.keyboard_speed, 0.1f, 10.0f);
 	ImGui::SliderFloat("Rotate Speed", &camera_.settings.rotate_speed, 0.1f, 10.0f);
 	ImGui::SliderFloat("Zoom Speed", &camera_.settings.zoom_speed, 0.1f, 10.0f);
+	ImGui::SliderFloat("Trackball Radius", &camera_.settings.trackball_radius, 0.01f, 10.0f);
 	ImGui::Checkbox("Invert X", &camera_.settings.invert_x);
 	ImGui::Checkbox("Invert Y", &camera_.settings.invert_y);
 	ImGui::Checkbox("Invert Zoom", &camera_.settings.invert_zoom);

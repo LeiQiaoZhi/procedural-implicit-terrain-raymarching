@@ -21,6 +21,7 @@ class CameraController
 		bool invert_y = false;
 		bool invert_zoom = false;
 		float trackball_radius = 1.0f;
+		int mode = 0; // 0: trackball, 1: FPS (vertical along y), 2: FPS (vertical along camera up)
 
 		nlohmann::json to_json() {
 			return {
@@ -31,7 +32,8 @@ class CameraController
 				{"invert_x", invert_x},
 				{"invert_y", invert_y},
 				{"invert_zoom", invert_zoom},
-				{"trackball_radius", trackball_radius}
+				{"trackball_radius", trackball_radius},
+				{"mode", mode}
 			};
 		}
 
@@ -44,6 +46,7 @@ class CameraController
 			invert_y = _json.value("invert_y", invert_y);
 			invert_zoom = _json.value("invert_zoom", invert_zoom);
 			trackball_radius = _json.value("trackball_radius", trackball_radius);
+			mode = _json.value("mode", mode);
 		}
 	};
 
