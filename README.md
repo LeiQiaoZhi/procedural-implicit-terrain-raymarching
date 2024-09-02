@@ -16,13 +16,14 @@ A desktop app with a real-time viewport, and ui to tweak parameters. Use keyboar
 
 ## Terrain and Trees
 
-<table>
+<table style="width: 100%; table-layout: fixed;">
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/caaf15ff-1d19-4a52-bdb7-588b78d01462" alt="Image 1" height="250px" /></td>
-    <td><img src="https://github.com/user-attachments/assets/9d7e5127-7429-45e8-af7b-1ad40317edff" alt="Image 2" height="250px" /></td>
-    <td><img src="https://github.com/user-attachments/assets/a4408d66-8e1e-40e6-b3ab-8220f03d564f" alt="Image 3" height="250px" /></td>
+    <td style="text-align: center;"><img src="https://github.com/user-attachments/assets/caaf15ff-1d19-4a52-bdb7-588b78d01462" alt="Image 1" width="100%" /></td>
+    <td style="text-align: center;"><img src="https://github.com/user-attachments/assets/9d7e5127-7429-45e8-af7b-1ad40317edff" alt="Image 2" width="100%" /></td>
+    <td style="text-align: center;"><img src="https://github.com/user-attachments/assets/a4408d66-8e1e-40e6-b3ab-8220f03d564f" alt="Image 3" width="100%" /></td>
   </tr>
 </table>
+
 
 
 
